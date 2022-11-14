@@ -1,0 +1,42 @@
+server:
+  port: 9081
+
+spring:
+  application:
+    name: user-server
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_boot_demo?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: mengwei131575585
+  redis:
+    host: localhost
+    database: 1
+    port: 6379
+    password: mengwei131575585
+    timeout: 3000ms
+    lettuce:
+      pool:
+        enabled: true
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 180000
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: spring_boot_demo_group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

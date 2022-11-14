@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.MenuMapper">
+    <select id="getMenuList" parameterType="org.example.api.MenuQueryPage" resultType="org.example.entity.Menu">
+        SELECT *
+        FROM menu
+        <where>
+            <if test="name != null and name != null">
+                name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getMenusByUserId" parameterType="java.lang.String" resultType="org.example.entity.Menu">
+        SELECT m.*
+        FROM menu m
+             LEFT JOIN role_menu_relation rmr ON m.id = rmr.menu_id
+             LEFT JOIN user_role_relation urr ON urr.role_id = rmr.role_id
+        WHERE urr.user_id = #{userId}
+    </select>
+</mapper>
