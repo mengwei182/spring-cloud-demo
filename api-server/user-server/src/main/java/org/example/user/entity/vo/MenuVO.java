@@ -10,7 +10,7 @@ import org.example.common.entity.BaseEntity;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleVo extends BaseEntity {
+public class MenuVO extends BaseEntity {
     private String name;
     private String parentId;
     private String idChain;

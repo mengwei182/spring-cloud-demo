@@ -4,8 +4,8 @@ import org.example.common.entity.vo.UserInfoVo;
 import org.example.common.model.CommonResult;
 import org.example.common.usercontext.UserContext;
 import org.example.user.api.UserQueryPage;
-import org.example.user.entity.vo.UserRoleRelationVo;
-import org.example.user.entity.vo.UsernamePasswordVo;
+import org.example.user.entity.vo.UserRoleRelationVO;
+import org.example.user.entity.vo.UsernamePasswordVO;
 import org.example.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/login")
-    public CommonResult login(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
+    public CommonResult login(@Valid @RequestBody UsernamePasswordVO usernamePasswordVo) {
         return CommonResult.success(userService.login(usernamePasswordVo));
     }
 
@@ -60,12 +60,12 @@ public class UserController {
     }
 
     @RequestMapping("/user/updatePassword")
-    public CommonResult updateUserPassword(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
+    public CommonResult updateUserPassword(@Valid @RequestBody UsernamePasswordVO usernamePasswordVo) {
         return CommonResult.success(userService.updateUserPassword(usernamePasswordVo));
     }
 
     @RequestMapping("/user/updateRole")
-    public CommonResult updateUserRole(@RequestBody UserRoleRelationVo userRoleRelationVo) {
+    public CommonResult updateUserRole(@RequestBody UserRoleRelationVO userRoleRelationVo) {
         return CommonResult.success(userService.updateUserRole(userRoleRelationVo));
     }
 

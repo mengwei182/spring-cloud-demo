@@ -1,14 +1,14 @@
 package org.example.user.service;
 
-import org.example.user.entity.vo.RoleMenuRelationVo;
-import org.example.user.entity.vo.RoleVo;
+import org.example.user.entity.vo.RoleMenuRelationVO;
+import org.example.user.entity.vo.RoleVO;
 
 public interface RoleService {
-    Boolean addRole(RoleVo roleVo);
+    Boolean addRole(RoleVO roleVo);
 
     Boolean deleteRole(String id);
 
-    Boolean updateRole(RoleVo roleVo);
+    Boolean updateRole(RoleVO roleVo);
 
-    Boolean updateRoleMenu(RoleMenuRelationVo roleMenuRelationVo);
+    Boolean updateRoleMenu(RoleMenuRelationVO roleMenuRelationVo);
 }

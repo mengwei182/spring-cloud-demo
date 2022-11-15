@@ -15,8 +15,8 @@ import org.example.common.util.TokenUtil;
 import org.example.user.api.UserQueryPage;
 import org.example.user.entity.User;
 import org.example.user.entity.UserRoleRelation;
-import org.example.user.entity.vo.UserRoleRelationVo;
-import org.example.user.entity.vo.UsernamePasswordVo;
+import org.example.user.entity.vo.UserRoleRelationVO;
+import org.example.user.entity.vo.UsernamePasswordVO;
 import org.example.user.mapper.*;
 import org.example.user.service.UserService;
 import org.example.user.service.cache.UserCacheService;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     private UserCacheService userCacheService;
 
     @Override
-    public String login(UsernamePasswordVo usernamePasswordVo) {
+    public String login(UsernamePasswordVO usernamePasswordVo) {
         String username = usernamePasswordVo.getUsername();
         String password = usernamePasswordVo.getPassword();
         if (!StringUtils.hasLength(username)) {
@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean updateUserPassword(UsernamePasswordVo usernamePasswordVo) {
+    public Boolean updateUserPassword(UsernamePasswordVO usernamePasswordVo) {
         User user = userMapper.selectById(usernamePasswordVo.getId());
         if (user == null) {
             throw new CommonException(UserServerErrorResult.USER_NOT_EXIST);
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Boolean updateUserRole(UserRoleRelationVo userRoleRelationVo) {
+    public Boolean updateUserRole(UserRoleRelationVO userRoleRelationVo) {
         User user = userMapper.selectById(userRoleRelationVo.getUserId());
         if (user == null) {
             throw new CommonException(UserServerErrorResult.USER_NOT_EXIST);

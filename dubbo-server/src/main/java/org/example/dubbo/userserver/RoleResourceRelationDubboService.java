@@ -1,6 +1,6 @@
 package org.example.dubbo.userserver;
 
-import org.example.dubbo.userserver.entity.RoleResourceRelation;
+import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVO;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  * @since 2022/11/11
  */
 public interface RoleResourceRelationDubboService {
-    List<RoleResourceRelation> getRoleResourceRelations();
+    List<RoleResourceRelationDubboVO> getRoleResourceRelations();
 }

@@ -7,8 +7,8 @@ import org.example.common.util.CommonUtils;
 import org.example.user.entity.Role;
 import org.example.user.entity.RoleMenuRelation;
 import org.example.user.entity.UserRoleRelation;
-import org.example.user.entity.vo.RoleMenuRelationVo;
-import org.example.user.entity.vo.RoleVo;
+import org.example.user.entity.vo.RoleMenuRelationVO;
+import org.example.user.entity.vo.RoleVO;
 import org.example.user.mapper.RoleMapper;
 import org.example.user.mapper.RoleMenuRelationMapper;
 import org.example.user.mapper.UserRoleRelationMapper;
@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
     private RoleMenuRelationMapper roleMenuRelationMapper;
 
     @Override
-    public Boolean addRole(RoleVo roleVo) {
+    public Boolean addRole(RoleVO roleVo) {
         Role role = new Role();
         BeanUtils.copyProperties(roleVo, role);
         role.setId(CommonUtils.uuid());
@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean updateRole(RoleVo roleVo) {
+    public Boolean updateRole(RoleVO roleVo) {
         Role role = roleMapper.selectById(roleVo.getId());
         if (role == null) {
             throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
@@ -69,7 +69,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean updateRoleMenu(RoleMenuRelationVo roleMenuRelationVo) {
+    public Boolean updateRoleMenu(RoleMenuRelationVO roleMenuRelationVo) {
         Role role = roleMapper.selectById(roleMenuRelationVo.getRoleId());
         if (role == null) {
             throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);

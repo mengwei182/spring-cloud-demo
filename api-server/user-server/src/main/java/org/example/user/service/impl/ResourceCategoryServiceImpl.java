@@ -5,7 +5,7 @@ import org.example.common.error.UserServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.user.entity.ResourceCategory;
-import org.example.user.entity.vo.ResourceCategoryVo;
+import org.example.user.entity.vo.ResourceCategoryVO;
 import org.example.user.mapper.ResourceCategoryMapper;
 import org.example.user.service.ResourceCategoryService;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +19,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     private ResourceCategoryMapper resourceCategoryMapper;
 
     @Override
-    public Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo) {
+    public Boolean addResourceCategory(ResourceCategoryVO resourceCategoryVo) {
         QueryWrapper<ResourceCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
@@ -34,7 +34,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     }
 
     @Override
-    public Boolean updateResourceCategory(ResourceCategoryVo resourceCategoryVo) {
+    public Boolean updateResourceCategory(ResourceCategoryVO resourceCategoryVo) {
         ResourceCategory resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
         resourceCategoryMapper.updateById(resourceCategory);

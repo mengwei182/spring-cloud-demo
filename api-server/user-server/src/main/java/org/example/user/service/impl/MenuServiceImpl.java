@@ -9,7 +9,7 @@ import org.example.common.util.PageUtils;
 import org.example.user.api.MenuQueryPage;
 import org.example.user.entity.Menu;
 import org.example.user.entity.RoleMenuRelation;
-import org.example.user.entity.vo.MenuVo;
+import org.example.user.entity.vo.MenuVO;
 import org.example.user.mapper.MenuMapper;
 import org.example.user.mapper.RoleMenuRelationMapper;
 import org.example.user.service.MenuService;
@@ -28,7 +28,7 @@ public class MenuServiceImpl implements MenuService {
     private RoleMenuRelationMapper roleMenuRelationMapper;
 
     @Override
-    public Boolean addMenu(MenuVo menuVo) {
+    public Boolean addMenu(MenuVO menuVo) {
         Menu menu = new Menu();
         BeanUtils.copyProperties(menuVo, menu);
         menu.setId(CommonUtils.uuid());
@@ -37,11 +37,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Page<MenuVo> getMenuList(MenuQueryPage queryPage) {
+    public Page<MenuVO> getMenuList(MenuQueryPage queryPage) {
         Page<Menu> page = new Page<>(queryPage.getPageNumber(), queryPage.getPageSize());
         List<Menu> menuList = menuMapper.getMenuList(page, queryPage);
         page.setRecords(menuList);
-        return PageUtils.wrap(page, MenuVo.class);
+        return PageUtils.wrap(page, MenuVO.class);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Boolean updateMenu(MenuVo menuVo) {
+    public Boolean updateMenu(MenuVO menuVo) {
         Menu menu = menuMapper.selectById(menuVo.getId());
         if (menu == null) {
             throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);

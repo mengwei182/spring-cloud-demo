@@ -2,11 +2,13 @@ package org.example.user.service.impl;
 
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.dubbo.userserver.RoleDubboService;
-import org.example.dubbo.userserver.entity.Role;
+import org.example.dubbo.userserver.entity.RoleDubboVO;
+import org.example.user.entity.Role;
 import org.example.user.service.cache.RoleCacheService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +19,18 @@ import java.util.List;
 @Service
 @DubboService(interfaceClass = RoleDubboService.class, timeout = 10000)
 public class RoleDubboServiceImpl implements RoleDubboService {
-    @javax.annotation.Resource
+    @Resource
     private RoleCacheService roleCacheService;
 
     @Override
-    public List<Role> getRoleByUserId(String userId) {
-        List<Role> resultRoles = new ArrayList<>();
-        List<org.example.user.entity.Role> roleByUserId = roleCacheService.getRoleByUserId(userId);
-        for (org.example.user.entity.Role role : roleByUserId) {
-            Role resultRole = new Role();
-            BeanUtils.copyProperties(role, resultRole);
-            resultRoles.add(resultRole);
+    public List<RoleDubboVO> getRoleByUserId(String userId) {
+        List<RoleDubboVO> roleDubboVOS = new ArrayList<>();
+        List<Role> roleByUserId = roleCacheService.getRoleByUserId(userId);
+        for (Role role : roleByUserId) {
+            RoleDubboVO roleDubboVO = new RoleDubboVO();
+            BeanUtils.copyProperties(role, roleDubboVO);
+            roleDubboVOS.add(roleDubboVO);
         }
-        return resultRoles;
+        return roleDubboVOS;
     }
 }

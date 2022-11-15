@@ -2,14 +2,14 @@ package org.example.user.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.user.api.MenuQueryPage;
-import org.example.user.entity.vo.MenuVo;
+import org.example.user.entity.vo.MenuVO;
 
 public interface MenuService {
-    Boolean addMenu(MenuVo menuVo);
+    Boolean addMenu(MenuVO menuVo);
 
-    Page<MenuVo> getMenuList(MenuQueryPage queryPage);
+    Page<MenuVO> getMenuList(MenuQueryPage queryPage);
 
     Boolean deleteMenu(String id);
 
-    Boolean updateMenu(MenuVo menuVo);
+    Boolean updateMenu(MenuVO menuVo);
 }

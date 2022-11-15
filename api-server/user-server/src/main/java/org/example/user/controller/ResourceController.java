@@ -2,7 +2,7 @@ package org.example.user.controller;
 
 import org.example.common.model.CommonResult;
 import org.example.user.api.ResourceQueryPage;
-import org.example.user.entity.vo.ResourceVo;
+import org.example.user.entity.vo.ResourceVO;
 import org.example.user.service.ResourceService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @RequestMapping("/add")
-    public CommonResult addResource(@RequestBody ResourceVo resourceVo) {
+    public CommonResult addResource(@RequestBody ResourceVO resourceVo) {
         return CommonResult.success(resourceService.addResource(resourceVo));
     }
 
@@ -25,7 +25,7 @@ public class ResourceController {
     }
 
     @RequestMapping("/update")
-    public CommonResult updateResource(@RequestBody ResourceVo resourceVo) {
+    public CommonResult updateResource(@RequestBody ResourceVO resourceVo) {
         return CommonResult.success(resourceService.updateResource(resourceVo));
     }
 

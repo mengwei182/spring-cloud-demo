@@ -1,6 +1,6 @@
 package org.example.dubbo.userserver;
 
-import org.example.dubbo.userserver.entity.Resource;
+import org.example.dubbo.userserver.entity.ResourceDubboVO;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  * @since 2022/11/11
  */
 public interface ResourceDubboService {
-    List<Resource> getResources();
+    List<ResourceDubboVO> getResources();
 }
