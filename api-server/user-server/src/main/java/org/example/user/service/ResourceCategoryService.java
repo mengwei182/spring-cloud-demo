@@ -1,9 +1,9 @@
 package org.example.user.service;
 
-import org.example.user.entity.vo.ResourceCategoryVO;
+import org.example.user.entity.vo.ResourceCategoryVo;
 
 public interface ResourceCategoryService {
-    Boolean addResourceCategory(ResourceCategoryVO resourceCategoryVo);
+    Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo);
 
-    Boolean updateResourceCategory(ResourceCategoryVO resourceCategoryVo);
+    Boolean updateResourceCategory(ResourceCategoryVo resourceCategoryVo);
 }

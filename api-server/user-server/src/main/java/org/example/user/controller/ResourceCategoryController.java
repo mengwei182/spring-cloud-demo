@@ -1,7 +1,7 @@
 package org.example.user.controller;
 
 import org.example.common.model.CommonResult;
-import org.example.user.entity.vo.ResourceCategoryVO;
+import org.example.user.entity.vo.ResourceCategoryVo;
 import org.example.user.service.ResourceCategoryService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +16,12 @@ public class ResourceCategoryController {
     private ResourceCategoryService resourceCategoryService;
 
     @RequestMapping("/add")
-    public CommonResult addResourceCategory(@RequestBody ResourceCategoryVO resourceCategoryVo) {
+    public CommonResult addResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
         return CommonResult.success(resourceCategoryService.addResourceCategory(resourceCategoryVo));
     }
 
     @RequestMapping("/update")
-    public CommonResult updateResourceCategory(@RequestBody ResourceCategoryVO resourceCategoryVo) {
+    public CommonResult updateResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
         return CommonResult.success(resourceCategoryService.updateResourceCategory(resourceCategoryVo));
     }
 }

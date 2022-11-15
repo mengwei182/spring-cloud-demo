@@ -2,7 +2,7 @@ package org.example.user.controller;
 
 import org.example.common.model.CommonResult;
 import org.example.user.api.MenuQueryPage;
-import org.example.user.entity.vo.MenuVO;
+import org.example.user.entity.vo.MenuVo;
 import org.example.user.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping("/add")
-    public CommonResult addMenu(@RequestBody MenuVO menuVo) {
+    public CommonResult addMenu(@RequestBody MenuVo menuVo) {
         return CommonResult.success(menuService.addMenu(menuVo));
     }
 
@@ -25,7 +25,7 @@ public class MenuController {
     }
 
     @RequestMapping("/update")
-    public CommonResult updateMenu(@RequestParam MenuVO menuVo) {
+    public CommonResult updateMenu(@RequestParam MenuVo menuVo) {
         return CommonResult.success(menuService.updateMenu(menuVo));
     }
 

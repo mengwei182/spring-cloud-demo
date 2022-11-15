@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @TableName("role_menu_relation")
 @EqualsAndHashCode(callSuper = true)
-public class RoleMenuRelationVO extends BaseEntity {
+public class RoleMenuRelationVo extends BaseEntity {
     private String roleId;
     private String menuId;
     private List<String> roleIds;

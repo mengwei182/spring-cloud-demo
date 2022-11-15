@@ -2,14 +2,14 @@ package org.example.user.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.user.api.ResourceQueryPage;
-import org.example.user.entity.vo.ResourceVO;
+import org.example.user.entity.vo.ResourceVo;
 
 public interface ResourceService {
-    Boolean addResource(ResourceVO resourceVo);
+    Boolean addResource(ResourceVo resourceVo);
 
     Boolean deleteResource(String id);
 
-    Boolean updateResource(ResourceVO resourceVo);
+    Boolean updateResource(ResourceVo resourceVo);
 
-    Page<ResourceVO> getResourceList(ResourceQueryPage queryPage);
+    Page<ResourceVo> getResourceList(ResourceQueryPage queryPage);
 }

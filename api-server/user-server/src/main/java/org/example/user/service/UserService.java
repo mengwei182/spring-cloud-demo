@@ -3,14 +3,14 @@ package org.example.user.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.vo.UserInfoVo;
 import org.example.user.api.UserQueryPage;
-import org.example.user.entity.vo.UserRoleRelationVO;
-import org.example.user.entity.vo.UsernamePasswordVO;
+import org.example.user.entity.vo.UserRoleRelationVo;
+import org.example.user.entity.vo.UsernamePasswordVo;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface UserService {
-    String login(UsernamePasswordVO usernamePasswordVo);
+    String login(UsernamePasswordVo usernamePasswordVo);
 
     Boolean logout();
 
@@ -26,9 +26,9 @@ public interface UserService {
 
     Boolean updateUser(UserInfoVo userInfoVo);
 
-    Boolean updateUserPassword(UsernamePasswordVO usernamePasswordVo);
+    Boolean updateUserPassword(UsernamePasswordVo usernamePasswordVo);
 
-    Boolean updateUserRole(UserRoleRelationVO userRoleRelationVo);
+    Boolean updateUserRole(UserRoleRelationVo userRoleRelationVo);
 
     Boolean deleteUser(String id);
 }

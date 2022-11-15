@@ -10,13 +10,11 @@ import org.example.common.entity.BaseEntity;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class MenuVO extends BaseEntity {
+public class ResourceVo extends BaseEntity {
     private String name;
-    private String parentId;
-    private String idChain;
-    private Integer level;
-    private Integer sort;
-    private String icon;
-    private Integer status;
+    private String url;
     private String description;
+    private String categoryId;
+    private Integer status;
+    private String categoryName;
 }

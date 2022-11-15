@@ -1,8 +1,8 @@
 package org.example.user.controller;
 
 import org.example.common.model.CommonResult;
-import org.example.user.entity.vo.RoleMenuRelationVO;
-import org.example.user.entity.vo.RoleVO;
+import org.example.user.entity.vo.RoleMenuRelationVo;
+import org.example.user.entity.vo.RoleVo;
 import org.example.user.service.RoleService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class RoleController {
     private RoleService roleService;
 
     @RequestMapping("/add")
-    public CommonResult addRole(@RequestBody RoleVO roleVo) {
+    public CommonResult addRole(@RequestBody RoleVo roleVo) {
         return CommonResult.success(roleService.addRole(roleVo));
     }
 
@@ -28,12 +28,12 @@ public class RoleController {
     }
 
     @RequestMapping("/update")
-    public CommonResult updateRole(@RequestBody RoleVO roleVo) {
+    public CommonResult updateRole(@RequestBody RoleVo roleVo) {
         return CommonResult.success(roleService.updateRole(roleVo));
     }
 
     @RequestMapping("/menu/update")
-    public CommonResult updateRoleMenu(@RequestBody RoleMenuRelationVO roleMenuRelationVo) {
+    public CommonResult updateRoleMenu(@RequestBody RoleMenuRelationVo roleMenuRelationVo) {
         return CommonResult.success(roleService.updateRoleMenu(roleMenuRelationVo));
     }
 }
