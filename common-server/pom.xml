@@ -33,6 +33,19 @@
         </dependency>
         <!--spring boot end-->
 
+        <!--redis start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring.boot.starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+        <!--redis end-->
+
         <!--mybatis end-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
