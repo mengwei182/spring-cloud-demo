@@ -1,0 +1,53 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: prod:8848
+        namespace: prod
+        group: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://prod:3306/spring_boot_demo?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: prod
+  redis:
+    host: prod
+    database: 1
+    port: 6379
+    password: prod
+    timeout: 3000ms
+    lettuce:
+      pool:
+        enabled: true
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 180000
+  kafka:
+    bootstrap-servers: prod:9092
+    consumer:
+      group-id: spring_cloud_demo_group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+dubbo:
+  application:
+    name: ${spring.application.name}
+    id: ${spring.application.name}
+    qos-enable: false
+    qos-accept-foreign-ip: false
+    metadata-type: local
+  protocol:
+    id: dubbo
+    name: dubbo
+    port: -1
+    payload: 10485760
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+      group: ${spring.cloud.nacos.discovery.group}
+    use-as-config-center: false
+    check: false
+  consumer:
+    check: false
+    retries: 2
