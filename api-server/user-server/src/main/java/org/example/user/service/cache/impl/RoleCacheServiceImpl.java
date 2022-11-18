@@ -19,11 +19,11 @@ import java.util.Set;
  */
 @Service
 public class RoleCacheServiceImpl implements RoleCacheService {
+    private static final String ROLE_CACHE_PREFIX = "ROLE_CACHE_PREFIX_";
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;
     @Resource
     private RoleMapper roleMapper;
-    private static final String ROLE_CACHE_PREFIX = "ROLE_CACHE_PREFIX_";
 
     @Override
     public List<Role> getRoleByUserId(String userId) {

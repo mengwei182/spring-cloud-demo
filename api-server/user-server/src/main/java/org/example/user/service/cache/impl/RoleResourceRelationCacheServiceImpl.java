@@ -19,11 +19,11 @@ import java.util.Set;
  */
 @Service
 public class RoleResourceRelationCacheServiceImpl implements RoleResourceRelationCacheService {
+    private static final String ROLE_RESOURCE_RELATION_CACHE = "ROLE_RESOURCE_RELATION_CACHE";
     @Resource
     private RedisTemplate<Object, Object> redisTemplate;
     @Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
-    private static final String ROLE_RESOURCE_RELATION_CACHE = "ROLE_RESOURCE_RELATION_CACHE";
 
     @Override
     public List<RoleResourceRelation> getRoleResourceRelations() {

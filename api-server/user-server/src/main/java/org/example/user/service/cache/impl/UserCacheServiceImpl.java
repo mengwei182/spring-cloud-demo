@@ -9,11 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserCacheServiceImpl implements UserCacheService {
-    @Resource
-    private RedisTemplate<Object, Object> redisTemplate;
     private static final String USER_CACHE_PREFIX = "USER_CACHE_PREFIX_";
     private static final String USER_CACHE_PHONE_VERIFY_PREFIX = "USER_CACHE_PHONE_VERIFY_PREFIX_";
     private static final String USER_CACHE_IMAGE_VERIFY_PREFIX = "USER_CACHE_IMAGE_VERIFY_PREFIX_";
+    @Resource
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     public void setPhoneVerifyCode(String phone, String verifyCode, Long timeout) {

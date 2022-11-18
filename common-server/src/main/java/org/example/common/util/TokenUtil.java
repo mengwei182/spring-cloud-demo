@@ -19,9 +19,9 @@ import java.util.Base64;
 @Slf4j
 public class TokenUtil {
     private static final String SALT = "dc,.-!^%";
+    private static final String ERROR_TOKEN = "ERROR_TOKEN";
     private static Cipher encryptCipher;
     private static Cipher decryptCipher;
-    private static final String ERROR_TOKEN = "ERROR_TOKEN";
 
     static {
         try {

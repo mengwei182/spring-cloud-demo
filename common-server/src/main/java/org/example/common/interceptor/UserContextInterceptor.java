@@ -1,12 +1,12 @@
 package org.example.common.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.error.CommonErrorResult;
-import org.example.common.error.exception.CommonException;
-import org.example.common.usercontext.UserContext;
 import org.example.common.entity.vo.TokenVo;
 import org.example.common.entity.vo.UserInfoVo;
+import org.example.common.error.CommonErrorResult;
+import org.example.common.error.exception.CommonException;
 import org.example.common.properties.ConfigProperties;
+import org.example.common.usercontext.UserContext;
 import org.example.common.util.TokenUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.annotation.Order;

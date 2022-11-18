@@ -4,11 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.BaseEntity;
 
-import javax.management.relation.Role;
 import javax.validation.constraints.NotNull;
-import java.awt.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author lihui

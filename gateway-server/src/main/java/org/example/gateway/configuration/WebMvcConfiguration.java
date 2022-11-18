@@ -1,7 +1,7 @@
 package org.example.gateway.configuration;
 
-import org.example.gateway.interceptor.AuthorizationInterceptor;
 import org.example.common.interceptor.UserContextInterceptor;
+import org.example.gateway.interceptor.AuthorizationInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

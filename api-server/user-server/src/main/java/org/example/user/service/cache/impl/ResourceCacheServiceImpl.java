@@ -18,11 +18,11 @@ import java.util.Set;
  */
 @Service
 public class ResourceCacheServiceImpl implements ResourceCacheService {
+    private static final String RESOURCE_CACHE = "RESOURCE_CACHE";
     @javax.annotation.Resource
     private RedisTemplate<Object, Object> redisTemplate;
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
-    private static final String RESOURCE_CACHE = "RESOURCE_CACHE";
 
     @Override
     public List<Resource> getResources() {
