@@ -13,8 +13,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserRoleRelationVo extends BaseEntity {
-    List<String> userIds;
-    List<String> roleIds;
     private String userId;
     private String roleId;
+    private List<String> userIds;
+    private List<String> roleIds;
 }
