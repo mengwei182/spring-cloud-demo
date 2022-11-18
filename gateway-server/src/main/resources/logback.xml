@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
-    <property name="log.file.path" value="logs/services.log"/>
+    <property name="log.file.path" value="logs/gateway-server.log"/>
     <property name="consoleLogPattern" value="%date{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %cyan(%logger):%msg%n"/>
     <property name="fileLogPattern" value="%date %level [%thread] %logger{36} [%file : %line] %msg%n"/>
 

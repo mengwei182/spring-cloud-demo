@@ -1,7 +1,7 @@
 ulimit -SHn 65535
-appName=spring-boot-demo
-jpsCommand=spring-boot-demo
-port=8080
+appName=gateway-server
+jpsCommand=gateway-server
+port=9080
 
 JAVA_OPTS="-Xms512m -Xmx512m -Xmn256m"
 
