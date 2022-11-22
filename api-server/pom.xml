@@ -89,6 +89,14 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <!--mybatis end-->
+
+        <!--kafka start-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>${spring.kafka.version}</version>
+        </dependency>
+        <!--kafka end-->
     </dependencies>
 
     <build>
