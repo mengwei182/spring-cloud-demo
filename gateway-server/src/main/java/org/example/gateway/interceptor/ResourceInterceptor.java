@@ -10,9 +10,9 @@ import org.example.common.util.TokenUtil;
 import org.example.dubbo.userserver.ResourceDubboService;
 import org.example.dubbo.userserver.RoleDubboService;
 import org.example.dubbo.userserver.RoleResourceRelationDubboService;
-import org.example.dubbo.userserver.entity.ResourceDubboVO;
-import org.example.dubbo.userserver.entity.RoleDubboVO;
-import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVO;
+import org.example.dubbo.userserver.entity.ResourceDubboVo;
+import org.example.dubbo.userserver.entity.RoleDubboVo;
+import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -68,17 +68,17 @@ public class ResourceInterceptor implements HandlerInterceptor {
         String cookie = request.getHeader("Cookie");
         TokenVo<?> tokenVo = TokenUtil.unsigned(cookie);
         String userId = (String) tokenVo.getId();
-        List<RoleDubboVO> roleDubboVOS = roleDubboService.getRoleByUserId(userId);
-        Map<String, RoleDubboVO> roleMap = roleDubboVOS.stream().collect(Collectors.toMap(RoleDubboVO::getId, o -> o));
-        List<ResourceDubboVO> resourceDubboVOS = resourceDubboService.getResources();
-        Map<String, ResourceDubboVO> resourceMap = resourceDubboVOS.stream().collect(Collectors.toMap(ResourceDubboVO::getId, o -> o));
-        List<RoleResourceRelationDubboVO> roleResourceRelationDubboVOS = roleResourceRelationDubboService.getRoleResourceRelations();
+        List<RoleDubboVo> roleDubboVos = roleDubboService.getRoleByUserId(userId);
+        Map<String, RoleDubboVo> roleMap = roleDubboVos.stream().collect(Collectors.toMap(RoleDubboVo::getId, o -> o));
+        List<ResourceDubboVo> resourceDubboVos = resourceDubboService.getResources();
+        Map<String, ResourceDubboVo> resourceMap = resourceDubboVos.stream().collect(Collectors.toMap(ResourceDubboVo::getId, o -> o));
+        List<RoleResourceRelationDubboVo> roleResourceRelationDubboVos = roleResourceRelationDubboService.getRoleResourceRelations();
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        for (RoleResourceRelationDubboVO roleResourceRelationDubboVO : roleResourceRelationDubboVOS) {
-            RoleDubboVO roleDubboVO = roleMap.get(roleResourceRelationDubboVO.getRoleId());
-            if (roleDubboVO != null) {
-                ResourceDubboVO resourceDubboVO = resourceMap.get(roleResourceRelationDubboVO.getResourceId());
-                if (antPathMatcher.match(resourceDubboVO.getUrl(), servletPath)) {
+        for (RoleResourceRelationDubboVo roleResourceRelationDubboVo : roleResourceRelationDubboVos) {
+            RoleDubboVo roleDubboVo = roleMap.get(roleResourceRelationDubboVo.getRoleId());
+            if (roleDubboVo != null) {
+                ResourceDubboVo resourceDubboVo = resourceMap.get(roleResourceRelationDubboVo.getResourceId());
+                if (antPathMatcher.match(resourceDubboVo.getUrl(), servletPath)) {
                     return true;
                 }
             }

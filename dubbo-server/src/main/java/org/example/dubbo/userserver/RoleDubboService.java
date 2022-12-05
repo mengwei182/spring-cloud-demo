@@ -1,6 +1,6 @@
 package org.example.dubbo.userserver;
 
-import org.example.dubbo.userserver.entity.RoleDubboVO;
+import org.example.dubbo.userserver.entity.RoleDubboVo;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  * @since 2022/11/11
  */
 public interface RoleDubboService {
-    List<RoleDubboVO> getRoleByUserId(String userId);
+    List<RoleDubboVo> getRoleByUserId(String userId);
 }

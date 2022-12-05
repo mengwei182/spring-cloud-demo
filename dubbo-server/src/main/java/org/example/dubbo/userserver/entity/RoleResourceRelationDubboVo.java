@@ -10,7 +10,7 @@ import org.example.common.entity.BaseEntity;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleResourceRelationDubboVO extends BaseEntity {
+public class RoleResourceRelationDubboVo extends BaseEntity {
     private String roleId;
     private String resourceId;
 }

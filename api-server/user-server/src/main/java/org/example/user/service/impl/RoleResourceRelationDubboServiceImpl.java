@@ -2,7 +2,7 @@ package org.example.user.service.impl;
 
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.dubbo.userserver.RoleResourceRelationDubboService;
-import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVO;
+import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVo;
 import org.example.user.entity.RoleResourceRelation;
 import org.example.user.service.cache.RoleResourceRelationCacheService;
 import org.springframework.beans.BeanUtils;
@@ -23,14 +23,14 @@ public class RoleResourceRelationDubboServiceImpl implements RoleResourceRelatio
     private RoleResourceRelationCacheService roleResourceRelationCacheService;
 
     @Override
-    public List<RoleResourceRelationDubboVO> getRoleResourceRelations() {
-        List<RoleResourceRelationDubboVO> roleResourceRelationDubboVOS = new ArrayList<>();
+    public List<RoleResourceRelationDubboVo> getRoleResourceRelations() {
+        List<RoleResourceRelationDubboVo> roleResourceRelationDubboVos = new ArrayList<>();
         List<RoleResourceRelation> roleResourceRelations = roleResourceRelationCacheService.getRoleResourceRelations();
         for (RoleResourceRelation roleResourceRelation : roleResourceRelations) {
-            RoleResourceRelationDubboVO roleResourceRelationDubboVO = new RoleResourceRelationDubboVO();
+            RoleResourceRelationDubboVo roleResourceRelationDubboVO = new RoleResourceRelationDubboVo();
             BeanUtils.copyProperties(roleResourceRelation, roleResourceRelationDubboVO);
-            roleResourceRelationDubboVOS.add(roleResourceRelationDubboVO);
+            roleResourceRelationDubboVos.add(roleResourceRelationDubboVO);
         }
-        return roleResourceRelationDubboVOS;
+        return roleResourceRelationDubboVos;
     }
 }

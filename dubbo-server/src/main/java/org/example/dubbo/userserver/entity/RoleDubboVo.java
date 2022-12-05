@@ -10,10 +10,13 @@ import org.example.common.entity.BaseEntity;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ResourceDubboVO extends BaseEntity {
+public class RoleDubboVo extends BaseEntity {
     private String name;
-    private String url;
-    private String description;
-    private String categoryId;
+    private String parentId;
+    private String idChain;
+    private Integer level;
+    private Integer sort;
+    private String icon;
     private Integer status;
+    private String description;
 }

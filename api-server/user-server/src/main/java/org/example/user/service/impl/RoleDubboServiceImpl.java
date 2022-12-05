@@ -2,7 +2,7 @@ package org.example.user.service.impl;
 
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.dubbo.userserver.RoleDubboService;
-import org.example.dubbo.userserver.entity.RoleDubboVO;
+import org.example.dubbo.userserver.entity.RoleDubboVo;
 import org.example.user.entity.Role;
 import org.example.user.service.cache.RoleCacheService;
 import org.springframework.beans.BeanUtils;
@@ -23,14 +23,14 @@ public class RoleDubboServiceImpl implements RoleDubboService {
     private RoleCacheService roleCacheService;
 
     @Override
-    public List<RoleDubboVO> getRoleByUserId(String userId) {
-        List<RoleDubboVO> roleDubboVOS = new ArrayList<>();
+    public List<RoleDubboVo> getRoleByUserId(String userId) {
+        List<RoleDubboVo> roleDubboVos = new ArrayList<>();
         List<Role> roleByUserId = roleCacheService.getRoleByUserId(userId);
         for (Role role : roleByUserId) {
-            RoleDubboVO roleDubboVO = new RoleDubboVO();
+            RoleDubboVo roleDubboVO = new RoleDubboVo();
             BeanUtils.copyProperties(role, roleDubboVO);
-            roleDubboVOS.add(roleDubboVO);
+            roleDubboVos.add(roleDubboVO);
         }
-        return roleDubboVOS;
+        return roleDubboVos;
     }
 }
