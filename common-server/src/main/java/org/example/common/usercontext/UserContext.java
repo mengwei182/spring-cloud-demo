@@ -45,8 +45,4 @@ public final class UserContext implements Serializable {
     public static void remove() {
         USER_CONTEXTS.remove();
     }
-
-    public static void clear() {
-        USER_CONTEXTS.remove();
-    }
 }
