@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,9 +44,10 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         String servletPath = request.getServletPath();
         if (StringUtils.hasLength(servletPath)) {
             // 校验是否是不需要验证token的url
+            AntPathMatcher antPathMatcher = new AntPathMatcher();
             String[] noAuthUrls = configProperties.getNoAuthUrls().split(",");
             for (String noAuthUrl : noAuthUrls) {
-                if (servletPath.startsWith(noAuthUrl)) {
+                if (antPathMatcher.match(noAuthUrl, servletPath)) {
                     return true;
                 }
             }
