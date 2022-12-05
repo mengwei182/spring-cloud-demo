@@ -29,6 +29,7 @@ spring:
       group-id: spring_cloud_demo_group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
 dubbo:
   application:
     name: ${spring.application.name}
