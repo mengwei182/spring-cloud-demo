@@ -5,7 +5,7 @@ import org.example.common.entity.vo.TokenVo;
 import org.example.common.entity.vo.UserInfoVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.exception.CommonException;
-import org.example.common.properties.ConfigProperties;
+import org.example.common.properties.ConfigurationProperties;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.TokenUtil;
 import org.springframework.core.annotation.Order;
@@ -30,7 +30,7 @@ import java.io.IOException;
 @WebFilter
 public class UserContextInterceptor implements Filter {
     @Resource
-    private ConfigProperties configProperties;
+    private ConfigurationProperties configurationProperties;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -45,7 +45,7 @@ public class UserContextInterceptor implements Filter {
         if (StringUtils.hasLength(servletPath)) {
             // 校验是否是不需要验证token的url
             AntPathMatcher antPathMatcher = new AntPathMatcher();
-            String[] noAuthUrls = configProperties.getNoAuthUrls().split(",");
+            String[] noAuthUrls = configurationProperties.getNoAuthUrls().split(",");
             for (String noAuthUrl : noAuthUrls) {
                 if (antPathMatcher.match(noAuthUrl, servletPath)) {
                     return;

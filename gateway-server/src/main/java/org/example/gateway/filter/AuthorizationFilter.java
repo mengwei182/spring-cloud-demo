@@ -2,7 +2,7 @@ package org.example.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.vo.TokenVo;
-import org.example.common.properties.ConfigProperties;
+import org.example.common.properties.ConfigurationProperties;
 import org.example.common.util.TokenUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -33,7 +33,7 @@ import java.util.List;
 @Component
 public class AuthorizationFilter implements GlobalFilter {
     @Resource
-    private ConfigProperties configProperties;
+    private ConfigurationProperties configurationProperties;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -48,7 +48,7 @@ public class AuthorizationFilter implements GlobalFilter {
         if (StringUtils.hasLength(contextPath)) {
             // 校验是否是不需要验证token的url
             AntPathMatcher antPathMatcher = new AntPathMatcher();
-            String[] noAuthUrls = configProperties.getNoAuthUrls().split(",");
+            String[] noAuthUrls = configurationProperties.getNoAuthUrls().split(",");
             for (String noAuthUrl : noAuthUrls) {
                 if (antPathMatcher.match(noAuthUrl, contextPath)) {
                     response.setStatusCode(HttpStatus.OK);

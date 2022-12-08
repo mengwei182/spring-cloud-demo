@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 @Configuration
 @PropertySource("classpath:common.properties")
-public class ConfigProperties {
+public class ConfigurationProperties {
     @Value("${no.auth.path}")
     private String noAuthUrls;
 }
