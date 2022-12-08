@@ -8,18 +8,16 @@ import org.example.common.error.exception.CommonException;
 import org.example.common.properties.ConfigProperties;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.TokenUtil;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * UserContext拦截器
@@ -29,17 +27,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @Order(3)
-@Component
-public class UserContextInterceptor implements HandlerInterceptor {
+@WebFilter
+public class UserContextInterceptor implements Filter {
     @Resource
     private ConfigProperties configProperties;
 
     @Override
-    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
         // 简单请求直接放行
-        if (HttpMethod.OPTIONS.toString().equalsIgnoreCase(request.getMethod())) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
-            return true;
+            return;
         }
         String servletPath = request.getServletPath();
         if (StringUtils.hasLength(servletPath)) {
@@ -48,7 +48,7 @@ public class UserContextInterceptor implements HandlerInterceptor {
             String[] noAuthUrls = configProperties.getNoAuthUrls().split(",");
             for (String noAuthUrl : noAuthUrls) {
                 if (antPathMatcher.match(noAuthUrl, servletPath)) {
-                    return true;
+                    return;
                 }
             }
         } else {
@@ -59,14 +59,5 @@ public class UserContextInterceptor implements HandlerInterceptor {
         // 经过AuthorizationInterceptor拦截器处理后，token不会为null
         UserInfoVo userInfoVo = tokenVo.getData();
         UserContext.set(userInfoVo.getId(), userInfoVo.getUsername(), userInfoVo);
-        return true;
-    }
-
-    @Override
-    public void postHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, ModelAndView modelAndView) throws Exception {
-    }
-
-    @Override
-    public void afterCompletion(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, Exception ex) throws Exception {
     }
 }

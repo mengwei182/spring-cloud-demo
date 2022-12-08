@@ -1,4 +1,4 @@
-//package org.example.gateway.interceptor;
+//package org.example.gateway.filter;
 //
 //import lombok.extern.slf4j.Slf4j;
 //import org.apache.dubbo.config.annotation.DubboReference;
@@ -36,7 +36,7 @@
 //@Slf4j
 //@Order(2)
 //@Component
-//public class ResourceInterceptor implements HandlerInterceptor {
+//public class ResourceFilter implements HandlerInterceptor {
 //    @Resource
 //    private ConfigProperties configProperties;
 //    @DubboReference

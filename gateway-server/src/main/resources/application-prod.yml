@@ -5,3 +5,26 @@ spring:
         server-addr: prod:8848
         namespace: prod
         group: prod
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    id: ${spring.application.name}
+    qos-enable: false
+    qos-accept-foreign-ip: false
+    metadata-type: local
+  protocol:
+    id: dubbo
+    name: dubbo
+    port: -1
+    payload: 10485760
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+      group: ${spring.cloud.nacos.discovery.group}
+    use-as-config-center: false
+    check: false
+  consumer:
+    check: false
+    retries: 2
