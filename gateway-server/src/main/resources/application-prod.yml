@@ -5,6 +5,11 @@ spring:
         server-addr: prod:8848
         namespace: prod
         group: prod
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: true
 
 dubbo:
   application:

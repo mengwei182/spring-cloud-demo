@@ -5,6 +5,11 @@ spring:
         server-addr: dev:8848
         namespace: dev
         group: dev
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: true
 
 dubbo:
   application:
