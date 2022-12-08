@@ -26,10 +26,6 @@ public class CommonResult {
         return new CommonResult(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getName(), data);
     }
 
-    public static CommonResult success(String message) {
-        return new CommonResult(ResultCode.SUCCESS.getCode(), message, null);
-    }
-
     public static CommonResult success(String message, Object data) {
         return new CommonResult(ResultCode.SUCCESS.getCode(), message, data);
     }

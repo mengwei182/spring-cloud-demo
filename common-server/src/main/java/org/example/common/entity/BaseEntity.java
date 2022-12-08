@@ -21,5 +21,5 @@ public abstract class BaseEntity implements Serializable {
     private Date createTime;
     private Date updateTime;
     // 是否删除：0.未删除，1.已删除
-    private Integer deleted;
+    private Integer deleted = 0;
 }

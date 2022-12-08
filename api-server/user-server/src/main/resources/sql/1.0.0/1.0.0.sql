@@ -3,6 +3,7 @@ CREATE TABLE `menu`
 (
     `id` VARCHAR(32) NOT NULL,
     `parent_id` VARCHAR(255) COMMENT '父级ID',
+    `id_chain` VARCHAR(255) COMMENT 'id链',
     `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
     `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
     `name` VARCHAR(255) NOT NULL COMMENT '名称',
@@ -64,8 +65,10 @@ CREATE TABLE `role`
     `id` VARCHAR(32) NOT NULL,
     `name` VARCHAR(255) NOT NULL COMMENT '资源名称',
     `parent_id` VARCHAR(255) COMMENT '父级ID',
+    `id_chain` VARCHAR(255) COMMENT 'id链',
     `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
     `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+    `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT COMMENT '状态',
     `description` VARCHAR(255) COMMENT '描述',
     `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0.未删除，1.已删除',

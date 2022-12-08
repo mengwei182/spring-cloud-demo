@@ -14,7 +14,7 @@ public class PageUtils {
         Page<T> resultPage = new Page<>();
         try {
             List<?> records = page.getRecords();
-            BeanUtils.copyProperties(page, records);
+            BeanUtils.copyProperties(page, resultPage);
             List<T> resultRecords = new ArrayList<>();
             for (Object record : records) {
                 T t = clazz.getDeclaredConstructor().newInstance();

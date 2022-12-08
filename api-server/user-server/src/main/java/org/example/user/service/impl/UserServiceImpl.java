@@ -153,10 +153,6 @@ public class UserServiceImpl implements UserService {
     private UserInfoVo buildUserVo(User user) {
         UserInfoVo userInfoVo = new UserInfoVo();
         BeanUtils.copyProperties(user, userInfoVo);
-//        List<Role> roles = roleMapper.getRolesByUserId(user.getId());
-//        userInfoVo.setRoles(roles);
-//        List<Menu> menus = menuMapper.getMenusByUserId(user.getId());
-//        userInfoVo.setMenus(menus);
         return userInfoVo;
     }
 

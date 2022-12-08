@@ -38,12 +38,12 @@ dubbo:
     qos-accept-foreign-ip: false
     metadata-type: local
   protocol:
-    id: dubbo
     name: dubbo
     port: -1
-    payload: 10485760
   registry:
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    protocol: -1
+    port: -1
     parameters:
       namespace: ${spring.cloud.nacos.discovery.namespace}
       group: ${spring.cloud.nacos.discovery.group}
