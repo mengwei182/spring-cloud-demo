@@ -15,7 +15,6 @@ import org.example.common.entity.BaseEntity;
 public class Role extends BaseEntity {
     private String name;
     private String parentId;
-    private String idChain;
     private Integer level;
     private Integer sort;
     private String icon;
