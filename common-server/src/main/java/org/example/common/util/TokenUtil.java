@@ -74,6 +74,8 @@ public class TokenUtil {
      * 解析token
      *
      * @param token
+     * @param clazz
+     * @param <T>
      * @return
      */
     public static <T> TokenVo<T> unsigned(String token, Class<T> clazz) {
