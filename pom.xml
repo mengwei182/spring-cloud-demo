@@ -25,7 +25,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
         <maven.resources.plugin.version>3.3.0</maven.resources.plugin.version>
-        <maven.dependency.plugin.version>3.4.0</maven.dependency.plugin.version>
+        <maven.dependency.plugin.version>3.5.0</maven.dependency.plugin.version>
         <jedis.version>4.3.1</jedis.version>
         <mysql.version>8.0.32</mysql.version>
         <dubbo.version>3.1.7</dubbo.version>
