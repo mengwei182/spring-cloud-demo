@@ -28,15 +28,13 @@
         <maven.dependency.plugin.version>3.4.0</maven.dependency.plugin.version>
         <jedis.version>4.3.1</jedis.version>
         <mysql.version>8.0.32</mysql.version>
-        <jackson.version>2.14.1</jackson.version>
-        <dubbo.version>3.1.5</dubbo.version>
+        <dubbo.version>3.1.7</dubbo.version>
         <nacos.version>2021.1</nacos.version>
-        <spring.boot.starter.version>2.7.8</spring.boot.starter.version>
+        <spring.boot.starter.version>2.7.9</spring.boot.starter.version>
         <mybatis.plus.boot.starter.version>3.5.3.1</mybatis.plus.boot.starter.version>
-        <druid.spring.boot.starter.version>1.2.15</druid.spring.boot.starter.version>
+        <druid.spring.boot.starter.version>1.2.16</druid.spring.boot.starter.version>
         <mybatis.spring.boot.starter.version>2.3.0</mybatis.spring.boot.starter.version>
         <spring.cloud.starter.stream.kafka.version>4.0.1</spring.cloud.starter.stream.kafka.version>
-        <spring.cloud.starter.loadbalancer.version>3.1.5</spring.cloud.starter.loadbalancer.version>
     </properties>
 
     <dependencyManagement>
