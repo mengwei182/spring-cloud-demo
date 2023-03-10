@@ -3,6 +3,8 @@ spring:
     nacos:
       discovery:
         server-addr: prod:8848
+        username: nacos
+        password: nacos
         namespace: prod
         group: prod
   datasource:
