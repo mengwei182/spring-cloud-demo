@@ -13,7 +13,10 @@ import org.example.common.entity.BaseEntity;
 @TableName("resource_category")
 @EqualsAndHashCode(callSuper = true)
 public class ResourceCategory extends BaseEntity {
+    // 分类名称
     private String name;
+    // 排序
     private Integer sort;
+    // 描述
     private String description;
 }

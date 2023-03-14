@@ -11,7 +11,7 @@ import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
-import org.example.common.util.TokenUtil;
+import org.example.common.util.TokenUtils;
 import org.example.user.api.UserQueryPage;
 import org.example.user.entity.User;
 import org.example.user.entity.UserRoleRelation;
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         Date loginTime = new Date();
         UserInfoVo userInfoVo = buildUserVo(user);
         TokenVo<?> tokenVo = new TokenVo<>(user.getId(), loginTime, 60 * 60L, userInfoVo);
-        String token = TokenUtil.sign(tokenVo);
+        String token = TokenUtils.sign(tokenVo);
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().set(User::getLoginTime, new Date()).eq(User::getId, user.getId());
         userMapper.update(null, updateWrapper);

@@ -17,7 +17,7 @@ import java.util.Base64;
  * @since 2022/10/25
  */
 @Slf4j
-public class TokenUtil {
+public class TokenUtils {
     private static final String SALT = "dc,.-!^%";
     private static final String ERROR_TOKEN = "ERROR_TOKEN";
     private static Cipher encryptCipher;
@@ -35,7 +35,7 @@ public class TokenUtil {
         }
     }
 
-    private TokenUtil() {
+    private TokenUtils() {
     }
 
     /**

@@ -2,8 +2,8 @@ package org.example.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.vo.TokenVo;
-import org.example.common.properties.ConfigurationProperties;
-import org.example.common.util.TokenUtil;
+import org.example.common.properties.CommonProperties;
+import org.example.common.util.TokenUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -33,7 +33,7 @@ import java.util.List;
 @Component
 public class AuthorizationFilter implements GlobalFilter {
     @Resource
-    private ConfigurationProperties configurationProperties;
+    private CommonProperties commonProperties;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -44,13 +44,13 @@ public class AuthorizationFilter implements GlobalFilter {
             response.setStatusCode(HttpStatus.OK);
             return chain.filter(exchange);
         }
-        String contextPath = request.getPath().value();
-        if (StringUtils.hasLength(contextPath)) {
+        String path = request.getPath().value();
+        if (StringUtils.hasLength(path)) {
             // 校验是否是不需要验证token的url
             AntPathMatcher antPathMatcher = new AntPathMatcher();
-            String[] noAuthUrls = configurationProperties.getNoAuthUrls().split(",");
+            String[] noAuthUrls = commonProperties.getUrlWhiteList().split(",");
             for (String noAuthUrl : noAuthUrls) {
-                if (antPathMatcher.match(noAuthUrl, contextPath)) {
+                if (antPathMatcher.match(noAuthUrl, path)) {
                     response.setStatusCode(HttpStatus.OK);
                     return chain.filter(exchange);
                 }
@@ -65,7 +65,7 @@ public class AuthorizationFilter implements GlobalFilter {
             return response.setComplete();
         }
         String cookie = cookies.get(0);
-        TokenVo<?> tokenVo = TokenUtil.unsigned(cookie);
+        TokenVo<?> tokenVo = TokenUtils.unsigned(cookie);
         if (tokenVo != null) {
             if (tokenVo.getSignTime().getTime() + tokenVo.getExpiration() * 1000 >= new Date().getTime()) {
                 response.setStatusCode(HttpStatus.OK);

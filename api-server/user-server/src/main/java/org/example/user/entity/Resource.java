@@ -13,9 +13,14 @@ import org.example.common.entity.BaseEntity;
 @TableName("resource")
 @EqualsAndHashCode(callSuper = true)
 public class Resource extends BaseEntity {
+    // 资源名称
     private String name;
+    // 资源URL
     private String url;
+    // 描述
     private String description;
+    // 资源分类id
     private String categoryId;
+    // 状态
     private Integer status;
 }

@@ -5,9 +5,9 @@ import org.example.common.entity.vo.TokenVo;
 import org.example.common.entity.vo.UserInfoVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.exception.CommonException;
-import org.example.common.properties.ConfigurationProperties;
+import org.example.common.properties.CommonProperties;
 import org.example.common.usercontext.UserContext;
-import org.example.common.util.TokenUtil;
+import org.example.common.util.TokenUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -30,7 +30,7 @@ import java.io.IOException;
 @WebFilter
 public class UserContextInterceptor implements Filter {
     @Resource
-    private ConfigurationProperties configurationProperties;
+    private CommonProperties commonProperties;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -45,7 +45,7 @@ public class UserContextInterceptor implements Filter {
         if (StringUtils.hasLength(servletPath)) {
             // 校验是否是不需要验证token的url
             AntPathMatcher antPathMatcher = new AntPathMatcher();
-            String[] noAuthUrls = configurationProperties.getNoAuthUrls().split(",");
+            String[] noAuthUrls = commonProperties.getUrlWhiteList().split(",");
             for (String noAuthUrl : noAuthUrls) {
                 if (antPathMatcher.match(noAuthUrl, servletPath)) {
                     return;
@@ -55,7 +55,7 @@ public class UserContextInterceptor implements Filter {
             throw new CommonException(CommonErrorResult.UNAUTHORIZED);
         }
         String cookie = request.getHeader("Cookie");
-        TokenVo<UserInfoVo> tokenVo = TokenUtil.unsigned(cookie, UserInfoVo.class);
+        TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(cookie, UserInfoVo.class);
         // 经过AuthorizationInterceptor拦截器处理后，token不会为null
         UserInfoVo userInfoVo = tokenVo.getData();
         UserContext.set(userInfoVo.getId(), userInfoVo.getUsername(), userInfoVo);

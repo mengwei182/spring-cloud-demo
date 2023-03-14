@@ -3,8 +3,8 @@ package org.example.gateway.filter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.common.entity.vo.TokenVo;
-import org.example.common.properties.ConfigurationProperties;
-import org.example.common.util.TokenUtil;
+import org.example.common.properties.CommonProperties;
+import org.example.common.util.TokenUtils;
 import org.example.dubbo.userserver.ResourceDubboService;
 import org.example.dubbo.userserver.RoleDubboService;
 import org.example.dubbo.userserver.RoleResourceRelationDubboService;
@@ -43,7 +43,7 @@ public class ResourceFilter implements GlobalFilter {
     @DubboReference
     private ResourceDubboService resourceDubboService;
     @Resource
-    private ConfigurationProperties configurationProperties;
+    private CommonProperties commonProperties;
     @DubboReference
     private RoleResourceRelationDubboService roleResourceRelationDubboService;
 
@@ -60,7 +60,7 @@ public class ResourceFilter implements GlobalFilter {
         String path = request.getPath().value();
         if (StringUtils.hasLength(path)) {
             // 校验是否是不需要验证token的url
-            String[] noAuthUrls = configurationProperties.getNoAuthUrls().split(",");
+            String[] noAuthUrls = commonProperties.getUrlWhiteList().split(",");
             for (String noAuthUrl : noAuthUrls) {
                 if (antPathMatcher.match(noAuthUrl, path)) {
                     response.setStatusCode(HttpStatus.OK);
@@ -77,7 +77,7 @@ public class ResourceFilter implements GlobalFilter {
             return response.setComplete();
         }
         String cookie = cookies.get(0);
-        TokenVo<?> tokenVo = TokenUtil.unsigned(cookie);
+        TokenVo<?> tokenVo = TokenUtils.unsigned(cookie);
         String userId = (String) tokenVo.getId();
         List<RoleDubboVo> roleDubboVos = roleDubboService.getRoleByUserId(userId);
         Map<String, RoleDubboVo> roleMap = roleDubboVos.stream().collect(Collectors.toMap(RoleDubboVo::getId, o -> o));
