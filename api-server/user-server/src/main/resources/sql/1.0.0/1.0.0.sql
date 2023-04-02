@@ -102,8 +102,8 @@ CREATE TABLE `role`
     PRIMARY KEY (`id`),
     UNIQUE INDEX (`parent_id`)
 ) DEFAULT CHARSET = utf8 COMMENT '资源信息表';
-INSERT INTO role(id, name, description, sort)
-VALUES ('1', '超级管理员', '拥有系统所有权限的角色', 0);
+INSERT INTO role(id, name, parent_id, id_chain, status, description, sort, level)
+VALUES ('1', '超级管理员', '0', '0', 0, '拥有系统所有权限的角色', 0, 0);
 
 DROP TABLE IF EXISTS `role_menu_relation`;
 CREATE TABLE `role_menu_relation`
