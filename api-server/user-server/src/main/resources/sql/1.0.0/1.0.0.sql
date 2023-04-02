@@ -42,11 +42,11 @@ CREATE TABLE `menu`
     UNIQUE INDEX (`parent_id`)
 ) DEFAULT CHARSET = utf8 COMMENT '菜单信息表';
 INSERT INTO menu(id, name)
-VALUES (REPLACE(UUID(), '-', ''), '菜单管理'),
-    (REPLACE(UUID(), '-', ''), '用户管理'),
-    (REPLACE(UUID(), '-', ''), '角色管理'),
-    (REPLACE(UUID(), '-', ''), '资源管理'),
-    (REPLACE(UUID(), '-', ''), '部门管理');
+VALUES (1, '菜单管理'),
+       (2, '用户管理'),
+       (3, '角色管理'),
+       (4, '资源管理'),
+       (5, '部门管理');
 
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`
@@ -103,7 +103,7 @@ CREATE TABLE `role`
     UNIQUE INDEX (`parent_id`)
 ) DEFAULT CHARSET = utf8 COMMENT '资源信息表';
 INSERT INTO role(id, name, parent_id, id_chain, status, description, sort, level)
-VALUES ('1', '超级管理员', '0', '0', 0, '拥有系统所有权限的角色', 0, 0);
+VALUES ('1', '超级管理员', '0', '0', 1, '拥有系统所有权限的角色', 0, 0);
 
 DROP TABLE IF EXISTS `role_menu_relation`;
 CREATE TABLE `role_menu_relation`
@@ -117,6 +117,12 @@ CREATE TABLE `role_menu_relation`
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '角色菜单信息表';
+INSERT INTO role_menu_relation(id, role_id, menu_id)
+VALUES (1, 1, 1),
+       (2, 1, 2),
+       (3, 1, 3),
+       (4, 1, 4),
+       (5, 1, 5);
 
 DROP TABLE IF EXISTS `role_resource_relation`;
 CREATE TABLE `role_resource_relation`
