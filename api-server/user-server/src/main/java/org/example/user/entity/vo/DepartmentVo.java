@@ -1,16 +1,20 @@
 package org.example.user.entity.vo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.BaseEntity;
 
 /**
+ * 部门信息表
+ *
  * @author lihui
  * @since 2022/10/29
  */
 @Data
+@TableName("department")
 @EqualsAndHashCode(callSuper = true)
-public class RoleVo extends BaseEntity {
+public class DepartmentVo extends BaseEntity {
     /**
      * 名称
      */

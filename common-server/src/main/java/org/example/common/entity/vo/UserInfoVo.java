@@ -28,7 +28,9 @@ public class UserInfoVo extends BaseEntity {
     private String email;
     // 姓名
     private String name;
-    // 描述
+    /**
+     * 描述
+     */
     private String description;
     // 登录时间
     private Date loginTime;

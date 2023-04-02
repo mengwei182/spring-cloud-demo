@@ -4,7 +4,7 @@
     <select id="getRolesByUserId" parameterType="java.lang.String" resultType="org.example.user.entity.Role">
         SELECT r.*
         FROM role r
-             LEFT JOIN user_role_relation urr ON r.id = urr.user_id
+                 LEFT JOIN user_role_relation urr ON r.id = urr.user_id
         WHERE urr.user_id = #{userId}
     </select>
 </mapper>

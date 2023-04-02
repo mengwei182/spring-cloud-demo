@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import org.example.common.entity.BaseEntity;
 
 /**
+ * 资源信息表
+ *
  * @author lihui
  * @since 2022/10/29
  */
@@ -17,10 +19,14 @@ public class Resource extends BaseEntity {
     private String name;
     // 资源URL
     private String url;
-    // 描述
+    /**
+     * 描述
+     */
     private String description;
     // 资源分类id
     private String categoryId;
-    // 状态
+    /**
+     * 状态
+     */
     private Integer status;
 }

@@ -1,5 +1,6 @@
 package org.example.common.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -12,6 +13,8 @@ import java.util.Date;
  */
 @Data
 public abstract class BaseEntity implements Serializable {
+    @TableField(exist = false)
+    public static final String TOP_LEVEL_ID = "0";
     @TableId
     private String id;
     // 创建者id

@@ -17,7 +17,8 @@ import org.example.user.entity.User;
 import org.example.user.entity.UserRoleRelation;
 import org.example.user.entity.vo.UserRoleRelationVo;
 import org.example.user.entity.vo.UsernamePasswordVo;
-import org.example.user.mapper.*;
+import org.example.user.mapper.UserMapper;
+import org.example.user.mapper.UserRoleRelationMapper;
 import org.example.user.service.UserService;
 import org.example.user.service.cache.UserCacheService;
 import org.example.user.util.ImageVerifyCodeUtils;
@@ -42,13 +43,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
     @Resource
-    private RoleMapper roleMapper;
-    @Resource
-    private MenuMapper menuMapper;
-    @Resource
     private UserRoleRelationMapper userRoleRelationMapper;
-    @Resource
-    private RoleResourceRelationMapper roleResourceRelationMapper;
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource

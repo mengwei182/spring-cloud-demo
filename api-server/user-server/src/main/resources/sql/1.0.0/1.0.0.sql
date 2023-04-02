@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `menu`;
-CREATE TABLE `menu`
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department`
 (
     `id` VARCHAR(32) NOT NULL,
     `parent_id` VARCHAR(255) COMMENT '父级id',
@@ -15,13 +15,38 @@ CREATE TABLE `menu`
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX (`parent_id`)
+) DEFAULT CHARSET = utf8 COMMENT '部门信息表';
+
+DROP TABLE IF EXISTS `menu`;
+CREATE TABLE `menu`
+(
+    `id` VARCHAR(32) NOT NULL,
+    `parent_id` VARCHAR(255) COMMENT '父级id',
+    `id_chain` TEXT COMMENT 'id链',
+    `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
+    `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
+    `name` VARCHAR(255) NOT NULL COMMENT '名称',
+    `route_address` VARCHAR(255) COMMENT '路由地址',
+    `icon` VARCHAR(255) COMMENT '图标',
+    `status` TINYINT COMMENT '状态',
+    `hided` TINYINT COMMENT '0显示，1隐藏',
+    `description` VARCHAR(255) COMMENT '描述',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
+    `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX (`parent_id`)
 ) DEFAULT CHARSET = utf8 COMMENT '菜单信息表';
 INSERT INTO menu(id, name)
 VALUES (REPLACE(UUID(), '-', ''), '菜单管理'),
-       (REPLACE(UUID(), '-', ''), '用户管理'),
-       (REPLACE(UUID(), '-', ''), '角色管理'),
-       (REPLACE(UUID(), '-', ''), '资源管理');
+    (REPLACE(UUID(), '-', ''), '用户管理'),
+    (REPLACE(UUID(), '-', ''), '角色管理'),
+    (REPLACE(UUID(), '-', ''), '资源管理'),
+    (REPLACE(UUID(), '-', ''), '部门管理');
 
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`
@@ -37,10 +62,10 @@ CREATE TABLE `resource`
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '资源信息表';
 INSERT INTO resource(id, url)
-VALUES ('fc8d8a28f2b111ebad8f005056c00001', '/*/**');
+VALUES ('1', '/*/**');
 
 DROP TABLE IF EXISTS `resource_category`;
 CREATE TABLE `resource_category`
@@ -54,7 +79,7 @@ CREATE TABLE `resource_category`
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '资源分类信息表';
 
 DROP TABLE IF EXISTS `role`;
@@ -74,10 +99,11 @@ CREATE TABLE `role`
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX (`parent_id`)
 ) DEFAULT CHARSET = utf8 COMMENT '资源信息表';
 INSERT INTO role(id, name, description, sort)
-VALUES ('ab1a320bf2ad11ebad8f005056c00001', '超级管理员', '拥有系统所有权限的角色', 0);
+VALUES ('1', '超级管理员', '拥有系统所有权限的角色', 0);
 
 DROP TABLE IF EXISTS `role_menu_relation`;
 CREATE TABLE `role_menu_relation`
@@ -85,12 +111,11 @@ CREATE TABLE `role_menu_relation`
     `id` VARCHAR(32) NOT NULL,
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色id',
     `menu_id` VARCHAR(255) NOT NULL COMMENT '菜单id',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '角色菜单信息表';
 
 DROP TABLE IF EXISTS `role_resource_relation`;
@@ -99,15 +124,14 @@ CREATE TABLE `role_resource_relation`
     `id` VARCHAR(32) NOT NULL,
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色id',
     `resource_id` VARCHAR(255) NOT NULL COMMENT '资源id',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '角色资源信息表';
 INSERT INTO role_resource_relation(id, role_id, resource_id)
-VALUES (REPLACE(UUID(), '-', ''), 'ab1a320bf2ad11ebad8f005056c00001', 'fc8d8a28f2b111ebad8f005056c00001');
+VALUES (1, '1', '1');
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`
@@ -127,10 +151,10 @@ CREATE TABLE `user`
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '用户信息表';
 INSERT INTO `user`(id, username, password, email, name)
-VALUES ('17b90220c4104392aec7cccf9c8bcaef', 'superadmin', '$2a$10$P75kwF3AjIXvnsPsCxOxFe/sA/Puhvc8tzJnmKIDt8UhFRMBeZQbK', 'superadmin@test.com', '超级管理员');
+VALUES ('1', 'superadmin', '$2a$10$P75kwF3AjIXvnsPsCxOxFe/sA/Puhvc8tzJnmKIDt8UhFRMBeZQbK', 'superadmin@test.com', '超级管理员');
 
 DROP TABLE IF EXISTS `user_role_relation`;
 CREATE TABLE `user_role_relation`
@@ -138,12 +162,11 @@ CREATE TABLE `user_role_relation`
     `id` VARCHAR(32) NOT NULL,
     `user_id` VARCHAR(255) NOT NULL COMMENT '用户ID',
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色ID',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARSET = utf8 COMMENT '用户角色信息表';
 INSERT INTO user_role_relation(id, user_id, role_id)
-VALUES (REPLACE(UUID(), '-', ''), '17b90220c4104392aec7cccf9c8bcaef', 'ab1a320bf2ad11ebad8f005056c00001');
+VALUES (1, '1', '1');

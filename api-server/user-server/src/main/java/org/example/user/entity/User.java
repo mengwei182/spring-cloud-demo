@@ -8,6 +8,8 @@ import org.example.common.entity.BaseEntity;
 import java.util.Date;
 
 /**
+ * 用户信息表
+ *
  * @author lihui
  * @since 2022/10/29
  */
@@ -27,7 +29,9 @@ public class User extends BaseEntity {
     private String email;
     // 姓名
     private String name;
-    // 描述
+    /**
+     * 描述
+     */
     private String description;
     // 登录时间
     private Date loginTime;

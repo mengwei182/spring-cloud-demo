@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import org.example.common.entity.BaseEntity;
 
 /**
+ * 角色菜单关联表
+ *
  * @author lihui
  * @since 2022/10/29
  */

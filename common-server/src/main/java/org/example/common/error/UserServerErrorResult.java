@@ -13,4 +13,6 @@ public interface UserServerErrorResult {
     String VERIFY_CODE_ERROR = "验证码错误";
     String VERIFY_CODE_OVERDUE = "验证码过期";
     String CATEGORY_EXIST = "分类已存在";
+    String MENU_NAME_EXIST = "存在同名菜单";
+    String PARENT_NOT_EXIST = "父级对象不存在";
 }
