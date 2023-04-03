@@ -34,11 +34,6 @@ public class UserController {
         return CommonResult.success(userService.register(userInfoVo));
     }
 
-    @RequestMapping("/phone/verify/code")
-    public CommonResult getPhoneVerifyCode(@RequestParam String phone) {
-        return CommonResult.success(userService.generatePhoneVerifyCode(phone));
-    }
-
     @RequestMapping("/image/verify/code")
     public void getImageVerifyCode(HttpServletResponse response) throws IOException {
         userService.generateImageVerifyCode(response);

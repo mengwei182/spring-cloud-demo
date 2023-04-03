@@ -16,8 +16,6 @@ public interface UserService {
 
     Boolean register(UserInfoVo userInfoVo);
 
-    Boolean generatePhoneVerifyCode(String phone);
-
     void generateImageVerifyCode(HttpServletResponse response) throws IOException;
 
     UserInfoVo getUserInfo(String id);

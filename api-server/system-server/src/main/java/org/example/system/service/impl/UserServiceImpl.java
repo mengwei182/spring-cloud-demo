@@ -22,7 +22,6 @@ import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.service.UserService;
 import org.example.system.service.cache.UserCacheService;
 import org.example.system.util.ImageVerifyCodeUtils;
-import org.example.system.util.MessageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,20 +107,6 @@ public class UserServiceImpl implements UserService {
         user.setUpdateId("");
         userMapper.insert(user);
         return true;
-    }
-
-    @Override
-    public Boolean generatePhoneVerifyCode(String phone) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            sb.append((int) (Math.random() * 10));
-        }
-        String verifyCode = sb.toString();
-        if (MessageUtils.sendMessage(phone, verifyCode)) {
-            userCacheService.setPhoneVerifyCode(phone, verifyCode, 5L);
-            return true;
-        }
-        return false;
     }
 
     @Override
