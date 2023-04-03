@@ -146,14 +146,8 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public List<MenuVo> getAllMenuList() {
-        List<MenuVo> resultMenuVos = new ArrayList<>();
         List<Menu> menus = menuMapper.selectList(new LambdaQueryWrapper<>());
-        for (Menu menu : menus) {
-            MenuVo menuVo = new MenuVo();
-            BeanUtils.copyProperties(menuVo, menu);
-            resultMenuVos.add(menuVo);
-        }
-        return resultMenuVos;
+        return CommonUtils.transformList(menus, MenuVo.class);
     }
 
     /**

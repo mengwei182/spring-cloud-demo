@@ -15,4 +15,5 @@ public interface UserServerErrorResult {
     String CATEGORY_EXIST = "分类已存在";
     String MENU_NAME_EXIST = "存在同名菜单";
     String PARENT_NOT_EXIST = "父级对象不存在";
+    String CATEGORY_RESOURCE_EXIST = "分类下存在资源";
 }

@@ -14,14 +14,30 @@ public class CommonUtils {
     private CommonUtils() {
     }
 
+    /**
+     * 生成uuid
+     *
+     * @return
+     */
     public static String uuid() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    /**
+     * 返回全局GSON对象
+     *
+     * @return
+     */
     public static Gson gson() {
         return GSON;
     }
 
+    /**
+     * 构建树形结构
+     *
+     * @param objects 对象必须有id、name、parentId字段
+     * @return
+     */
     public static List<TreeModel> buildTreeModel(List<?> objects) {
         List<TreeModel> treeModels = new ArrayList<>();
         List<TreeModel> resultTreeModels = new ArrayList<>();
@@ -45,5 +61,27 @@ public class CommonUtils {
         for (TreeModel tm : treeModels) {
             buildChildren(treeModels, tm);
         }
+    }
+
+    /**
+     * 转换list成目标类型集合
+     *
+     * @param list
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> transformList(List<?> list, Class<T> clazz) {
+        List<T> resultList = new ArrayList<>();
+        for (Object object : list) {
+            try {
+                T t = clazz.getConstructor().newInstance();
+                BeanUtils.copyProperties(object, t);
+                resultList.add(t);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return resultList;
     }
 }

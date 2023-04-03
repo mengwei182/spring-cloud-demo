@@ -3,7 +3,6 @@ package org.example.common.util;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PageUtils {
@@ -15,13 +14,7 @@ public class PageUtils {
         try {
             List<?> records = page.getRecords();
             BeanUtils.copyProperties(page, resultPage);
-            List<T> resultRecords = new ArrayList<>();
-            for (Object record : records) {
-                T t = clazz.getDeclaredConstructor().newInstance();
-                BeanUtils.copyProperties(record, t);
-                resultRecords.add(t);
-                resultPage.setRecords(resultRecords);
-            }
+            resultPage.setRecords(CommonUtils.transformList(records, clazz));
             return resultPage;
         } catch (Exception e) {
             return resultPage;

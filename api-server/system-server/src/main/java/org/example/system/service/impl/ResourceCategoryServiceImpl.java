@@ -1,23 +1,38 @@
 package org.example.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.error.UserServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
+import org.example.system.api.ResourceCategoryQueryPage;
+import org.example.system.entity.Resource;
 import org.example.system.entity.ResourceCategory;
 import org.example.system.entity.vo.ResourceCategoryVo;
+import org.example.system.entity.vo.ResourceVo;
 import org.example.system.mapper.ResourceCategoryMapper;
+import org.example.system.mapper.ResourceMapper;
 import org.example.system.service.ResourceCategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class ResourceCategoryServiceImpl implements ResourceCategoryService {
-    @Resource
+    @javax.annotation.Resource
+    private ResourceMapper resourceMapper;
+    @javax.annotation.Resource
     private ResourceCategoryMapper resourceCategoryMapper;
 
+    /**
+     * 新增资源分类信息
+     *
+     * @param resourceCategoryVo
+     * @return
+     */
     @Override
     public Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo) {
         QueryWrapper<ResourceCategory> queryWrapper = new QueryWrapper<>();
@@ -33,11 +48,79 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
         return true;
     }
 
+    /**
+     * 删除资源分类信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Boolean deleteResourceCategory(String id) {
+        ResourceCategory resourceCategory = resourceCategoryMapper.selectById(id);
+        if (resourceCategory != null) {
+            throw new CommonException(UserServerErrorResult.CATEGORY_EXIST);
+        }
+        Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, id));
+        if (count != null && count > 0) {
+            throw new CommonException(UserServerErrorResult.CATEGORY_RESOURCE_EXIST);
+        }
+        resourceCategoryMapper.deleteById(id);
+        return true;
+    }
+
+    /**
+     * 更新资源分类
+     *
+     * @param resourceCategoryVo
+     * @return
+     */
     @Override
     public Boolean updateResourceCategory(ResourceCategoryVo resourceCategoryVo) {
-        ResourceCategory resourceCategory = new ResourceCategory();
+        QueryWrapper<ResourceCategory> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
+        ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
+        if (resourceCategory != null) {
+            throw new CommonException(UserServerErrorResult.CATEGORY_EXIST);
+        }
+        resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
         resourceCategoryMapper.updateById(resourceCategory);
         return true;
+    }
+
+    /**
+     * 查看资源分类列表
+     *
+     * @param queryPage
+     * @return
+     */
+    @Override
+    public Page<ResourceCategoryVo> getResourceCategoryList(ResourceCategoryQueryPage queryPage) {
+        Page<ResourceCategory> page = new Page<>(queryPage.getPageNumber(), queryPage.getPageSize());
+        List<ResourceCategory> resourceCategories = resourceCategoryMapper.getResourceCategoryList(page, queryPage);
+        page.setRecords(resourceCategories);
+        Page<ResourceCategoryVo> resltPage = PageUtils.wrap(page, ResourceCategoryVo.class);
+        List<ResourceCategoryVo> records = resltPage.getRecords();
+        for (ResourceCategoryVo record : records) {
+            List<Resource> resources = resourceMapper.selectList(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, record.getId()));
+            record.setResources(CommonUtils.transformList(resources, ResourceVo.class));
+        }
+        return resltPage;
+    }
+
+    /**
+     * 查看全部资源分类列表
+     *
+     * @return
+     */
+    @Override
+    public List<ResourceCategoryVo> getAllResourceCategoryList() {
+        List<ResourceCategory> resourceCategories = resourceCategoryMapper.selectList(new LambdaQueryWrapper<>());
+        List<ResourceCategoryVo> resourceCategoryVos = CommonUtils.transformList(resourceCategories, ResourceCategoryVo.class);
+        for (ResourceCategoryVo resourceCategoryVo : resourceCategoryVos) {
+            List<Resource> resources = resourceMapper.selectList(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, resourceCategoryVo.getId()));
+            resourceCategoryVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
+        }
+        return resourceCategoryVos;
     }
 }
