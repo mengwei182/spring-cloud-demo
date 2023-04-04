@@ -15,8 +15,12 @@ import org.example.common.entity.BaseEntity;
 @TableName("role_menu_relation")
 @EqualsAndHashCode(callSuper = true)
 public class RoleMenuRelation extends BaseEntity {
-    // 角色id
+    /**
+     * 角色id
+     */
     private String roleId;
-    // 菜单id
+    /**
+     * 菜单id
+     */
     private String menuId;
 }

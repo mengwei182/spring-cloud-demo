@@ -19,7 +19,9 @@ public class Menu extends BaseEntity {
      * 名称
      */
     private String name;
-    // 路由地址
+    /**
+     * 路由地址
+     */
     private String routeAddress;
     /**
      * 父级id

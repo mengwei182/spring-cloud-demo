@@ -32,7 +32,7 @@ public interface ResourceCategoryService {
     Boolean updateResourceCategory(ResourceCategoryVo resourceCategoryVo);
 
     /**
-     * 分页查看资源分类列表
+     * 分页获取资源分类列表
      *
      * @param queryPage
      * @return
@@ -40,7 +40,7 @@ public interface ResourceCategoryService {
     Page<ResourceCategoryVo> getResourceCategoryList(ResourceCategoryQueryPage queryPage);
 
     /**
-     * 查看全部资源分类列表
+     * 获取全部资源分类列表
      *
      * @return
      */

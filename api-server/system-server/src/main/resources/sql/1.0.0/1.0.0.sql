@@ -10,7 +10,7 @@ CREATE TABLE `department`
     `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `description` VARCHAR(255) COMMENT '描述',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -34,7 +34,7 @@ CREATE TABLE `menu`
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `hided` TINYINT COMMENT '0显示，1隐藏',
     `description` VARCHAR(255) COMMENT '描述',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -60,7 +60,7 @@ CREATE TABLE `resource`
     `category_id` VARCHAR(255) COMMENT '资源分类id',
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -77,7 +77,7 @@ CREATE TABLE `resource_category`
     `name` VARCHAR(255) NOT NULL COMMENT '分类名称',
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -99,7 +99,7 @@ CREATE TABLE `role`
     `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `description` VARCHAR(255) COMMENT '描述',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -159,7 +159,7 @@ CREATE TABLE `user`
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `login_time` TIMESTAMP COMMENT '登录时间',
-    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

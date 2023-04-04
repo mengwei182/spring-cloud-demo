@@ -17,24 +17,40 @@ import java.util.Date;
 @TableName("user")
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
-    // 用户名
+    /**
+     * 用户名
+     */
     private String username;
-    // 密码
+    /**
+     * 密码
+     */
     private String password;
-    // 头像
+    /**
+     * 头像
+     */
     private String icon;
-    // 手机号
+    /**
+     * 手机号
+     */
     private String phone;
-    // 邮箱
+    /**
+     * 邮箱
+     */
     private String email;
-    // 姓名
+    /**
+     * 姓名
+     */
     private String name;
     /**
      * 描述
      */
     private String description;
-    // 登录时间
+    /**
+     * 登录时间
+     */
     private Date loginTime;
-    // 0禁用，1正常，2需要手机验证码，3需要图形验证码，4需要手机验证码和图像验证码
+    /**
+     * 状态：0禁用，1正常，2需要手机验证码，3需要图形验证码，4需要手机验证码和图像验证码
+     */
     private Integer status;
 }

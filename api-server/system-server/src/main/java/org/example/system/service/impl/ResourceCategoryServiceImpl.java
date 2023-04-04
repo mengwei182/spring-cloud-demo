@@ -3,7 +3,7 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.error.UserServerErrorResult;
+import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
@@ -39,7 +39,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
         if (resourceCategory != null) {
-            throw new CommonException(UserServerErrorResult.CATEGORY_EXIST);
+            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
         }
         resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
@@ -58,11 +58,11 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     public Boolean deleteResourceCategory(String id) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(id);
         if (resourceCategory != null) {
-            throw new CommonException(UserServerErrorResult.CATEGORY_EXIST);
+            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, id));
         if (count != null && count > 0) {
-            throw new CommonException(UserServerErrorResult.CATEGORY_RESOURCE_EXIST);
+            throw new CommonException(SystemServerErrorResult.CATEGORY_RESOURCE_EXIST);
         }
         resourceCategoryMapper.deleteById(id);
         return true;
@@ -80,7 +80,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
         if (resourceCategory != null) {
-            throw new CommonException(UserServerErrorResult.CATEGORY_EXIST);
+            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
         }
         resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
@@ -89,7 +89,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     }
 
     /**
-     * 查看资源分类列表
+     * 获取资源分类列表
      *
      * @param queryPage
      * @return
@@ -109,7 +109,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     }
 
     /**
-     * 查看全部资源分类列表
+     * 获取全部资源分类列表
      *
      * @return
      */

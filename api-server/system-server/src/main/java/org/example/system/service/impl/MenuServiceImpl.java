@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.BaseEntity;
 import org.example.common.entity.vo.TreeModel;
 import org.example.common.error.CommonErrorResult;
-import org.example.common.error.UserServerErrorResult;
+import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,7 +49,7 @@ public class MenuServiceImpl implements MenuService {
         if (StringUtils.hasLength(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
-                throw new CommonException(UserServerErrorResult.PARENT_NOT_EXIST);
+                throw new CommonException(SystemServerErrorResult.PARENT_NOT_EXIST);
             }
             parentId = menuVo.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -62,7 +61,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {
-            throw new CommonException(UserServerErrorResult.MENU_NAME_EXIST);
+            throw new CommonException(SystemServerErrorResult.MENU_NAME_EXIST);
         }
         menuMapper.insert(menu);
         return true;
@@ -107,7 +106,7 @@ public class MenuServiceImpl implements MenuService {
         if (StringUtils.hasLength(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
-                throw new CommonException(UserServerErrorResult.PARENT_NOT_EXIST);
+                throw new CommonException(SystemServerErrorResult.PARENT_NOT_EXIST);
             }
             parentId = menuVo.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -119,7 +118,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {
-            throw new CommonException(UserServerErrorResult.MENU_NAME_EXIST);
+            throw new CommonException(SystemServerErrorResult.MENU_NAME_EXIST);
         }
         menuMapper.updateById(menu);
         return true;

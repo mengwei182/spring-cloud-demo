@@ -15,8 +15,12 @@ import org.example.common.entity.BaseEntity;
 @TableName("user_role_relation")
 @EqualsAndHashCode(callSuper = true)
 public class UserRoleRelation extends BaseEntity {
-    // 用户id
+    /**
+     * 用户id
+     */
     private String userId;
-    // 角色id
+    /**
+     * 角色id
+     */
     private String roleId;
 }

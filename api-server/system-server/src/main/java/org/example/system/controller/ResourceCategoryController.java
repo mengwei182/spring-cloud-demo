@@ -51,7 +51,7 @@ public class ResourceCategoryController {
     }
 
     /**
-     * 查看资源分类列表
+     * 获取资源分类列表
      *
      * @param queryPage
      * @return
@@ -62,7 +62,7 @@ public class ResourceCategoryController {
     }
 
     /**
-     * 查看全部资源分类列表
+     * 获取全部资源分类列表
      *
      * @return
      */

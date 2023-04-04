@@ -13,12 +13,20 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserRoleRelationVo extends BaseEntity {
-    // 用户id
+    /**
+     * 用户id
+     */
     private String userId;
-    // 角色id
+    /**
+     * 角色id
+     */
     private String roleId;
-    // 用户id集合
+    /**
+     * 用户id集合
+     */
     private List<String> userIds;
-    // 角色id集合
+    /**
+     * 角色id集合
+     */
     private List<String> roleIds;
 }

@@ -17,14 +17,24 @@ public abstract class BaseEntity implements Serializable {
     public static final String TOP_LEVEL_ID = "0";
     @TableId
     private String id;
-    // 创建者id
+    /**
+     * 创建者id
+     */
     private String createId;
-    // 更新者id
+    /**
+     * 更新者id
+     */
     private String updateId;
-    // 创建时间
+    /**
+     * 创建时间
+     */
     private Date createTime;
-    // 更新时间
+    /**
+     * 更新时间
+     */
     private Date updateTime;
-    // 是否删除：0未删除，1已删除
+    /**
+     * 删除标志：0未删除，1已删除
+     */
     private Integer deleted = 0;
 }
