@@ -20,25 +20,9 @@ public class Role extends BaseEntity {
      */
     private String name;
     /**
-     * 父级id
-     */
-    private String parentId;
-    /**
-     * id链
-     */
-    private String idChain;
-    /**
-     * 级别
-     */
-    private Integer level;
-    /**
      * 排序
      */
     private Integer sort;
-    /**
-     * 图标
-     */
-    private String icon;
     /**
      * 状态
      */

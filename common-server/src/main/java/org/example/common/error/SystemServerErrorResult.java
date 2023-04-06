@@ -23,4 +23,5 @@ public interface SystemServerErrorResult {
     String RESOURCE_URL_LENGTH_ERROR = "资源URL长度不能超过255个字符";
     String RESOURCE_CATEGORY_ID_NOT_NULL = "资源分类不能为空";
     String RESOURCE_CATEGORY_ID_LENGTH_ERROR = "资源分类主键不能超过32个字符";
+    String ROLE_NAME_EXIST = "存在同名角色";
 }

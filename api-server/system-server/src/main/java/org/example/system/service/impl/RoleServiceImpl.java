@@ -1,7 +1,9 @@
 package org.example.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.common.error.CommonErrorResult;
+import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.system.entity.Role;
@@ -30,15 +32,32 @@ public class RoleServiceImpl implements RoleService {
     @Resource
     private RoleMenuRelationMapper roleMenuRelationMapper;
 
+    /**
+     * 新增角色
+     *
+     * @param roleVo
+     * @return
+     */
     @Override
     public Boolean addRole(RoleVo roleVo) {
         Role role = new Role();
         BeanUtils.copyProperties(roleVo, role);
         role.setId(CommonUtils.uuid());
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        Role resultRole = roleMapper.selectOne(queryWrapper.eq(Role::getName, roleVo.getName()));
+        if (resultRole != null) {
+            throw new CommonException(SystemServerErrorResult.ROLE_NAME_EXIST);
+        }
         roleMapper.insert(role);
         return true;
     }
 
+    /**
+     * 删除角色
+     *
+     * @param id
+     * @return
+     */
     @Override
     @Transactional
     public Boolean deleteRole(String id) {
@@ -56,6 +75,12 @@ public class RoleServiceImpl implements RoleService {
         return true;
     }
 
+    /**
+     * 更新角色
+     *
+     * @param roleVo
+     * @return
+     */
     @Override
     public Boolean updateRole(RoleVo roleVo) {
         Role role = roleMapper.selectById(roleVo.getId());
@@ -68,8 +93,15 @@ public class RoleServiceImpl implements RoleService {
         return true;
     }
 
+    /**
+     * 新增角色菜单关系
+     *
+     * @param roleMenuRelationVo
+     * @return
+     */
     @Override
-    public Boolean updateRoleMenu(RoleMenuRelationVo roleMenuRelationVo) {
+    @Transactional
+    public Boolean addRoleMenu(RoleMenuRelationVo roleMenuRelationVo) {
         Role role = roleMapper.selectById(roleMenuRelationVo.getRoleId());
         if (role == null) {
             throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
@@ -78,7 +110,7 @@ public class RoleServiceImpl implements RoleService {
         roleMenuRelationQueryWrapper.lambda().eq(RoleMenuRelation::getRoleId, roleMenuRelationVo.getRoleId());
         roleMenuRelationMapper.delete(roleMenuRelationQueryWrapper);
         List<String> menuIds = roleMenuRelationVo.getMenuIds();
-        if (CollectionUtils.isEmpty(menuIds)) {
+        if (!CollectionUtils.isEmpty(menuIds)) {
             menuIds.forEach(menuId -> {
                 RoleMenuRelation roleMenuRelation = new RoleMenuRelation();
                 roleMenuRelation.setId(CommonUtils.uuid());

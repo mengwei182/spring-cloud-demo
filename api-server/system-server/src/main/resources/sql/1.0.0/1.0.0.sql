@@ -7,10 +7,9 @@ CREATE TABLE `department`
     `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
     `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
     `name` VARCHAR(255) NOT NULL COMMENT '名称',
-    `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `description` VARCHAR(255) COMMENT '描述',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -34,7 +33,7 @@ CREATE TABLE `menu`
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `hided` TINYINT COMMENT '0显示，1隐藏',
     `description` VARCHAR(255) COMMENT '描述',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -60,7 +59,7 @@ CREATE TABLE `resource`
     `category_id` VARCHAR(255) COMMENT '资源分类id',
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -77,7 +76,7 @@ CREATE TABLE `resource_category`
     `name` VARCHAR(255) NOT NULL COMMENT '分类名称',
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -91,25 +90,19 @@ DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`
 (
     `id` VARCHAR(32) NOT NULL,
-    `name` VARCHAR(255) NOT NULL COMMENT '资源名称',
-    `parent_id` VARCHAR(255) COMMENT '父级id',
-    `id_chain` VARCHAR(768) COMMENT 'id链',
-    `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
+    `name` VARCHAR(255) NOT NULL COMMENT '角色名称',
     `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
-    `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `description` VARCHAR(255) COMMENT '描述',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    INDEX (`parent_id`),
-    INDEX (`id_chain`)
+    PRIMARY KEY (`id`)
 ) COMMENT '资源信息表';
-INSERT INTO role(`id`, `name`, `parent_id`, `id_chain`, `description`)
-VALUES ('1', '超级管理员', '0', '0', '超级管理员');
+INSERT INTO role(`id`, `name`, `description`)
+VALUES ('1', '超级管理员', '超级管理员');
 
 DROP TABLE IF EXISTS `role_menu_relation`;
 CREATE TABLE `role_menu_relation`
@@ -117,6 +110,7 @@ CREATE TABLE `role_menu_relation`
     `id` VARCHAR(32) NOT NULL,
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色id',
     `menu_id` VARCHAR(255) NOT NULL COMMENT '菜单id',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -137,6 +131,7 @@ CREATE TABLE `role_resource_relation`
     `id` VARCHAR(32) NOT NULL,
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色id',
     `resource_id` VARCHAR(255) NOT NULL COMMENT '资源id',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -159,7 +154,7 @@ CREATE TABLE `user`
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `login_time` TIMESTAMP COMMENT '登录时间',
-    /*`deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',*/
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -175,6 +170,7 @@ CREATE TABLE `user_role_relation`
     `id` VARCHAR(32) NOT NULL,
     `user_id` VARCHAR(255) NOT NULL COMMENT '用户ID',
     `role_id` VARCHAR(255) NOT NULL COMMENT '角色ID',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
     `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
     `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
