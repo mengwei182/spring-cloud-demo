@@ -1,4 +1,4 @@
-package org.example.common.entity.vo;
+package org.example.common.entity.base.vo;
 
 import lombok.Data;
 

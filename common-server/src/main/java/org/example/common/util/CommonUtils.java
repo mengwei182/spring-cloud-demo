@@ -1,13 +1,17 @@
 package org.example.common.util;
 
 import com.google.gson.Gson;
-import org.example.common.entity.vo.TreeModel;
+import org.example.common.entity.base.vo.TreeModel;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public class CommonUtils {
     private static final Gson GSON = new Gson();
 
@@ -83,5 +87,23 @@ public class CommonUtils {
             }
         }
         return resultList;
+    }
+
+    /**
+     * 转换object成目标类型对象
+     *
+     * @param object
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T transformObject(Object object, Class<T> clazz) {
+        try {
+            T t = clazz.getConstructor().newInstance();
+            BeanUtils.copyProperties(object, t);
+            return t;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

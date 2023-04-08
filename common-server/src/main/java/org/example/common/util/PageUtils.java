@@ -5,6 +5,10 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public class PageUtils {
     private PageUtils() {
     }

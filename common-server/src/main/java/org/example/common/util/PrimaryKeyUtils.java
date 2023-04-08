@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Component
 public class PrimaryKeyUtils {
     @Value("spring.application.name")

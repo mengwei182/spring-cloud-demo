@@ -2,15 +2,15 @@ package org.example.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.entity.system.Resource;
+import org.example.common.entity.system.ResourceCategory;
+import org.example.common.entity.system.RoleResourceRelation;
+import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.system.api.ResourceQueryPage;
-import org.example.system.entity.Resource;
-import org.example.system.entity.ResourceCategory;
-import org.example.system.entity.RoleResourceRelation;
-import org.example.system.entity.vo.ResourceVo;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
@@ -21,6 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Service
 public class ResourceServiceImpl implements ResourceService {
     @javax.annotation.Resource

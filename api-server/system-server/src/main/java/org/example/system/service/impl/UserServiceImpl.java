@@ -4,24 +4,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.vo.TokenVo;
-import org.example.common.entity.vo.UserInfoVo;
+import org.example.common.entity.base.vo.UserInfoVo;
+import org.example.common.entity.system.User;
+import org.example.common.entity.system.UserRoleRelation;
+import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
-import org.example.common.util.TokenUtils;
 import org.example.system.api.UserQueryPage;
-import org.example.system.entity.User;
-import org.example.system.entity.UserRoleRelation;
-import org.example.system.entity.vo.UserRoleRelationVo;
-import org.example.system.entity.vo.UsernamePasswordVo;
 import org.example.system.mapper.UserMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.service.UserService;
 import org.example.system.service.cache.UserCacheService;
-import org.example.system.util.ImageVerifyCodeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,12 +26,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -48,43 +44,15 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserCacheService userCacheService;
 
+    /**
+     * 新增用户
+     *
+     * @param userInfoVo
+     * @return
+     */
     @Override
-    public String login(UsernamePasswordVo usernamePasswordVo) {
-        String username = usernamePasswordVo.getUsername();
-        String password = usernamePasswordVo.getPassword();
-        if (!StringUtils.hasLength(username)) {
-            throw new CommonException(SystemServerErrorResult.USERNAME_NULL);
-        }
-        if (!StringUtils.hasLength(password)) {
-            throw new CommonException(SystemServerErrorResult.PASSWORD_NULL);
-        }
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(User::getUsername, username);
-        User user = userMapper.selectOne(queryWrapper);
-        if (user == null) {
-            throw new CommonException(SystemServerErrorResult.USER_NOT_EXIST);
-        }
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new CommonException(SystemServerErrorResult.PASSWORD_ERROR);
-        }
-        Date loginTime = new Date();
-        UserInfoVo userInfoVo = buildUserVo(user);
-        TokenVo<?> tokenVo = new TokenVo<>(user.getId(), loginTime, 60 * 60L, userInfoVo);
-        String token = TokenUtils.sign(tokenVo);
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().set(User::getLoginTime, new Date()).eq(User::getId, user.getId());
-        userMapper.update(null, updateWrapper);
-        return token;
-    }
-
-    @Override
-    public Boolean logout() {
-        UserContext.remove();
-        return true;
-    }
-
-    @Override
-    public Boolean register(UserInfoVo userInfoVo) {
+    @Transactional
+    public Boolean addUser(UserInfoVo userInfoVo) {
         String username = userInfoVo.getUsername();
         String password = userInfoVo.getPassword();
         if (!StringUtils.hasLength(username)) {
@@ -103,39 +71,44 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userInfoVo, user);
         user.setId(CommonUtils.uuid());
         user.setPassword(passwordEncoder.encode(password));
-        user.setCreateId("");
-        user.setUpdateId("");
+        user.setCreateId(UserContext.get().getUserId());
+        user.setUpdateId(UserContext.get().getUserId());
         userMapper.insert(user);
+        // 添加角色信息
+        List<String> roleIds = userInfoVo.getRoleIds();
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            for (String roleId : roleIds) {
+                UserRoleRelation userRoleRelation = new UserRoleRelation();
+                userRoleRelation.setUserId(user.getId());
+                userRoleRelation.setRoleId(roleId);
+                userRoleRelation.setCreateId(UserContext.get().getUserId());
+                userRoleRelation.setUpdateId(UserContext.get().getUserId());
+                userRoleRelationMapper.insert(userRoleRelation);
+            }
+        }
         return true;
     }
 
-    @Override
-    public void generateImageVerifyCode(HttpServletResponse response) throws IOException {
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-        response.setContentType("image/jpeg");
-        ServletOutputStream servletOutputStream = response.getOutputStream();
-        String verifyCode = ImageVerifyCodeUtils.outputVerifyImage(130, 30, servletOutputStream, 6);
-        userCacheService.setImageVerifyCode(UserContext.get().getUserId(), verifyCode, 5L);
-        servletOutputStream.close();
-    }
-
+    /**
+     * 查看用户详情
+     *
+     * @return
+     */
     @Override
     public UserInfoVo getUserInfo(String id) {
         if (!StringUtils.hasLength(id)) {
             throw new CommonException(SystemServerErrorResult.USER_NOT_EXIST);
         }
         User user = userMapper.selectById(id);
-        return buildUserVo(user);
+        return CommonUtils.transformObject(user, UserInfoVo.class);
     }
 
-    private UserInfoVo buildUserVo(User user) {
-        UserInfoVo userInfoVo = new UserInfoVo();
-        BeanUtils.copyProperties(user, userInfoVo);
-        return userInfoVo;
-    }
-
+    /**
+     * 分页查看用户列表
+     *
+     * @param queryPage
+     * @return
+     */
     @Override
     public Page<UserInfoVo> getUserList(UserQueryPage queryPage) {
         Page<User> page = new Page<>(queryPage.getPageNumber(), queryPage.getPageSize());
@@ -144,6 +117,12 @@ public class UserServiceImpl implements UserService {
         return PageUtils.wrap(page, UserInfoVo.class);
     }
 
+    /**
+     * 更新用户信息
+     *
+     * @param userInfoVo
+     * @return
+     */
     @Override
     public Boolean updateUser(UserInfoVo userInfoVo) {
         User user = userMapper.selectById(userInfoVo.getId());
@@ -155,6 +134,12 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * 更新密码
+     *
+     * @param usernamePasswordVo
+     * @return
+     */
     @Override
     public Boolean updateUserPassword(UsernamePasswordVo usernamePasswordVo) {
         User user = userMapper.selectById(usernamePasswordVo.getId());
@@ -177,29 +162,12 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    @Override
-    @Transactional
-    public Boolean updateUserRole(UserRoleRelationVo userRoleRelationVo) {
-        User user = userMapper.selectById(userRoleRelationVo.getUserId());
-        if (user == null) {
-            throw new CommonException(SystemServerErrorResult.USER_NOT_EXIST);
-        }
-        QueryWrapper<UserRoleRelation> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(UserRoleRelation::getUserId, userRoleRelationVo.getUserId());
-        userRoleRelationMapper.delete(queryWrapper);
-        List<String> roleIds = userRoleRelationVo.getRoleIds();
-        if (!CollectionUtils.isEmpty(roleIds)) {
-            for (String roleId : roleIds) {
-                UserRoleRelation userRoleRelation = new UserRoleRelation();
-                userRoleRelation.setId(CommonUtils.uuid());
-                userRoleRelation.setUserId(userRoleRelationVo.getUserId());
-                userRoleRelation.setRoleId(roleId);
-                userRoleRelationMapper.insert(userRoleRelation);
-            }
-        }
-        return true;
-    }
-
+    /**
+     * 删除用户
+     *
+     * @param id
+     * @return
+     */
     @Override
     @Transactional
     public Boolean deleteUser(String id) {

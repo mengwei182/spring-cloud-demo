@@ -3,17 +3,17 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.BaseEntity;
-import org.example.common.entity.vo.TreeModel;
+import org.example.common.entity.base.BaseEntity;
+import org.example.common.entity.base.vo.TreeModel;
+import org.example.common.entity.system.Menu;
+import org.example.common.entity.system.RoleMenuRelation;
+import org.example.common.entity.system.vo.MenuVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.system.api.MenuQueryPage;
-import org.example.system.entity.Menu;
-import org.example.system.entity.RoleMenuRelation;
-import org.example.system.entity.vo.MenuVo;
 import org.example.system.mapper.MenuMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
 import org.example.system.service.MenuService;
@@ -25,6 +25,10 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Service
 public class MenuServiceImpl implements MenuService {
     @Resource

@@ -1,13 +1,17 @@
 package org.example.system.controller;
 
+import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.ResourceQueryPage;
-import org.example.system.entity.vo.ResourceVo;
 import org.example.system.service.ResourceService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {

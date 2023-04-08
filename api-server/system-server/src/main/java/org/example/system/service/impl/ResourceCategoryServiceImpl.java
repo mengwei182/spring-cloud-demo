@@ -3,15 +3,15 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.entity.system.Resource;
+import org.example.common.entity.system.ResourceCategory;
+import org.example.common.entity.system.vo.ResourceCategoryVo;
+import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.system.api.ResourceCategoryQueryPage;
-import org.example.system.entity.Resource;
-import org.example.system.entity.ResourceCategory;
-import org.example.system.entity.vo.ResourceCategoryVo;
-import org.example.system.entity.vo.ResourceVo;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.service.ResourceCategoryService;
@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Service
 public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     @javax.annotation.Resource

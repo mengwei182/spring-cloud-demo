@@ -1,11 +1,15 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.entity.system.vo.ResourceVo;
 import org.example.system.api.ResourceQueryPage;
-import org.example.system.entity.vo.ResourceVo;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public interface ResourceService {
     /**
      * 新增资源

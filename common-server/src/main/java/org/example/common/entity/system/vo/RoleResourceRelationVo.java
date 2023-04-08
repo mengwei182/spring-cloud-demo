@@ -1,9 +1,9 @@
-package org.example.system.entity;
+package org.example.common.entity.system.vo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
 /**
  * 角色资源关联表
@@ -12,9 +12,8 @@ import org.example.common.entity.BaseEntity;
  * @since 2022/10/29
  */
 @Data
-@TableName("role_resource_relation")
 @EqualsAndHashCode(callSuper = true)
-public class RoleResourceRelation extends BaseEntity {
+public class RoleResourceRelationVo extends BaseEntity {
     /**
      * 角色id
      */

@@ -1,7 +1,7 @@
 package org.example.system.service.cache.impl;
 
+import org.example.common.entity.system.Role;
 import org.example.common.util.CommonUtils;
-import org.example.system.entity.Role;
 import org.example.system.mapper.RoleMapper;
 import org.example.system.service.cache.RoleCacheService;
 import org.springframework.data.redis.core.RedisTemplate;

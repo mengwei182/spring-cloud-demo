@@ -1,13 +1,13 @@
 package org.example.dubbo.userserver;
 
-import org.example.dubbo.userserver.entity.RoleDubboVo;
+import org.example.common.entity.system.vo.RoleVo;
 
 import java.util.List;
 
 /**
- * @author 李辉
+ * @author lihui
  * @since 2022/11/11
  */
 public interface RoleDubboService {
-    List<RoleDubboVo> getRoleByUserId(String userId);
+    List<RoleVo> getRoleByUserId(String userId);
 }

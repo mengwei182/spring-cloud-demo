@@ -1,8 +1,8 @@
 package org.example.system.controller;
 
+import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.ResourceCategoryQueryPage;
-import org.example.system.entity.vo.ResourceCategoryVo;
 import org.example.system.service.ResourceCategoryService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @RestController
 @RequestMapping("/resourceCategory")
 public class ResourceCategoryController {

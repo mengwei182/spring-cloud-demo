@@ -1,9 +1,9 @@
 package org.example.system.service.impl;
 
 import org.apache.dubbo.config.annotation.DubboService;
+import org.example.common.entity.system.RoleResourceRelation;
+import org.example.common.entity.system.vo.RoleResourceRelationVo;
 import org.example.dubbo.userserver.RoleResourceRelationDubboService;
-import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVo;
-import org.example.system.entity.RoleResourceRelation;
 import org.example.system.service.cache.RoleResourceRelationCacheService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 李辉
+ * @author lihui
  * @since 2022/11/14
  */
 @Service
@@ -23,14 +23,14 @@ public class RoleResourceRelationDubboServiceImpl implements RoleResourceRelatio
     private RoleResourceRelationCacheService roleResourceRelationCacheService;
 
     @Override
-    public List<RoleResourceRelationDubboVo> getRoleResourceRelations() {
-        List<RoleResourceRelationDubboVo> roleResourceRelationDubboVos = new ArrayList<>();
+    public List<RoleResourceRelationVo> getRoleResourceRelations() {
+        List<RoleResourceRelationVo> roleResourceRelationVos = new ArrayList<>();
         List<RoleResourceRelation> roleResourceRelations = roleResourceRelationCacheService.getRoleResourceRelations();
         for (RoleResourceRelation roleResourceRelation : roleResourceRelations) {
-            RoleResourceRelationDubboVo roleResourceRelationDubboVO = new RoleResourceRelationDubboVo();
-            BeanUtils.copyProperties(roleResourceRelation, roleResourceRelationDubboVO);
-            roleResourceRelationDubboVos.add(roleResourceRelationDubboVO);
+            RoleResourceRelationVo roleResourceRelationVO = new RoleResourceRelationVo();
+            BeanUtils.copyProperties(roleResourceRelation, roleResourceRelationVO);
+            roleResourceRelationVos.add(roleResourceRelationVO);
         }
-        return roleResourceRelationDubboVos;
+        return roleResourceRelationVos;
     }
 }

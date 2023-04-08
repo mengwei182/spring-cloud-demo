@@ -1,8 +1,8 @@
-package org.example.dubbo.userserver.entity;
+package org.example.common.entity.system.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
 /**
  * @author lihui
@@ -10,12 +10,21 @@ import org.example.common.entity.BaseEntity;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleDubboVo extends BaseEntity {
+public class RoleVo extends BaseEntity {
+    /**
+     * 名称
+     */
     private String name;
-    private String parentId;
-    private Integer level;
+    /**
+     * 排序
+     */
     private Integer sort;
-    private String icon;
+    /**
+     * 状态
+     */
     private Integer status;
+    /**
+     * 描述
+     */
     private String description;
 }

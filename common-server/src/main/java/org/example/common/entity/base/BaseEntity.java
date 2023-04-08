@@ -1,4 +1,4 @@
-package org.example.common.entity;
+package org.example.common.entity.base;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

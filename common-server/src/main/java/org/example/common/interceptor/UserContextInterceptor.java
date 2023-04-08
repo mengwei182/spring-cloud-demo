@@ -1,8 +1,8 @@
 package org.example.common.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.vo.TokenVo;
-import org.example.common.entity.vo.UserInfoVo;
+import org.example.common.entity.base.vo.TokenVo;
+import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.properties.CommonProperties;

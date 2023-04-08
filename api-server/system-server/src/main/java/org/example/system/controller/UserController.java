@@ -1,65 +1,35 @@
 package org.example.system.controller;
 
-import org.example.common.entity.vo.UserInfoVo;
+import org.example.common.entity.base.vo.UserInfoVo;
+import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.model.CommonResult;
 import org.example.common.usercontext.UserContext;
 import org.example.system.api.UserQueryPage;
-import org.example.system.entity.vo.UserRoleRelationVo;
-import org.example.system.entity.vo.UsernamePasswordVo;
 import org.example.system.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Resource
     private UserService userService;
 
     /**
-     * 登录
-     *
-     * @param usernamePasswordVo
-     * @return
-     */
-    @RequestMapping("/login")
-    public CommonResult login(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
-        return CommonResult.success(userService.login(usernamePasswordVo));
-    }
-
-    /**
-     * 登出
-     *
-     * @return
-     */
-    @RequestMapping("/logout")
-    public CommonResult logout() {
-        return CommonResult.success(userService.logout());
-    }
-
-    /**
-     * 注册
+     * 新增用户
      *
      * @param userInfoVo
      * @return
      */
-    @RequestMapping("/register")
+    @RequestMapping("/add")
     public CommonResult register(@Valid @RequestBody UserInfoVo userInfoVo) {
-        return CommonResult.success(userService.register(userInfoVo));
-    }
-
-    /**
-     * 图片验证码
-     *
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping("/image/verify/code")
-    public void getImageVerifyCode(HttpServletResponse response) throws IOException {
-        userService.generateImageVerifyCode(response);
+        return CommonResult.success(userService.addUser(userInfoVo));
     }
 
     /**
@@ -107,6 +77,7 @@ public class UserController {
 
     /**
      * 删除用户
+     *
      * @param id
      * @return
      */

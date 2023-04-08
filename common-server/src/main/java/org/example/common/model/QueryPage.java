@@ -7,6 +7,10 @@ import lombok.EqualsAndHashCode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class QueryPage extends Page<Object> {

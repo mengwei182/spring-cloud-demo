@@ -1,9 +1,9 @@
-package org.example.system.entity;
+package org.example.common.entity.system;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
 /**
  * 资源分类信息表

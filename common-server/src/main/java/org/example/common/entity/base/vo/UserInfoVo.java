@@ -1,29 +1,30 @@
-package org.example.system.entity;
+package org.example.common.entity.base.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
- * 用户信息表
- *
  * @author lihui
  * @since 2022/10/29
  */
 @Data
-@TableName("user")
 @EqualsAndHashCode(callSuper = true)
-public class User extends BaseEntity {
+public class UserInfoVo extends BaseEntity {
     /**
      * 用户名
      */
+    @NotNull(message = "用户名不能为空")
     private String username;
     /**
      * 密码
      */
+    @NotNull(message = "密码不能为空")
     private String password;
     /**
      * 头像
@@ -36,6 +37,7 @@ public class User extends BaseEntity {
     /**
      * 邮箱
      */
+    @Email
     private String email;
     /**
      * 姓名
@@ -50,7 +52,15 @@ public class User extends BaseEntity {
      */
     private Date loginTime;
     /**
-     * 状态：0禁用，1正常，2需要手机验证码，3需要图形验证码，4需要手机验证码和图像验证码
+     * 0禁用，1正常
      */
     private Integer status;
+    /**
+     * 部门ID
+     */
+    private String departmentId;
+    /**
+     * 角色ID集合
+     */
+    private List<String> roleIds;
 }

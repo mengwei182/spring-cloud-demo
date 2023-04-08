@@ -1,7 +1,7 @@
 package org.example.common.usercontext;
 
 import lombok.Data;
-import org.example.common.entity.vo.UserInfoVo;
+import org.example.common.entity.base.vo.UserInfoVo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package org.example.system.service.cache.impl;
 
+import org.example.common.entity.system.Resource;
 import org.example.common.util.CommonUtils;
-import org.example.system.entity.Resource;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.service.cache.ResourceCacheService;
 import org.springframework.data.redis.core.RedisTemplate;

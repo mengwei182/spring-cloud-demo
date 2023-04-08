@@ -1,8 +1,12 @@
 package org.example.system.service;
 
-import org.example.system.entity.vo.RoleMenuRelationVo;
-import org.example.system.entity.vo.RoleVo;
+import org.example.common.entity.system.vo.RoleMenuRelationVo;
+import org.example.common.entity.system.vo.RoleVo;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public interface RoleService {
     /**
      * 新增角色

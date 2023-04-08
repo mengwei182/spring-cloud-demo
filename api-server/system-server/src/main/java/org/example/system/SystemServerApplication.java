@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.kafka.annotation.EnableKafka;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @EnableKafka
 @EnableDubbo
 @EnableDiscoveryClient

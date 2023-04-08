@@ -1,9 +1,13 @@
-package org.example.system.entity.vo;
+package org.example.common.entity.system.vo;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Data
 public class UsernamePasswordVo {
     private String id;

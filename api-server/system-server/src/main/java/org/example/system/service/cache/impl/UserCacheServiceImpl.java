@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Service
 public class UserCacheServiceImpl implements UserCacheService {
     private static final String USER_CACHE_PREFIX = "USER_CACHE_PREFIX_";

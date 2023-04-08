@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.system.mapper.MenuMapper">
-    <select id="getMenuList" parameterType="org.example.system.api.MenuQueryPage" resultType="org.example.system.entity.Menu">
+    <select id="getMenuList" parameterType="org.example.system.api.MenuQueryPage" resultType="org.example.common.entity.system.Menu">
         SELECT *
         FROM menu
         <where>
@@ -11,7 +11,7 @@
         </where>
     </select>
 
-    <select id="getMenusByUserId" parameterType="java.lang.String" resultType="org.example.system.entity.Menu">
+    <select id="getMenusByUserId" parameterType="java.lang.String" resultType="org.example.common.entity.system.Menu">
         SELECT m.*
         FROM menu m
              INNER JOIN role_menu_relation rmr ON m.id = rmr.menu_id

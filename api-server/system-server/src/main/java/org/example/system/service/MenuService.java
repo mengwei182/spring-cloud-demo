@@ -1,12 +1,16 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.vo.TreeModel;
+import org.example.common.entity.base.vo.TreeModel;
+import org.example.common.entity.system.vo.MenuVo;
 import org.example.system.api.MenuQueryPage;
-import org.example.system.entity.vo.MenuVo;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public interface MenuService {
     /**
      * 新增菜单

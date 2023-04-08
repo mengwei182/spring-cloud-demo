@@ -1,5 +1,9 @@
 package org.example.common.global;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public enum ResultCode {
     SUCCESS(200, "SUCCESS"),
     UNAUTHORIZED(401, "UNAUTHORIZED"),

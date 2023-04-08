@@ -1,6 +1,6 @@
 package org.example.system.service.cache;
 
-import org.example.system.entity.RoleResourceRelation;
+import org.example.common.entity.system.RoleResourceRelation;
 
 import java.util.List;
 

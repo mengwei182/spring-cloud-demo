@@ -1,13 +1,17 @@
 package org.example.system.controller;
 
+import org.example.common.entity.system.vo.MenuVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.MenuQueryPage;
-import org.example.system.entity.vo.MenuVo;
 import org.example.system.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @RestController
 @RequestMapping("/menu")
 public class MenuController {

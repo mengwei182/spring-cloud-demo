@@ -1,8 +1,8 @@
-package org.example.system.entity.vo;
+package org.example.common.entity.system.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
 import java.util.List;
 

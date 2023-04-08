@@ -1,11 +1,15 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.system.api.ResourceCategoryQueryPage;
-import org.example.system.entity.vo.ResourceCategoryVo;
 
 import java.util.List;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public interface ResourceCategoryService {
     /**
      * 新增资源分类信息

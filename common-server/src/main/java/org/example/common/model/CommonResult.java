@@ -3,6 +3,10 @@ package org.example.common.model;
 import lombok.Data;
 import org.example.common.global.ResultCode;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Data
 public class CommonResult {
     private Integer code;

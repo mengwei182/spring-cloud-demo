@@ -1,8 +1,8 @@
 package org.example.system.controller;
 
+import org.example.common.entity.system.vo.RoleMenuRelationVo;
+import org.example.common.entity.system.vo.RoleVo;
 import org.example.common.model.CommonResult;
-import org.example.system.entity.vo.RoleMenuRelationVo;
-import org.example.system.entity.vo.RoleVo;
 import org.example.system.service.RoleService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @RestController
 @RequestMapping("/role")
 public class RoleController {

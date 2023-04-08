@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 @Configuration
 public class ApplicationConfiguration {
     @Bean

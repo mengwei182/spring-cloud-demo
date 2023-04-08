@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
+/**
+ * @author lihui
+ * @since 2023/4/3
+ */
 public class ImageVerifyCodeUtils {
     private static final Random RANDOM = new Random();
     // 使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符

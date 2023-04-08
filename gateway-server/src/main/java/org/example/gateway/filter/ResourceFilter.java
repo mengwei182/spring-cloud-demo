@@ -2,15 +2,15 @@ package org.example.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.example.common.entity.vo.TokenVo;
+import org.example.common.entity.base.vo.TokenVo;
+import org.example.common.entity.system.vo.ResourceVo;
+import org.example.common.entity.system.vo.RoleResourceRelationVo;
+import org.example.common.entity.system.vo.RoleVo;
 import org.example.common.properties.CommonProperties;
 import org.example.common.util.TokenUtils;
 import org.example.dubbo.userserver.ResourceDubboService;
 import org.example.dubbo.userserver.RoleDubboService;
 import org.example.dubbo.userserver.RoleResourceRelationDubboService;
-import org.example.dubbo.userserver.entity.ResourceDubboVo;
-import org.example.dubbo.userserver.entity.RoleDubboVo;
-import org.example.dubbo.userserver.entity.RoleResourceRelationDubboVo;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -79,16 +79,16 @@ public class ResourceFilter implements GlobalFilter {
         String cookie = cookies.get(0);
         TokenVo<?> tokenVo = TokenUtils.unsigned(cookie);
         String userId = (String) tokenVo.getId();
-        List<RoleDubboVo> roleDubboVos = roleDubboService.getRoleByUserId(userId);
-        Map<String, RoleDubboVo> roleMap = roleDubboVos.stream().collect(Collectors.toMap(RoleDubboVo::getId, o -> o));
-        List<ResourceDubboVo> resourceDubboVos = resourceDubboService.getResources();
-        Map<String, ResourceDubboVo> resourceMap = resourceDubboVos.stream().collect(Collectors.toMap(ResourceDubboVo::getId, o -> o));
-        List<RoleResourceRelationDubboVo> roleResourceRelationDubboVos = roleResourceRelationDubboService.getRoleResourceRelations();
-        for (RoleResourceRelationDubboVo roleResourceRelationDubboVo : roleResourceRelationDubboVos) {
-            RoleDubboVo roleDubboVo = roleMap.get(roleResourceRelationDubboVo.getRoleId());
-            if (roleDubboVo != null) {
-                ResourceDubboVo resourceDubboVo = resourceMap.get(roleResourceRelationDubboVo.getResourceId());
-                if (antPathMatcher.match(resourceDubboVo.getUrl(), path)) {
+        List<RoleVo> roleVos = roleDubboService.getRoleByUserId(userId);
+        Map<String, RoleVo> roleMap = roleVos.stream().collect(Collectors.toMap(RoleVo::getId, o -> o));
+        List<ResourceVo> resourceVos = resourceDubboService.getResources();
+        Map<String, ResourceVo> resourceMap = resourceVos.stream().collect(Collectors.toMap(ResourceVo::getId, o -> o));
+        List<RoleResourceRelationVo> roleResourceRelationVos = roleResourceRelationDubboService.getRoleResourceRelations();
+        for (RoleResourceRelationVo roleResourceRelationVo : roleResourceRelationVos) {
+            RoleVo roleVo = roleMap.get(roleResourceRelationVo.getRoleId());
+            if (roleVo != null) {
+                ResourceVo resourceVo = resourceMap.get(roleResourceRelationVo.getResourceId());
+                if (antPathMatcher.match(resourceVo.getUrl(), path)) {
                     response.setStatusCode(HttpStatus.OK);
                     return chain.filter(exchange);
                 }

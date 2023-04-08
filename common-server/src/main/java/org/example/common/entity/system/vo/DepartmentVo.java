@@ -1,9 +1,8 @@
-package org.example.system.entity.vo;
+package org.example.common.entity.system.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.example.common.entity.BaseEntity;
+import org.example.common.entity.base.BaseEntity;
 
 /**
  * 部门信息表
@@ -12,7 +11,6 @@ import org.example.common.entity.BaseEntity;
  * @since 2022/10/29
  */
 @Data
-@TableName("department")
 @EqualsAndHashCode(callSuper = true)
 public class DepartmentVo extends BaseEntity {
     /**
