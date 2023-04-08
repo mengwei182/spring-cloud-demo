@@ -13,11 +13,15 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * UserContext拦截器
@@ -33,7 +37,7 @@ public class UserContextInterceptor implements Filter {
     private CommonProperties commonProperties;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         // 简单请求直接放行
@@ -42,17 +46,14 @@ public class UserContextInterceptor implements Filter {
             return;
         }
         String servletPath = request.getServletPath();
-        if (StringUtils.hasLength(servletPath)) {
-            // 校验是否是不需要验证token的url
-            AntPathMatcher antPathMatcher = new AntPathMatcher();
-            String[] noAuthUrls = commonProperties.getUrlWhiteList().split(",");
-            for (String noAuthUrl : noAuthUrls) {
-                if (antPathMatcher.match(noAuthUrl, servletPath)) {
-                    return;
-                }
-            }
-        } else {
+        if (!StringUtils.hasLength(servletPath)) {
             throw new CommonException(CommonErrorResult.UNAUTHORIZED);
+        }
+        // 校验是否是不需要验证token的url
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        Optional<String> first = Arrays.stream(commonProperties.getUrlWhiteList().split(",")).filter(noAuthUrl -> antPathMatcher.match(noAuthUrl, servletPath)).findFirst();
+        if (first.isPresent()) {
+            return;
         }
         String cookie = request.getHeader("Cookie");
         TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(cookie, UserInfoVo.class);

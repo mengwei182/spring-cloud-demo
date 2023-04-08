@@ -38,7 +38,7 @@ public class UserController {
      * @param queryPage
      * @return
      */
-    @RequestMapping("/user/list")
+    @RequestMapping("/list")
     public CommonResult getUserList(@ModelAttribute UserQueryPage queryPage) {
         return CommonResult.success(userService.getUserList(queryPage));
     }
@@ -48,7 +48,7 @@ public class UserController {
      *
      * @return
      */
-    @RequestMapping("/user/info")
+    @RequestMapping("/info")
     public CommonResult getUserInfo() {
         return CommonResult.success(userService.getUserInfo(UserContext.get().getUserId()));
     }
@@ -59,7 +59,7 @@ public class UserController {
      * @param userInfoVo
      * @return
      */
-    @RequestMapping("/user/update")
+    @RequestMapping("/update")
     public CommonResult updateUser(@RequestBody UserInfoVo userInfoVo) {
         return CommonResult.success(userService.updateUser(userInfoVo));
     }
@@ -70,7 +70,7 @@ public class UserController {
      * @param usernamePasswordVo
      * @return
      */
-    @RequestMapping("/user/updatePassword")
+    @RequestMapping("/updatePassword")
     public CommonResult updateUserPassword(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
         return CommonResult.success(userService.updateUserPassword(usernamePasswordVo));
     }
@@ -81,7 +81,7 @@ public class UserController {
      * @param id
      * @return
      */
-    @RequestMapping("/user/delete")
+    @RequestMapping("/delete")
     public CommonResult deleteUser(@RequestParam String id) {
         return CommonResult.success(userService.deleteUser(id));
     }

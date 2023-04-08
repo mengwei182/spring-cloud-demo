@@ -26,8 +26,10 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -58,18 +60,15 @@ public class ResourceFilter implements GlobalFilter {
         }
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         String path = request.getPath().value();
-        if (StringUtils.hasLength(path)) {
-            // 校验是否是不需要验证token的url
-            String[] noAuthUrls = commonProperties.getUrlWhiteList().split(",");
-            for (String noAuthUrl : noAuthUrls) {
-                if (antPathMatcher.match(noAuthUrl, path)) {
-                    response.setStatusCode(HttpStatus.OK);
-                    return chain.filter(exchange);
-                }
-            }
-        } else {
+        if (!StringUtils.hasLength(path)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();
+        }
+        // 校验是否是不需要验证token的url
+        Optional<String> first = Arrays.stream(commonProperties.getUrlWhiteList().split(",")).filter(noAuthUrl -> antPathMatcher.match(noAuthUrl, path)).findFirst();
+        if (first.isPresent()) {
+            response.setStatusCode(HttpStatus.OK);
+            return chain.filter(exchange);
         }
         List<String> cookies = request.getHeaders().get("Cookie");
         if (CollectionUtils.isEmpty(cookies) || !StringUtils.hasLength(cookies.get(0))) {
