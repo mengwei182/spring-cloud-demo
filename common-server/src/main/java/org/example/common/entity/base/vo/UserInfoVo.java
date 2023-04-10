@@ -3,6 +3,10 @@ package org.example.common.entity.base.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.base.BaseEntity;
+import org.example.common.entity.system.vo.DepartmentVo;
+import org.example.common.entity.system.vo.MenuVo;
+import org.example.common.entity.system.vo.ResourceVo;
+import org.example.common.entity.system.vo.RoleVo;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -63,4 +67,20 @@ public class UserInfoVo extends BaseEntity {
      * 角色ID集合
      */
     private List<String> roleIds;
+    /**
+     * 菜单信息
+     */
+    private List<MenuVo> menus;
+    /**
+     * 角色信息
+     */
+    private List<RoleVo> roles;
+    /**
+     * 资源信息
+     */
+    private List<ResourceVo> resources;
+    /**
+     * 部门信息
+     */
+    private DepartmentVo department;
 }

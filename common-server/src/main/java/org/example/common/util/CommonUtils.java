@@ -3,6 +3,7 @@ package org.example.common.util;
 import com.google.gson.Gson;
 import org.example.common.entity.base.vo.TreeModel;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,9 @@ public class CommonUtils {
      */
     public static <T> List<T> transformList(List<?> list, Class<T> clazz) {
         List<T> resultList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(list)) {
+            return resultList;
+        }
         for (Object object : list) {
             try {
                 T t = clazz.getConstructor().newInstance();

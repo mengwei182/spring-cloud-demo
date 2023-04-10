@@ -1,21 +1,20 @@
 package org.example.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.UserInfoVo;
-import org.example.common.entity.system.User;
-import org.example.common.entity.system.UserRoleRelation;
-import org.example.common.entity.system.vo.UsernamePasswordVo;
+import org.example.common.entity.system.*;
+import org.example.common.entity.system.vo.*;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.system.api.UserQueryPage;
-import org.example.system.mapper.UserMapper;
-import org.example.system.mapper.UserRoleRelationMapper;
+import org.example.system.mapper.*;
 import org.example.system.service.UserService;
 import org.example.system.service.cache.UserCacheService;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lihui
@@ -38,11 +38,23 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
     @Resource
-    private UserRoleRelationMapper userRoleRelationMapper;
+    private MenuMapper menuMapper;
+    @Resource
+    private RoleMapper roleMapper;
+    @Resource
+    private ResourceMapper resourceMapper;
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
+    private DepartmentMapper departmentMapper;
+    @Resource
     private UserCacheService userCacheService;
+    @Resource
+    private RoleMenuRelationMapper roleMenuRelationMapper;
+    @Resource
+    private UserRoleRelationMapper userRoleRelationMapper;
+    @Resource
+    private RoleResourceRelationMapper roleResourceRelationMapper;
 
     /**
      * 新增用户
@@ -100,7 +112,24 @@ public class UserServiceImpl implements UserService {
             throw new CommonException(SystemServerErrorResult.USER_NOT_EXIST);
         }
         User user = userMapper.selectById(id);
-        return CommonUtils.transformObject(user, UserInfoVo.class);
+        UserInfoVo userInfoVo = CommonUtils.transformObject(user, UserInfoVo.class);
+        userInfoVo.setPassword(null);
+        // 查询并填充用户角色信息
+        List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, user.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
+        List<Role> roles = roleMapper.selectBatchIds(roleIds);
+        userInfoVo.setRoles(CommonUtils.transformList(roles, RoleVo.class));
+        // 查询并填充用户菜单信息
+        List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
+        List<Menu> menus = menuMapper.selectBatchIds(menuIds);
+        userInfoVo.setMenus(CommonUtils.transformList(menus, MenuVo.class));
+        // 查询并填充用户资源信息
+        List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
+        List<org.example.common.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
+        userInfoVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
+        // 查询并填充用户部门信息
+        Department department = departmentMapper.selectById(user.getDepartmentId());
+        userInfoVo.setDepartment(CommonUtils.transformObject(department, DepartmentVo.class));
+        return userInfoVo;
     }
 
     /**
