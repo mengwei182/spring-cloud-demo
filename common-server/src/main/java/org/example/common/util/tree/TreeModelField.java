@@ -1,4 +1,6 @@
-package org.example.common.util.annotation;
+package org.example.common.util.tree;
+
+import org.example.common.util.tree.TreeModelFieldEnum;
 
 import java.lang.annotation.*;
 

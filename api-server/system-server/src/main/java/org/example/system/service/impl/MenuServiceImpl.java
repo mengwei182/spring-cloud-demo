@@ -13,6 +13,7 @@ import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
+import org.example.common.util.tree.TreeModelUtils;
 import org.example.system.api.MenuQueryPage;
 import org.example.system.mapper.MenuMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
@@ -161,6 +162,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<TreeModel> getMenuTreeList() {
         List<Menu> menus = menuMapper.selectList(new LambdaQueryWrapper<>());
-        return CommonUtils.buildTreeModel(menus);
+        return TreeModelUtils.buildTreeModel(menus);
     }
 }

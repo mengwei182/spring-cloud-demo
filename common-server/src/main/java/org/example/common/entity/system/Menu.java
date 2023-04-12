@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.base.BaseEntity;
-import org.example.common.util.annotation.TreeModelFieldEnum;
-import org.example.common.util.annotation.TreeModelField;
+import org.example.common.util.tree.TreeModelFieldEnum;
+import org.example.common.util.tree.TreeModelField;
 
 /**
  * 菜单信息表
