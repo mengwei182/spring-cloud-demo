@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
+import org.example.common.util.annotation.TreeModelFieldEnum;
+import org.example.common.util.annotation.TreeModelField;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,6 +27,7 @@ public abstract class BaseEntity implements Serializable {
     @TableField(exist = false)
     public static final String TOP_LEVEL_ID = "0";
     @TableId
+    @TreeModelField(field = TreeModelFieldEnum.ID)
     private String id;
     /**
      * 创建者id

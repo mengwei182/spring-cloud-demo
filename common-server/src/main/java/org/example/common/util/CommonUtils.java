@@ -1,18 +1,24 @@
 package org.example.common.util;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TreeModel;
+import org.example.common.util.annotation.TreeModelField;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author lihui
  * @since 2023/4/3
  */
+@Slf4j
 public class CommonUtils {
     private static final Gson GSON = new Gson();
 
@@ -48,12 +54,26 @@ public class CommonUtils {
         List<TreeModel> resultTreeModels = new ArrayList<>();
         for (Object object : objects) {
             TreeModel treeModel = new TreeModel();
-            BeanUtils.copyProperties(object, treeModel);
+            Class<?> clazz = object.getClass();
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                TreeModelField annotation = field.getAnnotation(TreeModelField.class);
+                try {
+                    switch (annotation.field()) {
+                        case ID -> treeModel.setId(String.valueOf(field.get(object)));
+                        case NAME -> treeModel.setName(String.valueOf(field.get(object)));
+                        case PARENT_ID -> treeModel.setParentId(String.valueOf(field.get(object)));
+                    }
+                } catch (Exception e) {
+                    log.error("build tree model error:{}", e.getMessage());
+                }
+            }
             treeModels.add(treeModel);
         }
-        List<String> parentIds = treeModels.stream().map(TreeModel::getParentId).toList();
+        Set<String> ids = treeModels.stream().map(TreeModel::getId).collect(Collectors.toSet());
         for (TreeModel treeModel : treeModels) {
-            if (!parentIds.contains(treeModel.getId())) {
+            if (!ids.contains(treeModel.getParentId())) {
                 resultTreeModels.add(treeModel);
                 buildChildren(treeModels, treeModel);
             }

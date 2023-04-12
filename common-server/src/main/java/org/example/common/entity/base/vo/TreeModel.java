@@ -14,9 +14,6 @@ import java.util.List;
 public class TreeModel {
     private String id;
     private String name;
-    /**
-     * 构建父子结构时使用
-     */
     private String parentId;
     private List<TreeModel> children;
 }
