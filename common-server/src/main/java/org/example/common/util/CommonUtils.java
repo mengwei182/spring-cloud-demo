@@ -55,6 +55,7 @@ public class CommonUtils {
         for (TreeModel treeModel : treeModels) {
             if (!parentIds.contains(treeModel.getId())) {
                 resultTreeModels.add(treeModel);
+                buildChildren(treeModels, treeModel);
             }
         }
         return resultTreeModels;
