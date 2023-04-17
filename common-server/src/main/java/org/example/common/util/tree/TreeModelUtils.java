@@ -31,6 +31,9 @@ public class TreeModelUtils {
             for (Field field : fields) {
                 field.setAccessible(true);
                 TreeModelField annotation = field.getAnnotation(TreeModelField.class);
+                if (annotation == null) {
+                    continue;
+                }
                 try {
                     switch (annotation.field()) {
                         case ID -> treeModel.setId(String.valueOf(field.get(object)));
@@ -58,7 +61,7 @@ public class TreeModelUtils {
     private static void buildChildren(List<TreeModel> treeModels, TreeModel treeModel) {
         List<TreeModel> children = treeModels.stream().filter(o -> o.getParentId().equals(treeModel.getId())).toList();
         treeModel.setChildren(children);
-        for (TreeModel tm : treeModels) {
+        for (TreeModel tm : children) {
             buildChildren(treeModels, tm);
         }
     }

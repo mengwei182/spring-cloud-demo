@@ -58,7 +58,7 @@ public class AuthorizationFilter implements GlobalFilter {
             response.setStatusCode(HttpStatus.OK);
             return chain.filter(exchange);
         }
-        List<String> cookies = request.getHeaders().get("Cookie");
+        List<String> cookies = request.getHeaders().get("Authorization");
         if (CollectionUtils.isEmpty(cookies) || !StringUtils.hasLength(cookies.get(0))) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();

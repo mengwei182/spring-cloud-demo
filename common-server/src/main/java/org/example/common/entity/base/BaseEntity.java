@@ -1,11 +1,10 @@
 package org.example.common.entity.base;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
-import org.example.common.util.tree.TreeModelFieldEnum;
 import org.example.common.util.tree.TreeModelField;
+import org.example.common.util.tree.TreeModelFieldEnum;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,8 +23,10 @@ public abstract class BaseEntity implements Serializable {
      * 未删除
      */
     public static final Integer UNDELETED = 0;
-    @TableField(exist = false)
-    public static final String TOP_LEVEL_ID = "0";
+    /**
+     * 顶级节点父级ID
+     */
+    public static final String TOP_PARENT_ID = "0";
     @TableId
     @TreeModelField(field = TreeModelFieldEnum.ID)
     private String id;

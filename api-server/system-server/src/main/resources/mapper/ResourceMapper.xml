@@ -5,11 +5,11 @@
         SELECT *
         FROM resource
         <where>
-            <if test="name != null and name != ''">
+            <if test="queryPage.name != null and queryPage.name != ''">
                 AND `name` LIKE CONCAT('%', #{name}, '%')
             </if>
-            <if test="categoryId != null and categoryId != ''">
-                AND category_id = #{categoryId}
+            <if test="queryPage.categoryId != null and queryPage.categoryId != ''">
+                AND category_id = #{queryPage.categoryId}
             </if>
         </where>
     </select>

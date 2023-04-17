@@ -31,8 +31,4 @@ public class Role extends BaseEntity {
      * 描述
      */
     private String description;
-    /**
-     * 部门id
-     */
-    private String departmentId;
 }

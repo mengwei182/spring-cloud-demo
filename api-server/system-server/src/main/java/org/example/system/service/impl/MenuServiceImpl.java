@@ -48,7 +48,7 @@ public class MenuServiceImpl implements MenuService {
         Menu menu = new Menu();
         BeanUtils.copyProperties(menuVo, menu);
         menu.setId(CommonUtils.uuid());
-        String parentId = BaseEntity.TOP_LEVEL_ID;
+        String parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
         if (StringUtils.hasLength(menuVo.getParentId())) {
@@ -61,8 +61,8 @@ public class MenuServiceImpl implements MenuService {
         }
         // 无父级id
         if (!StringUtils.hasLength(menuVo.getParentId())) {
-            menu.setParentId(BaseEntity.TOP_LEVEL_ID);
-            menu.setIdChain(BaseEntity.TOP_LEVEL_ID);
+            menu.setParentId(BaseEntity.TOP_PARENT_ID);
+            menu.setIdChain(BaseEntity.TOP_PARENT_ID);
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {
@@ -105,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
             throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
         }
         BeanUtils.copyProperties(menuVo, menu);
-        String parentId = BaseEntity.TOP_LEVEL_ID;
+        String parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
         if (StringUtils.hasLength(menuVo.getParentId())) {
@@ -118,8 +118,8 @@ public class MenuServiceImpl implements MenuService {
         }
         // 无父级id
         if (!StringUtils.hasLength(menuVo.getParentId())) {
-            menu.setParentId(BaseEntity.TOP_LEVEL_ID);
-            menu.setIdChain(BaseEntity.TOP_LEVEL_ID);
+            menu.setParentId(BaseEntity.TOP_PARENT_ID);
+            menu.setIdChain(BaseEntity.TOP_PARENT_ID);
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {

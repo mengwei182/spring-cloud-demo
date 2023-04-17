@@ -24,4 +24,7 @@ public interface SystemServerErrorResult {
     String RESOURCE_CATEGORY_ID_NOT_NULL = "资源分类不能为空";
     String RESOURCE_CATEGORY_ID_LENGTH_ERROR = "资源分类主键不能超过32个字符";
     String ROLE_NAME_EXIST = "存在同名角色";
+    String DICTIONARY_NAME_EXIST = "存在同名字典";
+    String DICTIONARY_CODE_EXIST = "存在相同编码字典";
+    String DICTIONARY_CHILD_EXIST = "存在子字典";
 }

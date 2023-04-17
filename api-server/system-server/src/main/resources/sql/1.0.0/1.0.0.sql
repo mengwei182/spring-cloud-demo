@@ -180,3 +180,22 @@ CREATE TABLE `user_role_relation`
 ) COMMENT '用户角色信息表';
 INSERT INTO user_role_relation(`id`, `user_id`, `role_id`)
 VALUES ('1', '1', '1');
+
+DROP TABLE IF EXISTS `dictionary`;
+CREATE TABLE `dictionary`
+(
+    `id` VARCHAR(32) NOT NULL,
+    `name` VARCHAR(255) NOT NULL COMMENT '名称',
+    `code` VARCHAR(255) NOT NULL COMMENT '编码',
+    `parent_id` VARCHAR(255) COMMENT '父级id',
+    `id_chain` VARCHAR(768) COMMENT 'id链',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    `create_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
+    `update_id` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX (`code`),
+    INDEX (`parent_id`),
+    INDEX (`id_chain`)
+) COMMENT '字典信息表';
