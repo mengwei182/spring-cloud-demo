@@ -19,10 +19,23 @@ public class ImageVerifyCodeUtils {
     // 使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符
     private static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 
+    /**
+     * 生成验证码
+     *
+     * @param verifySize 验证码位数
+     * @return
+     */
     public static String generateVerifyCode(int verifySize) {
         return generateVerifyCode(verifySize, VERIFY_CODES);
     }
 
+    /**
+     * 生成图片验证码
+     *
+     * @param verifySize 验证码位数
+     * @param sources 验证码
+     * @return
+     */
     public static String generateVerifyCode(int verifySize, String sources) {
         if (sources == null || sources.length() == 0) {
             sources = VERIFY_CODES;

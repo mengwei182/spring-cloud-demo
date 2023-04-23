@@ -1,18 +1,25 @@
 package org.example.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
+import org.example.common.entity.system.RoleResourceRelation;
 import org.example.common.entity.system.User;
+import org.example.common.entity.system.UserRoleRelation;
+import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.TokenUtils;
+import org.example.system.mapper.ResourceMapper;
+import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.mapper.UserMapper;
+import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.service.BaseService;
 import org.example.system.service.cache.UserCacheService;
 import org.example.system.util.ImageVerifyCodeUtils;
@@ -25,6 +32,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lihui
@@ -39,6 +48,12 @@ public class BaseServiceImpl implements BaseService {
     private PasswordEncoder passwordEncoder;
     @Resource
     private UserCacheService userCacheService;
+    @Resource
+    private RoleResourceRelationMapper roleResourceRelationMapper;
+    @Resource
+    private UserRoleRelationMapper userRoleRelationMapper;
+    @Resource
+    private ResourceMapper resourceMapper;
 
     /**
      * 登录
@@ -67,6 +82,11 @@ public class BaseServiceImpl implements BaseService {
         }
         Date loginTime = new Date();
         UserInfoVo userInfoVo = CommonUtils.transformObject(user, UserInfoVo.class);
+        // 查询并设置登录用户的resource数据
+        List<UserRoleRelation> userRoleRelations = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, user.getId()));
+        List<RoleResourceRelation> roleResourceRelations = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, userRoleRelations.stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList())));
+        List<org.example.common.entity.system.Resource> resources = resourceMapper.selectList(new LambdaQueryWrapper<org.example.common.entity.system.Resource>().in(org.example.common.entity.system.Resource::getId, roleResourceRelations.stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList())));
+        userInfoVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
         TokenVo<?> tokenVo = new TokenVo<>(user.getId(), loginTime, 60 * 60L, userInfoVo);
         String token = TokenUtils.sign(tokenVo);
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
