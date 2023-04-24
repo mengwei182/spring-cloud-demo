@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * token拦截器
+ * 权限校验拦截器
  *
  * @author lihui
  * @since 2022/10/26

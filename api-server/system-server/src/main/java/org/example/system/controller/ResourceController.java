@@ -81,4 +81,14 @@ public class ResourceController {
     public CommonResult getResourceById(@PathVariable String id) {
         return CommonResult.success(resourceService.getResourceById(id));
     }
+
+    /**
+     * 收集所有系统中所有资源
+     *
+     * @return
+     */
+    @RequestMapping("/collection")
+    public CommonResult collectionResource() {
+        return CommonResult.success(resourceService.collectionResource());
+    }
 }

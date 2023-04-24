@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.RoleResourceRelation;
+import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
@@ -16,6 +17,8 @@ import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.service.ResourceService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,8 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceCategoryMapper resourceCategoryMapper;
     @javax.annotation.Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
+    @javax.annotation.Resource
+    private KafkaTemplate<?, ?> kafkaTemplate;
 
     /**
      * 新增资源
@@ -41,6 +46,7 @@ public class ResourceServiceImpl implements ResourceService {
      * @return
      */
     @Override
+    @KafkaListener
     public Boolean addResource(ResourceVo resourceVo) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVo.getCategoryId());
         if (resourceCategory == null) {
@@ -138,5 +144,15 @@ public class ResourceServiceImpl implements ResourceService {
         ResourceVo resourceVo = new ResourceVo();
         BeanUtils.copyProperties(resource, resourceVo);
         return resourceVo;
+    }
+
+    /**
+     * 收集所有系统中所有资源
+     *
+     * @return
+     */
+    @Override
+    public ResourceCategoryVo collectionResource() {
+        return null;
     }
 }

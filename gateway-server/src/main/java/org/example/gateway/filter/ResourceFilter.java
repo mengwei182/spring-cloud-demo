@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 资源校验过滤器
+ *
  * @author lihui
  * @since 2022/10/26
  */
