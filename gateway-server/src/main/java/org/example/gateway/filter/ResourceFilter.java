@@ -1,6 +1,7 @@
 package org.example.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.properties.CommonProperties;
@@ -64,7 +65,9 @@ public class ResourceFilter implements GlobalFilter {
             return response.setComplete();
         }
         String cookie = cookies.get(0);
-        UserInfoVo userInfoVo = (UserInfoVo) TokenUtils.unsigned(cookie).getData();
+        TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(cookie, UserInfoVo.class);
+        // 经过AuthorizationInterceptor拦截器处理后，token不会为null
+        UserInfoVo userInfoVo = tokenVo.getData();
         List<ResourceVo> resourceVos = userInfoVo.getResources();
         Optional<ResourceVo> findAny = resourceVos.stream().filter(o -> antPathMatcher.match(o.getUrl(), path)).findAny();
         if (findAny.isPresent()) {

@@ -3,6 +3,7 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.vo.ResourceCategoryVo;
@@ -11,6 +12,7 @@ import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
+import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.system.api.ResourceCategoryQueryPage;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
@@ -25,7 +27,8 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-public class ResourceCategoryServiceImpl implements ResourceCategoryService {
+@DubboService(interfaceName = "resourceCategoryDubboService")
+public class ResourceCategoryServiceImpl implements ResourceCategoryService, ResourceCategoryDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
     @javax.annotation.Resource
@@ -126,5 +129,16 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
             resourceCategoryVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
         }
         return resourceCategoryVos;
+    }
+
+    /**
+     * 根据资源分类名称查询资源分类信息
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public ResourceCategory getResourceCategory(String name) {
+        return resourceCategoryMapper.selectOne(new LambdaQueryWrapper<ResourceCategory>().eq(ResourceCategory::getName, name));
     }
 }

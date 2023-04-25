@@ -1,7 +1,6 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.system.api.ResourceQueryPage;
 
@@ -59,9 +58,7 @@ public interface ResourceService {
     ResourceVo getResourceById(String id);
 
     /**
-     * 收集所有系统中所有资源
-     *
-     * @return
+     * 刷新所有系统中所有资源
      */
-    ResourceCategoryVo collectionResource();
+    void refreshResource();
 }

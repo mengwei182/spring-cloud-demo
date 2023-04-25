@@ -27,6 +27,11 @@ spring:
         max-wait: 180000
   kafka:
     bootstrap-servers: localhost:9092
+    listener:
+      missing-topics-fatal: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       group-id: spring_cloud_demo_group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

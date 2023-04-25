@@ -1,4 +1,4 @@
-package org.example.dubbo.userserver;
+package org.example.dubbo.system;
 
 /**
  * @author lihui

@@ -2,22 +2,23 @@ package org.example.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.RoleResourceRelation;
-import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
+import org.example.common.global.GlobalVariable;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
+import org.example.dubbo.system.ResourceDubboService;
 import org.example.system.api.ResourceQueryPage;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.service.ResourceService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,8 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-public class ResourceServiceImpl implements ResourceService {
+@DubboService
+public class ResourceServiceImpl implements ResourceService, ResourceDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
     @javax.annotation.Resource
@@ -37,7 +39,7 @@ public class ResourceServiceImpl implements ResourceService {
     @javax.annotation.Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
     @javax.annotation.Resource
-    private KafkaTemplate<?, ?> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     /**
      * 新增资源
@@ -46,7 +48,6 @@ public class ResourceServiceImpl implements ResourceService {
      * @return
      */
     @Override
-    @KafkaListener
     public Boolean addResource(ResourceVo resourceVo) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVo.getCategoryId());
         if (resourceCategory == null) {
@@ -147,12 +148,22 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     /**
-     * 收集所有系统中所有资源
+     * 刷新所有系统中所有资源
+     */
+    @Override
+    public void refreshResource() {
+        kafkaTemplate.send(GlobalVariable.REFRESH_RESOURCE_TOPIC, String.valueOf(Boolean.TRUE));
+    }
+
+    /**
+     * 根据url和分类id查询资源信息
      *
+     * @param url
+     * @param categoryId
      * @return
      */
     @Override
-    public ResourceCategoryVo collectionResource() {
-        return null;
+    public Resource getResource(String url, String categoryId) {
+        return resourceMapper.selectOne(new LambdaQueryWrapper<Resource>().eq(Resource::getUrl, url).eq(Resource::getCategoryId, categoryId));
     }
 }

@@ -83,12 +83,13 @@ public class ResourceController {
     }
 
     /**
-     * 收集所有系统中所有资源
+     * 刷新所有系统中所有资源
      *
      * @return
      */
-    @RequestMapping("/collection")
-    public CommonResult collectionResource() {
-        return CommonResult.success(resourceService.collectionResource());
+    @RequestMapping("/refresh")
+    public CommonResult refreshResource() {
+        resourceService.refreshResource();
+        return CommonResult.success();
     }
 }

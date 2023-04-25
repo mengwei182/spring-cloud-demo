@@ -1,4 +1,4 @@
-package org.example.dubbo.userserver;
+package org.example.dubbo.system;
 
 import org.example.common.entity.system.vo.RoleResourceRelationVo;
 
