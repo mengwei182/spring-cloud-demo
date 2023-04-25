@@ -9,7 +9,6 @@ import org.example.common.entity.system.RoleResourceRelation;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
-import org.example.common.global.GlobalVariable;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.dubbo.system.ResourceDubboService;
@@ -19,6 +18,7 @@ import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.service.ResourceService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +40,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     private RoleResourceRelationMapper roleResourceRelationMapper;
     @javax.annotation.Resource
     private KafkaTemplate<String, Object> kafkaTemplate;
+    @javax.annotation.Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 新增资源
@@ -152,7 +154,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      */
     @Override
     public void refreshResource() {
-        kafkaTemplate.send(GlobalVariable.REFRESH_RESOURCE_TOPIC, String.valueOf(Boolean.TRUE));
+        redisTemplate.convertAndSend("refresh_resource_topic", String.valueOf(Boolean.TRUE));
     }
 
     /**

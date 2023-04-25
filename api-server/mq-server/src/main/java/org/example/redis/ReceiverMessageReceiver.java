@@ -1,17 +1,16 @@
-package org.example.system.kafka;
+package org.example.redis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.common.configuration.ApplicationConfiguration;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
-import org.example.common.global.GlobalVariable;
 import org.example.common.util.CommonUtils;
 import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
@@ -22,8 +21,13 @@ import org.springframework.web.util.pattern.PathPattern;
 import java.util.Map;
 import java.util.Set;
 
-@Configuration
-public class ResourceListener {
+/**
+ * @author lihui
+ * @since 2023/4/25
+ */
+@Slf4j
+@Component
+public class ReceiverMessageReceiver {
     @Value("${spring.application.name}")
     private String applicationName;
     @DubboReference
@@ -31,11 +35,6 @@ public class ResourceListener {
     @DubboReference
     private ResourceCategoryDubboService resourceCategoryDubboService;
 
-    public ResourceListener() {
-        System.out.println();
-    }
-
-    @KafkaListener(topics = {GlobalVariable.REFRESH_RESOURCE_TOPIC}, groupId = "${spring.application.name}" + "_refreshResource")
     public void refreshResource(String start) {
         if (!Boolean.TRUE.equals(Boolean.parseBoolean(start))) {
             return;
