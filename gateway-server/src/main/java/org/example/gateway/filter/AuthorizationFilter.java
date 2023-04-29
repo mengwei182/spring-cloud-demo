@@ -2,8 +2,8 @@ package org.example.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
-import org.example.common.properties.CommonProperties;
 import org.example.common.util.TokenUtils;
+import org.example.properties.CommonProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;

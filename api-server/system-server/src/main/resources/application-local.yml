@@ -56,6 +56,11 @@ dubbo:
       group: ${spring.cloud.nacos.discovery.group}
     use-as-config-center: false
     check: false
+    simplified: true
+  metadata-report:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    username: nacos
+    password: nacos
   consumer:
     check: false
     retries: 2

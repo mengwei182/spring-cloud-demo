@@ -2,16 +2,17 @@ package org.example.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.example.common.configuration.ApplicationConfiguration;
-import org.example.common.entity.system.Resource;
-import org.example.common.entity.system.ResourceCategory;
+import org.example.common.entity.system.vo.ResourceCategoryVo;
+import org.example.common.entity.system.vo.ResourceVo;
+import org.example.common.model.CommonResult;
 import org.example.common.util.CommonUtils;
+import org.example.configuration.ApplicationConfiguration;
 import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -35,8 +36,17 @@ public class ReceiverMessageReceiver {
     @DubboReference
     private ResourceCategoryDubboService resourceCategoryDubboService;
 
-    public void refreshResource(String start) {
-        if (!Boolean.TRUE.equals(Boolean.parseBoolean(start))) {
+    /**
+     * 刷新资源
+     *
+     * @param message
+     */
+    public void refreshResource(String message) {
+        if (!StringUtils.hasLength(message)) {
+            return;
+        }
+        CommonResult commonResult = CommonUtils.fromJson(message, CommonResult.class);
+        if (commonResult == null || commonResult.getData() == null || !commonResult.getData().equals(Boolean.TRUE)) {
             return;
         }
         ApplicationContext applicationContext = ApplicationConfiguration.getApplicationContext();
@@ -53,33 +63,31 @@ public class ReceiverMessageReceiver {
             if (pathPatternsCondition == null) {
                 continue;
             }
-            // 请求方式
-            Set<RequestMethod> requestMethods = requestMappingInfo.getMethodsCondition().getMethods();
-
             String categoryName = applicationName + "_" + name;
             String categoryId = CommonUtils.uuid();
-            ResourceCategory resourceCategory = resourceCategoryDubboService.getResourceCategory(categoryName);
-            if (resourceCategory != null) {
-                categoryId = resourceCategory.getId();
+            ResourceCategoryVo resourceCategoryVo = resourceCategoryDubboService.getResourceCategory(categoryName);
+            // 资源分类已存在
+            if (resourceCategoryVo != null) {
+                categoryId = resourceCategoryVo.getId();
             } else {
-                resourceCategory = new ResourceCategory();
-                resourceCategory.setId(categoryId);
-                resourceCategory.setName(categoryName);
-//                    resourceCategoryMapper.insert(resourceCategory);
+                resourceCategoryVo = new ResourceCategoryVo();
+                resourceCategoryVo.setId(categoryId);
+                resourceCategoryVo.setName(categoryName);
+                resourceCategoryDubboService.addResourceCategory(resourceCategoryVo);
             }
             Set<PathPattern> patterns = pathPatternsCondition.getPatterns();
             for (PathPattern pattern : patterns) {
-                Resource resource = resourceDubboService.getResource(pattern.getPatternString(), categoryId);
+                ResourceVo resourceVo = resourceDubboService.getResource(pattern.getPatternString(), categoryId);
                 // 资源已存在，直接跳过
-                if (resource != null) {
+                if (resourceVo != null) {
                     continue;
                 }
-                resource = new Resource();
-                resource.setId(CommonUtils.uuid());
-//                    resource.setName();
-                resource.setCategoryId(categoryId);
-                resource.setUrl(pattern.getPatternString());
-//                    resourceMapper.insert(resource);
+                resourceVo = new ResourceVo();
+                resourceVo.setId(CommonUtils.uuid());
+                resourceVo.setName(handlerMethod.getMethod().getName());
+                resourceVo.setCategoryId(categoryId);
+                resourceVo.setUrl(pattern.getPatternString());
+                resourceDubboService.addResource(resourceVo);
             }
         }
     }

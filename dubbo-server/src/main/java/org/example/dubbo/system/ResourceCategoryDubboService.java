@@ -1,6 +1,6 @@
 package org.example.dubbo.system;
 
-import org.example.common.entity.system.ResourceCategory;
+import org.example.common.entity.system.vo.ResourceCategoryVo;
 
 public interface ResourceCategoryDubboService {
     /**
@@ -9,5 +9,13 @@ public interface ResourceCategoryDubboService {
      * @param name
      * @return
      */
-    ResourceCategory getResourceCategory(String name);
+    ResourceCategoryVo getResourceCategory(String name);
+
+    /**
+     * 新增资源分类
+     *
+     * @param resourceCategoryVo
+     * @return
+     */
+    Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo);
 }

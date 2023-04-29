@@ -4,15 +4,13 @@ import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.kafka.annotation.EnableKafka;
 
 /**
  * @author lihui
  * @since 2023/4/3
  */
-@EnableKafka
-@EnableDubbo
 @EnableDiscoveryClient
+@EnableDubbo(scanBasePackages = "org.example.*")
 @SpringBootApplication(scanBasePackages = "org.example.*")
 public class SystemServerApplication {
     public static void main(String[] args) {

@@ -1,13 +1,13 @@
-package org.example.common.interceptor;
+package org.example.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.exception.CommonException;
-import org.example.common.properties.CommonProperties;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.TokenUtils;
+import org.example.properties.CommonProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;

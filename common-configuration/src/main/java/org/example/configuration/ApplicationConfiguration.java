@@ -1,4 +1,4 @@
-package org.example.common.configuration;
+package org.example.configuration;
 
 import lombok.Getter;
 import org.springframework.beans.BeansException;

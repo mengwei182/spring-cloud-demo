@@ -11,9 +11,10 @@
 
     <modules>
         <module>gateway-server</module>
-        <module>common-server</module>
+        <module>common-model</module>
         <module>dubbo-server</module>
         <module>api-server</module>
+        <module>common-configuration</module>
     </modules>
 
     <properties>

@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.UserInfoVo;
-import org.example.common.entity.system.*;
-import org.example.common.entity.system.vo.*;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
@@ -18,6 +16,7 @@ import org.example.system.mapper.*;
 import org.example.system.service.UserService;
 import org.example.system.service.cache.UserCacheService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +34,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserCacheService {
+    private static final String PHONE_VERIFY_PREFIX = "PHONE_VERIFY_PREFIX_";
+    private static final String IMAGE_VERIFY_PREFIX = "IMAGE_VERIFY_PREFIX_";
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private DepartmentMapper departmentMapper;
     @Resource
-    private UserCacheService userCacheService;
+    private RedisTemplate<Object, Object> redisTemplate;
     @Resource
     private RoleMenuRelationMapper roleMenuRelationMapper;
     @Resource
@@ -124,7 +126,7 @@ public class UserServiceImpl implements UserService {
         userInfoVo.setMenus(CommonUtils.transformList(menus, MenuVo.class));
         // 查询并填充用户资源信息
         List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
-        List<org.example.common.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
+        List<org.example.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
         userInfoVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
         // 查询并填充用户部门信息
         Department department = departmentMapper.selectById(user.getDepartmentId());
@@ -180,14 +182,14 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.hasLength(phoneVerifyCode)) {
             throw new CommonException(SystemServerErrorResult.VERIFY_CODE_ERROR);
         }
-        String phoneVerifyCodeCache = userCacheService.getPhoneVerifyCode(phone);
+        String phoneVerifyCodeCache = getPhoneVerifyCode(phone);
         if (!StringUtils.hasLength(phoneVerifyCodeCache)) {
             throw new CommonException(SystemServerErrorResult.VERIFY_CODE_OVERDUE);
         }
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().set(User::getPassword, passwordEncoder.encode(usernamePasswordVo.getPassword())).eq(User::getId, user.getId());
         userMapper.update(null, updateWrapper);
-        userCacheService.deletePhoneVerifyCode(phone);
+        deletePhoneVerifyCode(phone);
         return true;
     }
 
@@ -205,5 +207,78 @@ public class UserServiceImpl implements UserService {
         queryWrapper.lambda().eq(UserRoleRelation::getUserId, id);
         userRoleRelationMapper.delete(queryWrapper);
         return true;
+    }
+
+    /**
+     * 设置手机验证码到redis
+     *
+     * @param phone
+     * @param verifyCode
+     * @param timeout
+     */
+    @Override
+    public void setPhoneVerifyCode(String phone, String verifyCode, Long timeout) {
+        if (timeout != null && timeout > 0) {
+            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), verifyCode, timeout, TimeUnit.MINUTES);
+        } else {
+            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), verifyCode);
+        }
+    }
+
+    /**
+     * 从redis获取手机验证码
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public String getPhoneVerifyCode(String phone) {
+        return (String) redisTemplate.opsForValue().get(PHONE_VERIFY_PREFIX.concat(phone));
+    }
+
+    /**
+     * 从redis删除手机验证码
+     *
+     * @param phone
+     */
+    @Override
+    public void deletePhoneVerifyCode(String phone) {
+        redisTemplate.delete(PHONE_VERIFY_PREFIX.concat(phone));
+    }
+
+    /**
+     * 设置图片验证码到redis
+     *
+     * @param account
+     * @param verifyCode
+     * @param timeout
+     */
+    @Override
+    public void setImageVerifyCode(String account, String verifyCode, Long timeout) {
+        if (timeout != null && timeout > 0) {
+            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), verifyCode, timeout, TimeUnit.MINUTES);
+        } else {
+            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), verifyCode);
+        }
+    }
+
+    /**
+     * 从redis获取图片验证码
+     *
+     * @param account
+     */
+    @Override
+    public String getImageVerifyCode(String account) {
+        return (String) redisTemplate.opsForValue().get(IMAGE_VERIFY_PREFIX.concat(account));
+    }
+
+    /**
+     * 从redis删除图片验证码
+     *
+     * @param account
+     */
+    @Override
+    public void deleteImageVerifyCode(String account) {
+        redisTemplate.delete(IMAGE_VERIFY_PREFIX.concat(account));
     }
 }

@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.example.common.entity.system.Resource;
-import org.example.common.entity.system.ResourceCategory;
-import org.example.common.entity.system.vo.ResourceCategoryVo;
-import org.example.common.entity.system.vo.ResourceVo;
+org.example.common.entity.system.Resource;
+org.example.common.entity.system.ResourceCategory;
+org.example.common.entity.system.vo.ResourceCategoryVo;
+org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
@@ -27,7 +27,7 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-@DubboService(interfaceName = "resourceCategoryDubboService")
+@DubboService(interfaceClass = ResourceCategoryDubboService.class)
 public class ResourceCategoryServiceImpl implements ResourceCategoryService, ResourceCategoryDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
@@ -64,8 +64,8 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
     @Override
     public Boolean deleteResourceCategory(String id) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(id);
-        if (resourceCategory != null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
+        if (resourceCategory == null) {
+            throw new CommonException(SystemServerErrorResult.CATEGORY_NOT_EXIST);
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, id));
         if (count != null && count > 0) {
@@ -138,7 +138,8 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
      * @return
      */
     @Override
-    public ResourceCategory getResourceCategory(String name) {
-        return resourceCategoryMapper.selectOne(new LambdaQueryWrapper<ResourceCategory>().eq(ResourceCategory::getName, name));
+    public ResourceCategoryVo getResourceCategory(String name) {
+        ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(new LambdaQueryWrapper<ResourceCategory>().eq(ResourceCategory::getName, name));
+        return CommonUtils.transformObject(resourceCategory, ResourceCategoryVo.class);
     }
 }

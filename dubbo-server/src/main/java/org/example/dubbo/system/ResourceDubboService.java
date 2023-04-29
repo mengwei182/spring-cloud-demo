@@ -1,6 +1,6 @@
 package org.example.dubbo.system;
 
-import org.example.common.entity.system.Resource;
+import org.example.common.entity.system.vo.ResourceVo;
 
 /**
  * @author lihui
@@ -14,5 +14,12 @@ public interface ResourceDubboService {
      * @param categoryId
      * @return
      */
-    Resource getResource(String url, String categoryId);
+    ResourceVo getResource(String url, String categoryId);
+
+    /**
+     * 新增资源
+     *
+     * @param resourceVo
+     */
+    Boolean addResource(ResourceVo resourceVo);
 }

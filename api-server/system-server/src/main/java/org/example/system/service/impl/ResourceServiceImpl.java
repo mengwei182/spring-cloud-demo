@@ -3,12 +3,13 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.example.common.entity.system.Resource;
-import org.example.common.entity.system.ResourceCategory;
-import org.example.common.entity.system.RoleResourceRelation;
-import org.example.common.entity.system.vo.ResourceVo;
+org.example.common.entity.system.Resource;
+org.example.common.entity.system.ResourceCategory;
+org.example.common.entity.system.RoleResourceRelation;
+org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
+import org.example.common.model.CommonResult;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
 import org.example.dubbo.system.ResourceDubboService;
@@ -19,7 +20,6 @@ import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.service.ResourceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-@DubboService
+@DubboService(interfaceClass = ResourceDubboService.class)
 public class ResourceServiceImpl implements ResourceService, ResourceDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
@@ -38,8 +38,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     private ResourceCategoryMapper resourceCategoryMapper;
     @javax.annotation.Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
-    @javax.annotation.Resource
-    private KafkaTemplate<String, Object> kafkaTemplate;
     @javax.annotation.Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -154,7 +152,9 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      */
     @Override
     public void refreshResource() {
-        redisTemplate.convertAndSend("refresh_resource_topic", String.valueOf(Boolean.TRUE));
+        CommonResult commonResult = CommonResult.success();
+        commonResult.setData(Boolean.TRUE);
+        redisTemplate.convertAndSend("refresh_resource_topic", commonResult);
     }
 
     /**
@@ -165,7 +165,8 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      * @return
      */
     @Override
-    public Resource getResource(String url, String categoryId) {
-        return resourceMapper.selectOne(new LambdaQueryWrapper<Resource>().eq(Resource::getUrl, url).eq(Resource::getCategoryId, categoryId));
+    public ResourceVo getResource(String url, String categoryId) {
+        Resource resource = resourceMapper.selectOne(new LambdaQueryWrapper<Resource>().eq(Resource::getUrl, url).eq(Resource::getCategoryId, categoryId));
+        return CommonUtils.transformObject(resource, ResourceVo.class);
     }
 }
