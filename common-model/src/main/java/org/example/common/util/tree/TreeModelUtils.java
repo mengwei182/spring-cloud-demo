@@ -36,9 +36,15 @@ public class TreeModelUtils {
                 }
                 try {
                     switch (annotation.field()) {
-                        case ID -> treeModel.setId(String.valueOf(field.get(object)));
-                        case NAME -> treeModel.setName(String.valueOf(field.get(object)));
-                        case PARENT_ID -> treeModel.setParentId(String.valueOf(field.get(object)));
+                        case ID:
+                            treeModel.setId(String.valueOf(field.get(object)));
+                            break;
+                        case NAME:
+                            treeModel.setName(String.valueOf(field.get(object)));
+                            break;
+                        case PARENT_ID:
+                            treeModel.setParentId(String.valueOf(field.get(object)));
+                            break;
                     }
                 } catch (Exception e) {
                     log.error("build tree model error:{}", e.getMessage());
@@ -59,7 +65,7 @@ public class TreeModelUtils {
     }
 
     private static void buildChildren(List<TreeModel> treeModels, TreeModel treeModel) {
-        List<TreeModel> children = treeModels.stream().filter(o -> o.getParentId().equals(treeModel.getId())).toList();
+        List<TreeModel> children = treeModels.stream().filter(o -> o.getParentId().equals(treeModel.getId())).collect(Collectors.toList());
         treeModel.setChildren(children);
         for (TreeModel tm : children) {
             buildChildren(treeModels, tm);

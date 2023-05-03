@@ -1,6 +1,6 @@
 package org.example.dubbo.system;
 
-org.example.common.entity.system.vo.RoleResourceRelationVo;
+import org.example.common.entity.system.vo.RoleResourceRelationVo;
 
 import java.util.List;
 

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.UserInfoVo;
+import org.example.common.entity.system.*;
+import org.example.common.entity.system.vo.*;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
@@ -126,7 +128,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
         userInfoVo.setMenus(CommonUtils.transformList(menus, MenuVo.class));
         // 查询并填充用户资源信息
         List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
-        List<org.example.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
+        List<org.example.common.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
         userInfoVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
         // 查询并填充用户部门信息
         Department department = departmentMapper.selectById(user.getDepartmentId());

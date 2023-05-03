@@ -2,11 +2,11 @@ package org.example.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-org.example.common.entity.system.Role;
-org.example.common.entity.system.RoleMenuRelation;
-org.example.common.entity.system.UserRoleRelation;
-org.example.common.entity.system.vo.RoleMenuRelationVo;
-org.example.common.entity.system.vo.RoleVo;
+import org.example.common.entity.system.Role;
+import org.example.common.entity.system.RoleMenuRelation;
+import org.example.common.entity.system.UserRoleRelation;
+import org.example.common.entity.system.vo.RoleMenuRelationVo;
+import org.example.common.entity.system.vo.RoleVo;
 import org.example.common.error.CommonErrorResult;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
