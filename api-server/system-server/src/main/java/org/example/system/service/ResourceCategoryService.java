@@ -17,7 +17,7 @@ public interface ResourceCategoryService {
      * @param resourceCategoryVo
      * @return
      */
-    Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo);
+    ResourceCategoryVo addResourceCategory(ResourceCategoryVo resourceCategoryVo);
 
     /**
      * 删除资源分类信息

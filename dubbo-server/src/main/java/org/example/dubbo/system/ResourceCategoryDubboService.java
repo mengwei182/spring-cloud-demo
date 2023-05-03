@@ -17,5 +17,5 @@ public interface ResourceCategoryDubboService {
      * @param resourceCategoryVo
      * @return
      */
-    Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo);
+    ResourceCategoryVo addResourceCategory(ResourceCategoryVo resourceCategoryVo);
 }

@@ -31,7 +31,7 @@
         <mysql.version>8.0.33</mysql.version>
         <nacos.version>2021.0.5.0</nacos.version>
         <spring.boot.starter.version>2.6.13</spring.boot.starter.version>
-        <dubbo.spring.boot.starter.version>3.2.0</dubbo.spring.boot.starter.version>
+        <dubbo.spring.boot.starter.version>3.0.15</dubbo.spring.boot.starter.version>
         <mybatis.plus.boot.starter.version>3.5.3.1</mybatis.plus.boot.starter.version>
         <druid.spring.boot.starter.version>1.2.17</druid.spring.boot.starter.version>
         <mybatis.spring.boot.starter.version>2.3.0</mybatis.spring.boot.starter.version>
@@ -72,6 +72,11 @@
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.spring.boot.starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-metadata-report-nacos</artifactId>
                 <version>${dubbo.spring.boot.starter.version}</version>
             </dependency>
             <!--nacos dubbo end-->
@@ -126,6 +131,14 @@
     </dependencyManagement>
 
     <dependencies>
+        <!--netty start-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.92.Final</version>
+        </dependency>
+        <!--netty end-->
+
         <!--utils start-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

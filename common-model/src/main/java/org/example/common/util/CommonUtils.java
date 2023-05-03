@@ -71,6 +71,9 @@ public class CommonUtils {
      * @return
      */
     public static <T> T transformObject(Object object, Class<T> clazz) {
+        if (object == null) {
+            return null;
+        }
         try {
             T t = clazz.getConstructor().newInstance();
             BeanUtils.copyProperties(object, t);

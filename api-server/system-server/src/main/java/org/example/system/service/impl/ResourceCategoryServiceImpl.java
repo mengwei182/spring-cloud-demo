@@ -41,7 +41,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
      * @return
      */
     @Override
-    public Boolean addResourceCategory(ResourceCategoryVo resourceCategoryVo) {
+    public ResourceCategoryVo addResourceCategory(ResourceCategoryVo resourceCategoryVo) {
         QueryWrapper<ResourceCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
@@ -52,7 +52,8 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
         resourceCategory.setId(CommonUtils.uuid());
         resourceCategoryMapper.insert(resourceCategory);
-        return true;
+        resourceCategoryVo.setId(resourceCategory.getId());
+        return resourceCategoryVo;
     }
 
     /**

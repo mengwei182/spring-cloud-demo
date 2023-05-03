@@ -20,11 +20,11 @@ public class ResourceCategory extends BaseEntity {
      */
     private String name;
     /**
-     * 排序
-     */
-    private Integer sort;
-    /**
      * 描述
      */
     private String description;
+    /**
+     * 0禁用，1正常
+     */
+    private Integer status;
 }

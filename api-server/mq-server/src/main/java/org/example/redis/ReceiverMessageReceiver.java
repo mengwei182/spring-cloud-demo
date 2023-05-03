@@ -67,14 +67,14 @@ public class ReceiverMessageReceiver {
             String categoryId = CommonUtils.uuid();
             ResourceCategoryVo resourceCategoryVo = resourceCategoryDubboService.getResourceCategory(categoryName);
             // 资源分类已存在
-            if (resourceCategoryVo != null) {
-                categoryId = resourceCategoryVo.getId();
-            } else {
+            if (resourceCategoryVo == null) {
                 resourceCategoryVo = new ResourceCategoryVo();
                 resourceCategoryVo.setId(categoryId);
                 resourceCategoryVo.setName(categoryName);
-                resourceCategoryDubboService.addResourceCategory(resourceCategoryVo);
+                resourceCategoryVo = resourceCategoryDubboService.addResourceCategory(resourceCategoryVo);
+                log.info("add resource category:{}", resourceCategoryVo.getName());
             }
+            categoryId = resourceCategoryVo.getId();
             Set<PathPattern> patterns = pathPatternsCondition.getPatterns();
             for (PathPattern pattern : patterns) {
                 ResourceVo resourceVo = resourceDubboService.getResource(pattern.getPatternString(), categoryId);
@@ -83,11 +83,11 @@ public class ReceiverMessageReceiver {
                     continue;
                 }
                 resourceVo = new ResourceVo();
-                resourceVo.setId(CommonUtils.uuid());
                 resourceVo.setName(handlerMethod.getMethod().getName());
                 resourceVo.setCategoryId(categoryId);
                 resourceVo.setUrl(pattern.getPatternString());
                 resourceDubboService.addResource(resourceVo);
+                log.info("add resource:{}", resourceVo.getName());
             }
         }
     }
