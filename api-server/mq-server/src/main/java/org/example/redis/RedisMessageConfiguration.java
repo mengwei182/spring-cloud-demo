@@ -22,12 +22,12 @@ public class RedisMessageConfiguration {
     }
 
     @Bean
-    public MessageListenerAdapter listenerAdapter(ReceiverMessageReceiver receiver) {
-        return new MessageListenerAdapter(receiver, "refreshResource");
+    public MessageListenerAdapter listenerAdapter(ResourceMessageReceiver resourceMessageReceiver) {
+        return new MessageListenerAdapter(resourceMessageReceiver, "refreshResource");
     }
 
     @Bean
-    public ReceiverMessageReceiver receiver() {
-        return new ReceiverMessageReceiver();
+    public ResourceMessageReceiver resourceMessageReceiver() {
+        return new ResourceMessageReceiver();
     }
 }

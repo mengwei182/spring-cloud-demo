@@ -28,7 +28,7 @@ import java.util.Set;
  */
 @Slf4j
 @Component
-public class ReceiverMessageReceiver {
+public class ResourceMessageReceiver {
     @Value("${spring.application.name}")
     private String applicationName;
     @DubboReference
