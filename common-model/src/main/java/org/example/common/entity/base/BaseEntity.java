@@ -16,14 +16,6 @@ import java.util.Date;
 @Data
 public abstract class BaseEntity implements Serializable {
     /**
-     * 已删除
-     */
-    public static final Integer DELETED = 1;
-    /**
-     * 未删除
-     */
-    public static final Integer UNDELETED = 0;
-    /**
      * 顶级节点父级ID
      */
     public static final String TOP_PARENT_ID = "0";
