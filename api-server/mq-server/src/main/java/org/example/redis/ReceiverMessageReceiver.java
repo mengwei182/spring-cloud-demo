@@ -66,7 +66,7 @@ public class ReceiverMessageReceiver {
             String categoryName = applicationName + "_" + name;
             String categoryId = CommonUtils.uuid();
             ResourceCategoryVo resourceCategoryVo = resourceCategoryDubboService.getResourceCategory(categoryName);
-            // 资源分类已存在
+            // 资源分类不存在
             if (resourceCategoryVo == null) {
                 resourceCategoryVo = new ResourceCategoryVo();
                 resourceCategoryVo.setId(categoryId);
