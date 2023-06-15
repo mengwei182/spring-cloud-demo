@@ -25,9 +25,4 @@ public class RedisMessageConfiguration {
     public MessageListenerAdapter listenerAdapter(ResourceMessageReceiver resourceMessageReceiver) {
         return new MessageListenerAdapter(resourceMessageReceiver, "refreshResource");
     }
-
-    @Bean
-    public ResourceMessageReceiver resourceMessageReceiver() {
-        return new ResourceMessageReceiver();
-    }
 }

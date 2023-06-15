@@ -5,11 +5,10 @@ spring:
         server-addr: localhost:8848
         username: nacos
         password: nacos
-        namespace: local
-        group: local
+        namespace: test
+        group: test
     gateway:
       enabled: true
       discovery:
         locator:
           enabled: true
-      routes:
