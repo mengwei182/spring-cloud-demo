@@ -148,16 +148,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     }
 
     /**
-     * 刷新所有系统中所有资源
-     */
-    @Override
-    public void refreshResource() {
-        CommonResult commonResult = CommonResult.success();
-        commonResult.setData(Boolean.TRUE);
-        redisTemplate.convertAndSend("refresh_resource_topic", commonResult);
-    }
-
-    /**
      * 根据url和分类id查询资源信息
      *
      * @param url
@@ -168,5 +158,15 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     public ResourceVo getResource(String url, String categoryId) {
         Resource resource = resourceMapper.selectOne(new LambdaQueryWrapper<Resource>().eq(Resource::getUrl, url).eq(Resource::getCategoryId, categoryId));
         return CommonUtils.transformObject(resource, ResourceVo.class);
+    }
+
+    /**
+     * 刷新所有系统中所有资源
+     */
+    @Override
+    public void refreshResource() {
+        CommonResult commonResult = CommonResult.success();
+        commonResult.setData(Boolean.TRUE);
+        redisTemplate.convertAndSend("refresh_resource_topic", commonResult);
     }
 }

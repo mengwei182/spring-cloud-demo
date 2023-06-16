@@ -6,11 +6,9 @@ import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
 import org.example.common.util.CommonUtils;
-import org.example.configuration.ApplicationConfiguration;
 import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +34,8 @@ public class ResourceMessageReceiver {
     private ResourceDubboService resourceDubboService;
     @DubboReference
     private ResourceCategoryDubboService resourceCategoryDubboService;
+    @Resource
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     /**
      * 刷新资源
@@ -49,9 +50,7 @@ public class ResourceMessageReceiver {
         if (commonResult == null || commonResult.getData() == null || !commonResult.getData().equals(Boolean.TRUE)) {
             return;
         }
-        ApplicationContext applicationContext = ApplicationConfiguration.getApplicationContext();
-        RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
-        Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
+        Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
         Set<RequestMappingInfo> requestMappingInfos = map.keySet();
         for (RequestMappingInfo requestMappingInfo : requestMappingInfos) {
             // controller类名称
@@ -65,7 +64,7 @@ public class ResourceMessageReceiver {
             }
             String categoryName = applicationName + "_" + name;
             String categoryId = CommonUtils.uuid();
-            ResourceCategoryVo resourceCategoryVo = resourceCategoryDubboService.getResourceCategory(categoryName);
+            ResourceCategoryVo resourceCategoryVo = resourceCategoryDubboService.getResourceCategoryByName(categoryName);
             // 资源分类不存在
             if (resourceCategoryVo == null) {
                 resourceCategoryVo = new ResourceCategoryVo();

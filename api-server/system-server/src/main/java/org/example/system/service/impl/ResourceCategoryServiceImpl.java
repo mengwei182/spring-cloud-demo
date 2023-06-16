@@ -139,7 +139,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
      * @return
      */
     @Override
-    public ResourceCategoryVo getResourceCategory(String name) {
+    public ResourceCategoryVo getResourceCategoryByName(String name) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(new LambdaQueryWrapper<ResourceCategory>().eq(ResourceCategory::getName, name));
         return CommonUtils.transformObject(resourceCategory, ResourceCategoryVo.class);
     }

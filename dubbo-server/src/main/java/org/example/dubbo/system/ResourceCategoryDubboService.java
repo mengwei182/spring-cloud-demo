@@ -9,7 +9,7 @@ public interface ResourceCategoryDubboService {
      * @param name
      * @return
      */
-    ResourceCategoryVo getResourceCategory(String name);
+    ResourceCategoryVo getResourceCategoryByName(String name);
 
     /**
      * 新增资源分类
