@@ -31,7 +31,7 @@ import java.util.Optional;
  * @since 2022/10/26
  */
 @Slf4j
-@Order(1)
+@Order(2)
 @Component
 public class AuthorizationFilter implements GlobalFilter {
     @Resource
@@ -49,7 +49,7 @@ public class AuthorizationFilter implements GlobalFilter {
         String path = request.getPath().value();
         if (!StringUtils.hasLength(path)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+            return response.setComplete().onErrorComplete();
         }
         // 校验是否是不需要验证token的url
         AntPathMatcher antPathMatcher = new AntPathMatcher();
@@ -61,7 +61,7 @@ public class AuthorizationFilter implements GlobalFilter {
         List<String> cookies = request.getHeaders().get("Authorization");
         if (CollectionUtils.isEmpty(cookies) || !StringUtils.hasLength(cookies.get(0))) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete();
+            return response.setComplete().onErrorComplete();
         }
         String cookie = cookies.get(0);
         TokenVo<?> tokenVo = TokenUtils.unsigned(cookie);
@@ -72,6 +72,6 @@ public class AuthorizationFilter implements GlobalFilter {
             }
         }
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        return response.setComplete();
+        return response.setComplete().onErrorComplete();
     }
 }

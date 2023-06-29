@@ -2,10 +2,12 @@ package org.example.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.reflect.TypeToken;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.RoleResourceRelation;
+import org.example.common.entity.system.UserRoleRelation;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.error.SystemServerErrorResult;
 import org.example.common.error.exception.CommonException;
@@ -17,13 +19,17 @@ import org.example.system.api.ResourceQueryPage;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
+import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.service.ResourceService;
+import org.example.system.service.cache.ResourceCacheService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lihui
@@ -31,7 +37,7 @@ import java.util.List;
  */
 @Service
 @DubboService(interfaceClass = ResourceDubboService.class)
-public class ResourceServiceImpl implements ResourceService, ResourceDubboService {
+public class ResourceServiceImpl implements ResourceService, ResourceCacheService, ResourceDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
     @javax.annotation.Resource
@@ -40,6 +46,9 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     private RoleResourceRelationMapper roleResourceRelationMapper;
     @javax.annotation.Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @javax.annotation.Resource
+    private UserRoleRelationMapper userRoleRelationMapper;
+    private static final String USER_TOKEN_HASH_KEY = "USER_TOKEN_HASH_KEY";
 
     /**
      * 新增资源
@@ -168,5 +177,27 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
         CommonResult commonResult = CommonResult.success();
         commonResult.setData(Boolean.TRUE);
         redisTemplate.convertAndSend("refresh_resource_topic", commonResult);
+    }
+
+    /**
+     * 根据用户id获取资源列表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<ResourceVo> getResourceByUserId(String userId) {
+        HashOperations<String, Object, Object> opsForHash = redisTemplate.opsForHash();
+        Object object = opsForHash.get(USER_TOKEN_HASH_KEY, userId);
+        if (object == null) {
+            List<UserRoleRelation> userRoleRelations = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userId));
+            List<RoleResourceRelation> roleResourceRelations = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, userRoleRelations.stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList())));
+            List<Resource> resources = resourceMapper.selectList(new LambdaQueryWrapper<Resource>().in(Resource::getId, roleResourceRelations.stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList())));
+            List<ResourceVo> resourceVos = CommonUtils.transformList(resources, ResourceVo.class);
+            opsForHash.put(USER_TOKEN_HASH_KEY, userId, resourceVos);
+            return resourceVos;
+        }
+        return CommonUtils.gson().fromJson(CommonUtils.gson().toJson(object), new TypeToken<>() {
+        });
     }
 }

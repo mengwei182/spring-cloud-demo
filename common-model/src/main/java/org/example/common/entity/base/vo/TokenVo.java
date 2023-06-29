@@ -21,10 +21,9 @@ public class TokenVo<T> {
     public TokenVo() {
     }
 
-    public TokenVo(Object id, Date signTime, Long expiration, T data) {
+    public TokenVo(Object id, Date signTime, T data) {
         this.id = id;
         this.signTime = signTime;
-        this.expiration = expiration;
         this.data = data;
     }
 }
