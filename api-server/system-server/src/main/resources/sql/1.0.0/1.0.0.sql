@@ -163,7 +163,7 @@ CREATE TABLE `user`
     PRIMARY KEY (`id`)
 ) COMMENT '用户信息表';
 INSERT INTO `user`(`id`, `username`, `password`, `email`, `name`)
-VALUES ('1', 'superadmin', '$2a$10$P75kwF3AjIXvnsPsCxOxFe/sA/Puhvc8tzJnmKIDt8UhFRMBeZQbK', 'superadmin@test.com', '超级管理员');
+VALUES ('1', 'admin', '$2a$10$P75kwF3AjIXvnsPsCxOxFe/sA/Puhvc8tzJnmKIDt8UhFRMBeZQbK', 'admin@test.com', '超级管理员');
 
 DROP TABLE IF EXISTS `user_role_relation`;
 CREATE TABLE `user_role_relation`
