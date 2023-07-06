@@ -31,6 +31,10 @@ public class MenuVo extends BaseEntity {
      */
     private String parentId;
     /**
+     * 类型
+     */
+    private Integer type;
+    /**
      * 级别
      */
     private Integer level;

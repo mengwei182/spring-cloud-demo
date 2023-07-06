@@ -32,6 +32,10 @@ public class Menu extends BaseEntity {
     @TreeModelField(field = TreeModelFieldEnum.PARENT_ID)
     private String parentId;
     /**
+     * 类型
+     */
+    private Integer type;
+    /**
      * id链
      */
     private String idChain;
