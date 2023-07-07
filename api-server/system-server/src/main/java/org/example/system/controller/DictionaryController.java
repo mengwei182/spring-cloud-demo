@@ -1,5 +1,6 @@
 package org.example.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.system.vo.DictionaryVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.DictionaryQueryPage;
@@ -29,7 +30,7 @@ public class DictionaryController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult addDictionary(@Valid @RequestBody DictionaryVo dictionaryVo) {
+    public CommonResult<Boolean> addDictionary(@Valid @RequestBody DictionaryVo dictionaryVo) {
         return CommonResult.success(dictionaryService.addDictionary(dictionaryVo));
     }
 
@@ -40,7 +41,7 @@ public class DictionaryController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteDictionary(@RequestParam String id) {
+    public CommonResult<Boolean> deleteDictionary(@RequestParam String id) {
         return CommonResult.success(dictionaryService.deleteDictionary(id));
     }
 
@@ -51,7 +52,7 @@ public class DictionaryController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateDictionary(@Valid @RequestBody DictionaryVo dictionaryVo) {
+    public CommonResult<Boolean> updateDictionary(@Valid @RequestBody DictionaryVo dictionaryVo) {
         return CommonResult.success(dictionaryService.updateDictionary(dictionaryVo));
     }
 
@@ -62,7 +63,7 @@ public class DictionaryController {
      * @return
      */
     @RequestMapping("/list")
-    public CommonResult getDictionaryList(@Valid @RequestBody DictionaryQueryPage queryPage) {
+    public CommonResult<Page<DictionaryVo>> getDictionaryList(@Valid @RequestBody DictionaryQueryPage queryPage) {
         return CommonResult.success(dictionaryService.getDictionaryList(queryPage));
     }
 }

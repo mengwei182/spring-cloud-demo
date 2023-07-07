@@ -1,5 +1,6 @@
 package org.example.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.ResourceCategoryQueryPage;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author lihui
@@ -28,7 +30,7 @@ public class ResourceCategoryController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult addResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
+    public CommonResult<ResourceCategoryVo> addResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
         return CommonResult.success(resourceCategoryService.addResourceCategory(resourceCategoryVo));
     }
 
@@ -39,7 +41,7 @@ public class ResourceCategoryController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteResourceCategory(@RequestParam String id) {
+    public CommonResult<Boolean> deleteResourceCategory(@RequestParam String id) {
         return CommonResult.success(resourceCategoryService.deleteResourceCategory(id));
     }
 
@@ -50,7 +52,7 @@ public class ResourceCategoryController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
+    public CommonResult<Boolean> updateResourceCategory(@RequestBody ResourceCategoryVo resourceCategoryVo) {
         return CommonResult.success(resourceCategoryService.updateResourceCategory(resourceCategoryVo));
     }
 
@@ -61,7 +63,7 @@ public class ResourceCategoryController {
      * @return
      */
     @RequestMapping("/list")
-    public CommonResult getResourceCategoryList(@RequestBody ResourceCategoryQueryPage queryPage) {
+    public CommonResult<Page<ResourceCategoryVo>> getResourceCategoryList(@RequestBody ResourceCategoryQueryPage queryPage) {
         return CommonResult.success(resourceCategoryService.getResourceCategoryList(queryPage));
     }
 
@@ -71,7 +73,7 @@ public class ResourceCategoryController {
      * @return
      */
     @RequestMapping("/list/all")
-    public CommonResult getAllResourceCategoryList() {
+    public CommonResult<List<ResourceCategoryVo>> getAllResourceCategoryList() {
         return CommonResult.success(resourceCategoryService.getAllResourceCategoryList());
     }
 }

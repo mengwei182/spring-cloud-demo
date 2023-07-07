@@ -28,7 +28,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult addRole(@RequestBody RoleVo roleVo) {
+    public CommonResult<Boolean> addRole(@RequestBody RoleVo roleVo) {
         return CommonResult.success(roleService.addRole(roleVo));
     }
 
@@ -39,7 +39,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteRole(@RequestParam String id) {
+    public CommonResult<Boolean> deleteRole(@RequestParam String id) {
         return CommonResult.success(roleService.deleteRole(id));
     }
 
@@ -50,7 +50,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateRole(@RequestBody RoleVo roleVo) {
+    public CommonResult<Boolean> updateRole(@RequestBody RoleVo roleVo) {
         return CommonResult.success(roleService.updateRole(roleVo));
     }
 
@@ -61,7 +61,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/menu/update")
-    public CommonResult addRoleMenu(@RequestBody RoleMenuRelationVo roleMenuRelationVo) {
+    public CommonResult<Boolean> addRoleMenu(@RequestBody RoleMenuRelationVo roleMenuRelationVo) {
         return CommonResult.success(roleService.addRoleMenu(roleMenuRelationVo));
     }
 }

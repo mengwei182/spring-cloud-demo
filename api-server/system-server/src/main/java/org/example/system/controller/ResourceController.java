@@ -1,5 +1,6 @@
 package org.example.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.ResourceQueryPage;
@@ -7,6 +8,7 @@ import org.example.system.service.ResourceService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author lihui
@@ -25,7 +27,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult addResource(@RequestBody ResourceVo resourceVo) {
+    public CommonResult<Boolean> addResource(@RequestBody ResourceVo resourceVo) {
         return CommonResult.success(resourceService.addResource(resourceVo));
     }
 
@@ -36,7 +38,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteResource(@RequestParam String id) {
+    public CommonResult<Boolean> deleteResource(@RequestParam String id) {
         return CommonResult.success(resourceService.deleteResource(id));
     }
 
@@ -47,7 +49,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateResource(@RequestBody ResourceVo resourceVo) {
+    public CommonResult<Boolean> updateResource(@RequestBody ResourceVo resourceVo) {
         return CommonResult.success(resourceService.updateResource(resourceVo));
     }
 
@@ -58,7 +60,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/list")
-    public CommonResult getResourceList(@ModelAttribute ResourceQueryPage queryPage) {
+    public CommonResult<Page<ResourceVo>> getResourceList(@ModelAttribute ResourceQueryPage queryPage) {
         return CommonResult.success(resourceService.getResourceList(queryPage));
     }
 
@@ -68,7 +70,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/list/all")
-    public CommonResult getAllResourceList() {
+    public CommonResult<List<ResourceVo>> getAllResourceList() {
         return CommonResult.success(resourceService.getAllResourceList());
     }
 
@@ -78,7 +80,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/{id}")
-    public CommonResult getResourceById(@PathVariable String id) {
+    public CommonResult<ResourceVo> getResourceById(@PathVariable String id) {
         return CommonResult.success(resourceService.getResourceById(id));
     }
 
@@ -88,7 +90,7 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/refresh")
-    public CommonResult refreshResource() {
+    public CommonResult<?> refreshResource() {
         resourceService.refreshResource();
         return CommonResult.success();
     }

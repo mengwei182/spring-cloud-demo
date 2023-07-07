@@ -1,5 +1,7 @@
 package org.example.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.entity.base.vo.TreeModel;
 import org.example.common.entity.system.vo.MenuVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.MenuQueryPage;
@@ -7,6 +9,7 @@ import org.example.system.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author lihui
@@ -25,7 +28,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult addMenu(@RequestBody MenuVo menuVo) {
+    public CommonResult<Boolean> addMenu(@RequestBody MenuVo menuVo) {
         return CommonResult.success(menuService.addMenu(menuVo));
     }
 
@@ -36,7 +39,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteMenu(@RequestParam String id) {
+    public CommonResult<Boolean> deleteMenu(@RequestParam String id) {
         return CommonResult.success(menuService.deleteMenu(id));
     }
 
@@ -47,7 +50,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateMenu(@RequestParam MenuVo menuVo) {
+    public CommonResult<Boolean> updateMenu(@RequestParam MenuVo menuVo) {
         return CommonResult.success(menuService.updateMenu(menuVo));
     }
 
@@ -58,7 +61,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/list")
-    public CommonResult getMenuList(@ModelAttribute MenuQueryPage queryPage) {
+    public CommonResult<Page<MenuVo>> getMenuList(@ModelAttribute MenuQueryPage queryPage) {
         return CommonResult.success(menuService.getMenuList(queryPage));
     }
 
@@ -68,7 +71,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/list/all")
-    public CommonResult getAllMenuList() {
+    public CommonResult<List<MenuVo>> getAllMenuList() {
         return CommonResult.success(menuService.getAllMenuList());
     }
 
@@ -78,7 +81,7 @@ public class MenuController {
      * @return
      */
     @RequestMapping("/list/tree")
-    public CommonResult getMenuTreeList() {
+    public CommonResult<List<TreeModel>> getMenuTreeList() {
         return CommonResult.success(menuService.getMenuTreeList());
     }
 }

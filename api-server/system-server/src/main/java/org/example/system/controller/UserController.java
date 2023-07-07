@@ -1,5 +1,6 @@
 package org.example.system.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.model.CommonResult;
@@ -28,7 +29,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/add")
-    public CommonResult register(@Valid @RequestBody UserInfoVo userInfoVo) {
+    public CommonResult<Boolean> register(@Valid @RequestBody UserInfoVo userInfoVo) {
         return CommonResult.success(userService.addUser(userInfoVo));
     }
 
@@ -39,7 +40,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/list")
-    public CommonResult getUserList(@ModelAttribute UserQueryPage queryPage) {
+    public CommonResult<Page<UserInfoVo>> getUserList(@ModelAttribute UserQueryPage queryPage) {
         return CommonResult.success(userService.getUserList(queryPage));
     }
 
@@ -49,7 +50,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/info")
-    public CommonResult getUserInfo() {
+    public CommonResult<UserInfoVo> getUserInfo() {
         return CommonResult.success(userService.getUserInfo(UserContext.get().getUserId()));
     }
 
@@ -60,7 +61,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/update")
-    public CommonResult updateUser(@RequestBody UserInfoVo userInfoVo) {
+    public CommonResult<Boolean> updateUser(@RequestBody UserInfoVo userInfoVo) {
         return CommonResult.success(userService.updateUser(userInfoVo));
     }
 
@@ -71,7 +72,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/updatePassword")
-    public CommonResult updateUserPassword(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
+    public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
         return CommonResult.success(userService.updateUserPassword(usernamePasswordVo));
     }
 
@@ -82,7 +83,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/delete")
-    public CommonResult deleteUser(@RequestParam String id) {
+    public CommonResult<Boolean> deleteUser(@RequestParam String id) {
         return CommonResult.success(userService.deleteUser(id));
     }
 }

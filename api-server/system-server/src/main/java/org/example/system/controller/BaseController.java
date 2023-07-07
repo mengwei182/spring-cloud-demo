@@ -29,7 +29,7 @@ public class BaseController {
      * @return
      */
     @RequestMapping("/login")
-    public CommonResult login(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
+    public CommonResult<String> login(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
         return CommonResult.success(baseService.login(usernamePasswordVo));
     }
 
@@ -39,7 +39,7 @@ public class BaseController {
      * @return
      */
     @RequestMapping("/logout")
-    public CommonResult logout() {
+    public CommonResult<Boolean> logout() {
         return CommonResult.success(baseService.logout());
     }
 
