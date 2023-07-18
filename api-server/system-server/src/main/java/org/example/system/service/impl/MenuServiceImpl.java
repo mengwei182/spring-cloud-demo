@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.base.BaseEntity;
-import org.example.common.entity.base.vo.TreeModel;
 import org.example.common.entity.system.Menu;
 import org.example.common.entity.system.RoleMenuRelation;
 import org.example.common.entity.system.vo.MenuVo;
-import org.example.common.error.CommonErrorResult;
-import org.example.common.error.SystemServerErrorResult;
+import org.example.common.error.CommonServerResult;
+import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
@@ -54,7 +53,7 @@ public class MenuServiceImpl implements MenuService {
         if (StringUtils.hasLength(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
-                throw new CommonException(SystemServerErrorResult.PARENT_NOT_EXIST);
+                throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
             }
             parentId = menuVo.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -66,7 +65,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {
-            throw new CommonException(SystemServerErrorResult.MENU_NAME_EXIST);
+            throw new CommonException(SystemServerResult.MENU_NAME_EXIST);
         }
         menuMapper.insert(menu);
         return true;
@@ -83,7 +82,7 @@ public class MenuServiceImpl implements MenuService {
     public Boolean deleteMenu(String id) {
         Menu menu = menuMapper.selectById(id);
         if (menu == null) {
-            throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
+            throw new CommonException(CommonServerResult.OBJECT_NOT_EXIST);
         }
         menuMapper.deleteById(id);
         QueryWrapper<RoleMenuRelation> roleMenuRelationQueryWrapper = new QueryWrapper<>();
@@ -102,7 +101,7 @@ public class MenuServiceImpl implements MenuService {
     public Boolean updateMenu(MenuVo menuVo) {
         Menu menu = menuMapper.selectById(menuVo.getId());
         if (menu == null) {
-            throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
+            throw new CommonException(CommonServerResult.OBJECT_NOT_EXIST);
         }
         BeanUtils.copyProperties(menuVo, menu);
         String parentId = BaseEntity.TOP_PARENT_ID;
@@ -111,7 +110,7 @@ public class MenuServiceImpl implements MenuService {
         if (StringUtils.hasLength(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
-                throw new CommonException(SystemServerErrorResult.PARENT_NOT_EXIST);
+                throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
             }
             parentId = menuVo.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -123,7 +122,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVo.getName()));
         if (resultMenu != null) {
-            throw new CommonException(SystemServerErrorResult.MENU_NAME_EXIST);
+            throw new CommonException(SystemServerResult.MENU_NAME_EXIST);
         }
         menuMapper.updateById(menu);
         return true;
@@ -160,8 +159,8 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
-    public List<TreeModel> getMenuTreeList() {
+    public List<MenuVo> getMenuTreeList() {
         List<Menu> menus = menuMapper.selectList(new LambdaQueryWrapper<>());
-        return TreeModelUtils.buildTreeModel(menus);
+        return TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVo.class));
     }
 }

@@ -1,7 +1,6 @@
 package org.example.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.base.vo.TreeModel;
 import org.example.common.entity.system.vo.MenuVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.MenuQueryPage;
@@ -76,12 +75,12 @@ public class MenuController {
     }
 
     /**
-     * 查询所有菜单列表
+     * 查询所有菜单树
      *
      * @return
      */
     @RequestMapping("/list/tree")
-    public CommonResult<List<TreeModel>> getMenuTreeList() {
+    public CommonResult<List<MenuVo>> getMenuTreeList() {
         return CommonResult.success(menuService.getMenuTreeList());
     }
 }

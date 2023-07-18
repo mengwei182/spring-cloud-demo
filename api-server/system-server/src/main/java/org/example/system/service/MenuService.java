@@ -1,7 +1,6 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.base.vo.TreeModel;
 import org.example.common.entity.system.vo.MenuVo;
 import org.example.system.api.MenuQueryPage;
 
@@ -56,5 +55,5 @@ public interface MenuService {
      *
      * @return
      */
-    List<TreeModel> getMenuTreeList();
+    List<MenuVo> getMenuTreeList();
 }

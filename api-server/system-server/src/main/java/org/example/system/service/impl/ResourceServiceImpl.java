@@ -9,7 +9,7 @@ import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.RoleResourceRelation;
 import org.example.common.entity.system.UserRoleRelation;
 import org.example.common.entity.system.vo.ResourceVo;
-import org.example.common.error.SystemServerErrorResult;
+import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.model.CommonResult;
 import org.example.common.util.CommonUtils;
@@ -60,11 +60,11 @@ public class ResourceServiceImpl implements ResourceService, ResourceCacheServic
     public Boolean addResource(ResourceVo resourceVo) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVo.getCategoryId());
         if (resourceCategory == null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_NOT_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_NOT_EXIST);
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, resourceVo.getCategoryId()).eq(Resource::getName, resourceVo.getName()));
         if (count != null && count > 0) {
-            throw new CommonException(SystemServerErrorResult.RESOURCE_NAME_DUPLICATE);
+            throw new CommonException(SystemServerResult.RESOURCE_NAME_DUPLICATE);
         }
         Resource resource = new Resource();
         BeanUtils.copyProperties(resourceVo, resource);
@@ -84,7 +84,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceCacheServic
     public Boolean deleteResource(String id) {
         Resource resource = resourceMapper.selectById(id);
         if (resource == null) {
-            throw new CommonException(SystemServerErrorResult.RESOURCE_NOT_EXIST);
+            throw new CommonException(SystemServerResult.RESOURCE_NOT_EXIST);
         }
         // 删除角色资源表的关联信息
         roleResourceRelationMapper.delete(new LambdaQueryWrapper<RoleResourceRelation>().eq(RoleResourceRelation::getResourceId, id));
@@ -102,15 +102,15 @@ public class ResourceServiceImpl implements ResourceService, ResourceCacheServic
     public Boolean updateResource(ResourceVo resourceVo) {
         Resource resource = resourceMapper.selectById(resourceVo.getId());
         if (resource == null) {
-            throw new CommonException(SystemServerErrorResult.RESOURCE_NOT_EXIST);
+            throw new CommonException(SystemServerResult.RESOURCE_NOT_EXIST);
         }
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVo.getCategoryId());
         if (resourceCategory == null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_NOT_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_NOT_EXIST);
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, resourceVo.getCategoryId()).eq(Resource::getName, resourceVo.getName()));
         if (count != null && count > 0) {
-            throw new CommonException(SystemServerErrorResult.RESOURCE_NAME_DUPLICATE);
+            throw new CommonException(SystemServerResult.RESOURCE_NAME_DUPLICATE);
         }
         Resource insterResource = new Resource();
         BeanUtils.copyProperties(resourceVo, insterResource);

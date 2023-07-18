@@ -7,7 +7,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TreeModelField {
     /**
-     * 标记对象中的字段和TreeModel的一个字段对应
+     * <p>标记对象中的字段和TreeModel的一个字段对应<p/>
+     * <p>见@link TreeModelFieldEnum枚举类<p/>
      *
      * @return
      */

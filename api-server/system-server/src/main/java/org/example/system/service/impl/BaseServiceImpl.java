@@ -6,7 +6,7 @@ import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.User;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
-import org.example.common.error.SystemServerErrorResult;
+import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
@@ -57,19 +57,19 @@ public class BaseServiceImpl implements BaseService {
         String username = usernamePasswordVo.getUsername();
         String password = usernamePasswordVo.getPassword();
         if (!StringUtils.hasLength(username)) {
-            throw new CommonException(SystemServerErrorResult.USERNAME_NULL);
+            throw new CommonException(SystemServerResult.USERNAME_NULL);
         }
         if (!StringUtils.hasLength(password)) {
-            throw new CommonException(SystemServerErrorResult.PASSWORD_NULL);
+            throw new CommonException(SystemServerResult.PASSWORD_NULL);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(User::getUsername, username);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new CommonException(SystemServerErrorResult.USER_NOT_EXIST);
+            throw new CommonException(SystemServerResult.USER_NOT_EXIST);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new CommonException(SystemServerErrorResult.PASSWORD_ERROR);
+            throw new CommonException(SystemServerResult.PASSWORD_ERROR);
         }
         UserInfoVo userInfoVo = CommonUtils.transformObject(user, UserInfoVo.class);
         // 查询并设置登录用户的resource数据

@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.base.BaseEntity;
 import org.example.common.entity.system.Dictionary;
 import org.example.common.entity.system.vo.DictionaryVo;
-import org.example.common.error.CommonErrorResult;
-import org.example.common.error.SystemServerErrorResult;
+import org.example.common.error.CommonServerResult;
+import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
@@ -47,7 +47,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (StringUtils.hasLength(dictionaryVo.getParentId())) {
             Dictionary parentDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getId, dictionaryVo.getParentId()));
             if (parentDictionary == null) {
-                throw new CommonException(SystemServerErrorResult.PARENT_NOT_EXIST);
+                throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
             }
             parentId = dictionaryVo.getParentId();
             dictionary.setIdChain(parentDictionary.getIdChain() + "," + parentDictionary.getId());
@@ -59,12 +59,12 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVo.getName()));
         if (resultDictionary != null) {
-            throw new CommonException(SystemServerErrorResult.DICTIONARY_NAME_EXIST);
+            throw new CommonException(SystemServerResult.DICTIONARY_NAME_EXIST);
         }
         // 校验编码唯一性
         resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getCode, dictionaryVo.getCode()));
         if (resultDictionary != null) {
-            throw new CommonException(SystemServerErrorResult.DICTIONARY_CODE_EXIST);
+            throw new CommonException(SystemServerResult.DICTIONARY_CODE_EXIST);
         }
         dictionaryMapper.insert(dictionary);
         return true;
@@ -80,11 +80,11 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Boolean deleteDictionary(String id) {
         Dictionary dictionary = dictionaryMapper.selectById(id);
         if (dictionary == null) {
-            throw new CommonException(CommonErrorResult.OBJECT_NOT_EXIST);
+            throw new CommonException(CommonServerResult.OBJECT_NOT_EXIST);
         }
         List<Dictionary> dictionaries = dictionaryMapper.selectList(new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, id));
         if (!CollectionUtils.isEmpty(dictionaries)) {
-            throw new CommonException(SystemServerErrorResult.DICTIONARY_CHILD_EXIST);
+            throw new CommonException(SystemServerResult.DICTIONARY_CHILD_EXIST);
         }
         dictionaryMapper.deleteById(id);
         return true;
@@ -102,7 +102,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<>();
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVo.getName()));
         if (resultDictionary != null) {
-            throw new CommonException(SystemServerErrorResult.DICTIONARY_NAME_EXIST);
+            throw new CommonException(SystemServerResult.DICTIONARY_NAME_EXIST);
         }
         Dictionary dictionary = new Dictionary();
         dictionary.setId(dictionaryVo.getId());

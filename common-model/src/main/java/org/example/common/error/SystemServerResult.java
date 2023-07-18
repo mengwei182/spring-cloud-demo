@@ -4,7 +4,7 @@ package org.example.common.error;
  * @author lihui
  * @since 2022/11/8
  */
-public interface SystemServerErrorResult {
+public interface SystemServerResult {
     String USERNAME_NULL = "用户名为空";
     String PASSWORD_NULL = "密码为空";
     String USER_EXIST = "用户已存在";

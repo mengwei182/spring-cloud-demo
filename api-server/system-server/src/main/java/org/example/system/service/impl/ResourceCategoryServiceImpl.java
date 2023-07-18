@@ -8,7 +8,7 @@ import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
-import org.example.common.error.SystemServerErrorResult;
+import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
@@ -46,7 +46,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
         if (resourceCategory != null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_EXIST);
         }
         resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
@@ -66,11 +66,11 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
     public Boolean deleteResourceCategory(String id) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(id);
         if (resourceCategory == null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_NOT_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_NOT_EXIST);
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, id));
         if (count != null && count > 0) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_RESOURCE_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_RESOURCE_EXIST);
         }
         resourceCategoryMapper.deleteById(id);
         return true;
@@ -88,7 +88,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService, Res
         queryWrapper.lambda().eq(ResourceCategory::getName, resourceCategoryVo.getName());
         ResourceCategory resourceCategory = resourceCategoryMapper.selectOne(queryWrapper);
         if (resourceCategory != null) {
-            throw new CommonException(SystemServerErrorResult.CATEGORY_EXIST);
+            throw new CommonException(SystemServerResult.CATEGORY_EXIST);
         }
         resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryVo, resourceCategory);
