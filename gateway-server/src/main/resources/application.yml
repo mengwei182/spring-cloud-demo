@@ -12,7 +12,7 @@ spring:
       discovery:
         server-addr: localhost:8848
       config:
-        namespace: local
+        namespace: spring-cloud-demo
         file-extension: yml
         group: DEFAULT_GROUP
         server-addr: localhost:8848

@@ -89,6 +89,11 @@ public class BaseServiceImpl implements BaseService {
      */
     @Override
     public Boolean logout() {
+        UserInfoVo userInfoVo = UserContext.get().getUserInfoVo();
+        if (userInfoVo == null) {
+            return true;
+        }
+        redisTemplate.delete(userInfoVo.getId());
         UserContext.remove();
         return true;
     }

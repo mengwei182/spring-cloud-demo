@@ -5,7 +5,7 @@ spring:
         server-addr: dev:8848
         username: nacos
         password: nacos
-        namespace: dev
+        namespace: spring-cloud-demo
         group: dev
     gateway:
       enabled: true

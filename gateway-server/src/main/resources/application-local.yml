@@ -5,7 +5,7 @@ spring:
         server-addr: localhost:8848
         username: nacos
         password: nacos
-        namespace: local
+        namespace: spring-cloud-demo
         group: local
     gateway:
       enabled: true

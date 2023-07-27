@@ -7,6 +7,9 @@ import org.example.common.entity.base.BaseEntity;
 import org.example.common.util.tree.TreeModelFieldEnum;
 import org.example.common.util.tree.TreeModelField;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * 菜单信息表
  *
@@ -25,7 +28,13 @@ public class Menu extends BaseEntity {
     /**
      * 路由地址
      */
-    private String routeAddress;
+    @NotNull(message = "路由地址不能为空")
+    @Size(min = 1, max = 255, message = "路由地址应该在1-255字符之间")
+    private String path;
+    /**
+     * 组件
+     */
+    private String component;
     /**
      * 父级id
      */

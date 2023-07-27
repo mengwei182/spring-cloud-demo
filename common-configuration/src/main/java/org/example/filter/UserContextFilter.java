@@ -1,6 +1,5 @@
 package org.example.filter;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.global.ResultCode;
@@ -41,14 +40,14 @@ public class UserContextFilter implements Filter {
         String authorization = StringUtils.hasLength(authorizationHeader) ? authorizationHeader : authorizationParameter;
         if (!StringUtils.hasLength(authorization)) {
             response.setStatus(ResultCode.UNAUTHORIZED.getCode());
-            servletResponse.getWriter().print(CommonUtils.gson().toJson(CommonResult.unauthorized()));
+            response.getWriter().print(CommonUtils.gson().toJson(CommonResult.unauthorized()));
             return;
         }
         TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(authorization, UserInfoVo.class);
         UserInfoVo userInfoVo = tokenVo.getData();
         if (userInfoVo == null) {
             response.setStatus(ResultCode.UNAUTHORIZED.getCode());
-            servletResponse.getWriter().print(CommonUtils.gson().toJson(CommonResult.unauthorized()));
+            response.getWriter().print(CommonUtils.gson().toJson(CommonResult.unauthorized()));
             return;
         }
         UserContext.set(userInfoVo.getId(), userInfoVo.getUsername(), userInfoVo);

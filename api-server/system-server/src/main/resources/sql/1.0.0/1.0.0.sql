@@ -24,11 +24,13 @@ CREATE TABLE `menu`
 (
     `id` VARCHAR(32) NOT NULL,
     `parent_id` VARCHAR(255) COMMENT '父级id',
+    `type` INT NOT NULL DEFAULT 0 COMMENT '类型',
     `id_chain` VARCHAR(768) COMMENT 'id链',
     `level` INT NOT NULL DEFAULT 0 COMMENT '级别',
     `sort` INT NOT NULL DEFAULT 0 COMMENT '排序',
     `name` VARCHAR(255) NOT NULL COMMENT '名称',
-    `route_address` VARCHAR(255) COMMENT '路由地址',
+    `path` VARCHAR(255) COMMENT '路由地址',
+    `component` VARCHAR(255) COMMENT '组件',
     `icon` VARCHAR(255) COMMENT '图标',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `hided` TINYINT COMMENT '0显示，1隐藏',
@@ -42,13 +44,13 @@ CREATE TABLE `menu`
     INDEX (`parent_id`),
     INDEX (`id_chain`)
 ) COMMENT '菜单信息表';
-INSERT INTO menu(`id`, `parent_id`, `id_chain`, `name`, `route_address`)
-VALUES ('1', '0', '0', '系统管理', '/systemManager'),
-       ('2', '1', '0', '菜单管理', '/systemManager/menuManager'),
-       ('3', '1', '0', '用户管理', '/systemManager/userManager'),
-       ('4', '1', '0', '角色管理', '/systemManager/roleManager'),
-       ('5', '1', '0', '资源管理', '/systemManager/resourceManager'),
-       ('6', '1', '0', '部门管理', '/systemManager/departmentManager');
+INSERT INTO menu(`id`, `parent_id`, `id_chain`, `name`, `path`, `component`)
+VALUES ('1', '0', '0', '系统管理', '/systemManager', 'systemManager'),
+       ('2', '1', '0', '菜单管理', '/systemManager/menuManager', 'systemManager/menuManager'),
+       ('3', '1', '0', '用户管理', '/systemManager/userManager', 'systemManager/userManager'),
+       ('4', '1', '0', '角色管理', '/systemManager/roleManager', 'systemManager/roleManager'),
+       ('5', '1', '0', '资源管理', '/systemManager/resourceManager', 'systemManager/resourceManager'),
+       ('6', '1', '0', '部门管理', '/systemManager/departmentManager', 'systemManager/departmentManager');
 
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource`

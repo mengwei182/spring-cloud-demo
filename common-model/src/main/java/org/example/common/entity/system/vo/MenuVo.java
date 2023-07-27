@@ -29,7 +29,11 @@ public class MenuVo extends BaseEntity {
      */
     @NotNull(message = "路由地址不能为空")
     @Size(min = 1, max = 255, message = "路由地址应该在1-255字符之间")
-    private String routeAddress;
+    private String path;
+    /**
+     * 组件
+     */
+    private String component;
     /**
      * 父级id
      */
