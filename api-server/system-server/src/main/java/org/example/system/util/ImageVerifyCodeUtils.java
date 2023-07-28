@@ -37,7 +37,7 @@ public class ImageVerifyCodeUtils {
      * @return
      */
     public static String generateVerifyCode(int verifySize, String sources) {
-        if (sources == null || sources.length() == 0) {
+        if (sources == null || sources.isEmpty()) {
             sources = VERIFY_CODES;
         }
         int codesLen = sources.length();

@@ -110,9 +110,9 @@ public class BaseServiceImpl implements BaseService {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
-        ServletOutputStream servletOutputStream = response.getOutputStream();
-        String verifyCode = ImageVerifyCodeUtils.outputVerifyImage(130, 30, servletOutputStream, 6);
+        ServletOutputStream os = response.getOutputStream();
+        String verifyCode = ImageVerifyCodeUtils.outputVerifyImage(130, 30, os, 6);
         userCacheService.setImageVerifyCode(UserContext.get().getUserId(), verifyCode, 5L);
-        servletOutputStream.close();
+        os.close();
     }
 }
