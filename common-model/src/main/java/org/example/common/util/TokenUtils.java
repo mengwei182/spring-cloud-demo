@@ -18,6 +18,7 @@ import java.util.Base64;
  */
 @Slf4j
 public class TokenUtils {
+    private static final String TRANSFORMATION = "DES";
     private static final String SALT = "dc,.-!^%";
     private static final String ERROR_TOKEN = "ERROR_TOKEN";
     private static Cipher encryptCipher;
@@ -26,9 +27,9 @@ public class TokenUtils {
     static {
         try {
             SecretKey secretKey = generateKey();
-            encryptCipher = Cipher.getInstance("DES");
+            encryptCipher = Cipher.getInstance(TRANSFORMATION);
             encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            decryptCipher = Cipher.getInstance("DES");
+            decryptCipher = Cipher.getInstance(TRANSFORMATION);
             decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -94,6 +95,6 @@ public class TokenUtils {
     }
 
     public static SecretKey generateKey() {
-        return new SecretKeySpec(SALT.getBytes(), "DES");
+        return new SecretKeySpec(SALT.getBytes(), TRANSFORMATION);
     }
 }
