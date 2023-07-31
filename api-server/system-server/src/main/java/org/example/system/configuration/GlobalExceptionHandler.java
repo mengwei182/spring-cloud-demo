@@ -17,7 +17,7 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResult methodArgumentNotValidHandler(MethodArgumentNotValidException exception) {
+    public CommonResult<String> methodArgumentNotValidHandler(MethodArgumentNotValidException exception) {
         log.error("methodArgumentNotValidHandler:", exception);
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         String msg = fieldErrors.stream().findFirst().map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage())).orElse(null);
@@ -25,13 +25,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public CommonResult handleRuntimeException(RuntimeException e) {
+    public CommonResult<String> handleRuntimeException(RuntimeException e) {
         log.error("handleRuntimeException:", e);
         return CommonResult.error(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public CommonResult handleException(Exception e) {
+    public CommonResult<String> handleException(Exception e) {
         log.error("handleException:", e);
         return CommonResult.error(e.getMessage());
     }

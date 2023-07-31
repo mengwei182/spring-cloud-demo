@@ -22,15 +22,15 @@ public class RedisConfiguration {
         // String的序列化方式
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // Jackson2JsonRedisSerializer序列化类
-        Jackson2JsonRedisSerializer<?> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        Jackson2JsonRedisSerializer<?> redisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         // key采用String的序列化方式
         redisTemplate.setKeySerializer(stringRedisSerializer);
         // value序列化方式采用jackson
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setValueSerializer(redisSerializer);
         // hash的key也采用String的序列化方式
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
         //hash的value也采用jackson
-        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(redisSerializer);
         return redisTemplate;
     }
 }

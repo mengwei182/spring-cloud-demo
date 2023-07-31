@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author lihui
  * @since 2023/4/3
  */
+@Getter
 @Configuration
 public class ApplicationConfiguration implements ApplicationContextAware {
-    @Getter
     private static ApplicationContext applicationContext;
 
     @Bean
