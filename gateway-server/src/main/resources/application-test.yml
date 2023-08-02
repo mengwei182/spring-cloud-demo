@@ -12,3 +12,16 @@ spring:
       discovery:
         locator:
           enabled: true
+  redis:
+    host: test
+    database: 1
+    port: 6379
+    password: test
+    timeout: 3000ms
+    lettuce:
+      pool:
+        enabled: true
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 180000

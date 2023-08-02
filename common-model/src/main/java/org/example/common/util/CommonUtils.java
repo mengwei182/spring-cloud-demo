@@ -1,12 +1,12 @@
 package org.example.common.util;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -14,8 +14,6 @@ import java.util.UUID;
  * @since 2023/4/3
  */
 public class CommonUtils {
-    private static final Gson GSON = new Gson();
-
     private CommonUtils() {
     }
 
@@ -26,15 +24,6 @@ public class CommonUtils {
      */
     public static String uuid() {
         return UUID.randomUUID().toString().replaceAll("-", "");
-    }
-
-    /**
-     * 返回全局GSON对象
-     *
-     * @return
-     */
-    public static Gson gson() {
-        return GSON;
     }
 
     /**
@@ -51,13 +40,7 @@ public class CommonUtils {
             return resultList;
         }
         for (Object object : list) {
-            try {
-                T t = clazz.getConstructor().newInstance();
-                BeanUtils.copyProperties(object, t);
-                resultList.add(t);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            resultList.add(transformObject(object, clazz));
         }
         return resultList;
     }
@@ -76,14 +59,15 @@ public class CommonUtils {
         }
         try {
             T t = clazz.getConstructor().newInstance();
-            BeanUtils.copyProperties(object, t);
+            if (object instanceof Map<?, ?>) {
+                BeanMap beanMap = BeanMap.create(t);
+                beanMap.putAll((Map<?, ?>) object);
+            } else {
+                BeanUtils.copyProperties(object, t);
+            }
             return t;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static <T> T fromJson(String json, Class<T> clazz) {
-        return GSON.fromJson(json, TypeToken.get(clazz));
     }
 }

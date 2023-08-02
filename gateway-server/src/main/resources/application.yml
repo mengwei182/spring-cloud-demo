@@ -4,17 +4,19 @@ server:
 spring:
   application:
     name: gateway-server
+  profiles:
+    active: local
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
+  config:
+    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
   cloud:
     nacos:
-      discovery:
-        server-addr: localhost:8848
       config:
+        username: nacos
+        password: nacos
+        server-addr: localhost:8848
         namespace: spring-cloud-demo
         file-extension: yml
         group: DEFAULT_GROUP
-        server-addr: localhost:8848
-  config:
-    import: nacos:${spring.application.name}.${spring.cloud.nacos.config.file-extension}

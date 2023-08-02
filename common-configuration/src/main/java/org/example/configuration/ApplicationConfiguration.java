@@ -1,6 +1,5 @@
 package org.example.configuration;
 
-import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author lihui
  * @since 2023/4/3
  */
-@Getter
 @Configuration
 public class ApplicationConfiguration implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
@@ -27,5 +25,9 @@ public class ApplicationConfiguration implements ApplicationContextAware {
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         ApplicationConfiguration.applicationContext = applicationContext;
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        return applicationContext.getBean(clazz);
     }
 }

@@ -37,13 +37,18 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
 dubbo:
   application:
     name: ${spring.application.name}
     id: ${spring.application.name}
     qos-enable: false
     qos-accept-foreign-ip: false
-    metadata-type: local
+    metadata-type: ${spring.cloud.nacos.discovery.group}
   protocol:
     name: dubbo
     port: -1

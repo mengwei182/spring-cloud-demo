@@ -2,6 +2,7 @@ package org.example.common.entity.base;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.example.common.util.tree.TreeModelField;
 import org.example.common.util.tree.TreeModelFieldEnum;
@@ -25,18 +26,20 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 创建者id
      */
-    private String createId;
+    private String creator;
     /**
      * 更新者id
      */
-    private String updateId;
+    private String updater;
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     /**
      * 删除标志：0未删除，1已删除

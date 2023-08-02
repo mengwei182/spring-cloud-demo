@@ -6,6 +6,7 @@ import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
 import org.example.common.util.CommonUtils;
+import org.example.common.util.GsonUtils;
 import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +47,7 @@ public class ResourceMessageReceiver {
         if (!StringUtils.hasLength(message)) {
             return;
         }
-        CommonResult commonResult = CommonUtils.fromJson(message, CommonResult.class);
+        CommonResult<?> commonResult = GsonUtils.fromJson(message, CommonResult.class);
         if (commonResult == null || commonResult.getData() == null || !commonResult.getData().equals(Boolean.TRUE)) {
             return;
         }

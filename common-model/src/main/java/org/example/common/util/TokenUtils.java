@@ -47,7 +47,7 @@ public class TokenUtils {
      */
     public static String sign(TokenVo<?> tokenVo) {
         try {
-            byte[] bytes = encryptCipher.doFinal(CommonUtils.gson().toJson(tokenVo).getBytes());
+            byte[] bytes = encryptCipher.doFinal(GsonUtils.gson().toJson(tokenVo).getBytes());
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -64,7 +64,7 @@ public class TokenUtils {
     public static TokenVo<?> unsigned(String token) {
         try {
             byte[] bytes = decryptCipher.doFinal(Base64.getDecoder().decode(token.getBytes()));
-            return CommonUtils.gson().fromJson(new String(bytes), TypeToken.get(TokenVo.class));
+            return GsonUtils.gson().fromJson(new String(bytes), TypeToken.get(TokenVo.class));
         } catch (Exception e) {
             log.error(e.getMessage());
             return new TokenVo<>();
@@ -83,7 +83,7 @@ public class TokenUtils {
         try {
             TokenVo<?> tokenVo = unsigned(token);
             Object data = tokenVo.getData();
-            T t = CommonUtils.gson().fromJson(CommonUtils.gson().toJson(data), clazz);
+            T t = GsonUtils.gson().fromJson(GsonUtils.gson().toJson(data), clazz);
             TokenVo<T> resultTokenVo = new TokenVo<>();
             BeanUtils.copyProperties(tokenVo, resultTokenVo);
             resultTokenVo.setData(t);

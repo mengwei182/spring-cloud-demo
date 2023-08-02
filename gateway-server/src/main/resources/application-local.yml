@@ -12,4 +12,16 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
+  redis:
+    host: localhost
+    database: 1
+    port: 6379
+    password: mengwei131575585
+    timeout: 3000ms
+    lettuce:
+      pool:
+        enabled: true
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 180000
