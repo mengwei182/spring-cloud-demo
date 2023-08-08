@@ -76,7 +76,7 @@ public class BaseFilter implements GlobalFilter {
         String path = request.getPath().value();
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         // 校验是否是不需要验证token的url
-        Optional<String> first = Arrays.stream(commonProperties.getUrlWhiteList().split(",")).filter(o -> antPathMatcher.match(o, path)).findFirst();
+        Optional<String> first = Arrays.stream(commonProperties.getSkipUrl().split(",")).filter(o -> antPathMatcher.match(o, path)).findFirst();
         return first.isPresent();
     }
 
