@@ -2,7 +2,6 @@ package org.example.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * @author lihui
@@ -21,9 +20,5 @@ public class GsonUtils {
      */
     public static Gson gson() {
         return GSON;
-    }
-
-    public static <T> T fromJson(String json, Class<T> clazz) {
-        return GsonUtils.gson().fromJson(json, TypeToken.get(clazz));
     }
 }

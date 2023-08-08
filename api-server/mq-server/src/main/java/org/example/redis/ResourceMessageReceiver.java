@@ -47,7 +47,7 @@ public class ResourceMessageReceiver {
         if (!StringUtils.hasLength(message)) {
             return;
         }
-        CommonResult<?> commonResult = GsonUtils.fromJson(message, CommonResult.class);
+        CommonResult<?> commonResult = GsonUtils.gson().fromJson(message, CommonResult.class);
         if (commonResult == null || commonResult.getData() == null || !commonResult.getData().equals(Boolean.TRUE)) {
             return;
         }
