@@ -5,6 +5,7 @@ import org.example.common.model.CommonResult;
 import org.example.system.service.BaseService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -47,10 +48,13 @@ public class BaseController {
      * 获取图片验证码
      *
      * @param response
+     * @param width 图片宽度
+     * @param height 图片高度
+     * @param captchaSize 验证码位数
      * @throws IOException
      */
-    @RequestMapping("/image/verify/code")
-    public void getImageVerifyCode(HttpServletResponse response) throws IOException {
-        baseService.generateImageVerifyCode(response);
+    @RequestMapping("/image/captcha")
+    public void getImageCaptcha(HttpServletResponse response, @RequestParam(defaultValue = "130") Integer width, @RequestParam(defaultValue = "30") Integer height, @RequestParam(defaultValue = "6") Integer captchaSize) throws IOException {
+        baseService.generateImageCaptcha(response, width, height, captchaSize);
     }
 }

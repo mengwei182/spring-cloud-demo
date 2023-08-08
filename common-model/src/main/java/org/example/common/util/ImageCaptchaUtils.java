@@ -1,4 +1,4 @@
-package org.example.system.util;
+package org.example.common.util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,58 +10,44 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
-/**
- * @author lihui
- * @since 2023/4/3
- */
-public class ImageVerifyCodeUtils {
+public class ImageCaptchaUtils {
     private static final Random RANDOM = new Random();
-    // 使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符
-    private static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    // 使用到Algerian字体，系统里没有的话需要安装字体，去掉了1、0、i、l、o几个容易混淆的字符
+    private static final String VERIFY_CODES = "23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ";
 
-    /**
-     * 生成验证码
-     *
-     * @param verifySize 验证码位数
-     * @return
-     */
-    public static String generateVerifyCode(int verifySize) {
-        return generateVerifyCode(verifySize, VERIFY_CODES);
+    private ImageCaptchaUtils() {
     }
 
-    /**
-     * 生成图片验证码
-     *
-     * @param verifySize 验证码位数
-     * @param sources 验证码
-     * @return
-     */
-    public static String generateVerifyCode(int verifySize, String sources) {
+    public static String generateCaptcha(int captchaSize) {
+        return generateCaptcha(captchaSize, VERIFY_CODES);
+    }
+
+    public static String generateCaptcha(int captchaSize, String sources) {
         if (sources == null || sources.isEmpty()) {
             sources = VERIFY_CODES;
         }
         int codesLen = sources.length();
         Random rand = new Random(System.currentTimeMillis());
-        StringBuilder verifyCode = new StringBuilder(verifySize);
-        for (int i = 0; i < verifySize; i++) {
-            verifyCode.append(sources.charAt(rand.nextInt(codesLen - 1)));
+        StringBuilder captcha = new StringBuilder(captchaSize);
+        for (int i = 0; i < captchaSize; i++) {
+            captcha.append(sources.charAt(rand.nextInt(codesLen - 1)));
         }
-        return verifyCode.toString();
+        return captcha.toString();
     }
 
-    public static String outputVerifyImage(int width, int height, File outputFile, int verifySize) throws IOException {
-        String verifyCode = generateVerifyCode(verifySize);
-        outputImage(width, height, outputFile, verifyCode);
-        return verifyCode;
+    public static String outputCaptchaImage(int width, int height, File outputFile, int captchaSize) throws IOException {
+        String captcha = generateCaptcha(captchaSize);
+        outputImage(width, height, outputFile, captcha);
+        return captcha;
     }
 
-    public static String outputVerifyImage(int width, int height, OutputStream outputStream, int verifySize) throws IOException {
-        String verifyCode = generateVerifyCode(verifySize);
-        outputImage(width, height, outputStream, verifyCode);
-        return verifyCode;
+    public static String outputCaptchaImage(int width, int height, OutputStream outputStream, int captchaSize) throws IOException {
+        String captcha = generateCaptcha(captchaSize);
+        outputImage(width, height, outputStream, captcha);
+        return captcha;
     }
 
-    public static void outputImage(int width, int height, File outputFile, String code) throws IOException {
+    private static void outputImage(int width, int height, File outputFile, String code) throws IOException {
         if (outputFile == null) {
             return;
         }
@@ -79,8 +65,8 @@ public class ImageVerifyCodeUtils {
         fos.close();
     }
 
-    public static void outputImage(int width, int height, OutputStream outputStream, String code) throws IOException {
-        int verifySize = code.length();
+    private static void outputImage(int width, int height, OutputStream outputStream, String code) throws IOException {
+        int captchaSize = code.length();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Random rand = new Random();
         Graphics2D graphics2D = image.createGraphics();
@@ -119,11 +105,11 @@ public class ImageVerifyCodeUtils {
         Font font = new Font("Algerian", Font.ITALIC, fontSize);
         graphics2D.setFont(font);
         char[] chars = code.toCharArray();
-        for (int i = 0; i < verifySize; i++) {
+        for (int i = 0; i < captchaSize; i++) {
             AffineTransform affine = new AffineTransform();
-            affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1), (double) (width / verifySize) * i + (double) fontSize / 2, (double) height / 2);
+            affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1), (double) (width / captchaSize) * i + (double) fontSize / 2, (double) height / 2);
             graphics2D.setTransform(affine);
-            graphics2D.drawChars(chars, i, 1, ((width - 10) / verifySize) * i + 5, height / 2 + fontSize / 2 - 10);
+            graphics2D.drawChars(chars, i, 1, ((width - 10) / captchaSize) * i + 5, height / 2 + fontSize / 2 - 10);
         }
         graphics2D.dispose();
         ImageIO.write(image, "jpg", outputStream);

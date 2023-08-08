@@ -26,10 +26,13 @@ public interface BaseService {
     Boolean logout();
 
     /**
-     * 获取图片验证码
+     * 生成图片验证码
      *
      * @param response
+     * @param width 图片宽度
+     * @param height 图片高度
+     * @param captchaSize 验证码位数
      * @throws IOException
      */
-    void generateImageVerifyCode(HttpServletResponse response) throws IOException;
+    void generateImageCaptcha(HttpServletResponse response, Integer width, Integer height, Integer captchaSize) throws IOException;
 }
