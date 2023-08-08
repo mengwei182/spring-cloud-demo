@@ -64,3 +64,5 @@ dubbo:
   consumer:
     check: false
     retries: 2
+common:
+  skipUrl: /base/login,/base/register,/base/logout
