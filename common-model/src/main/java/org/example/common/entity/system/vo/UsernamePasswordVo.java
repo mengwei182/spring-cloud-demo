@@ -22,15 +22,11 @@ public class UsernamePasswordVo {
     @NotNull(message = "密码不能为空")
     private String password;
     /**
-     * 手机号
+     * 旧密码
      */
-    private String phone;
+    private String oldPassword;
     /**
-     * 手机验证码
+     * 验证码
      */
-    private String phoneVerifyCode;
-    /**
-     * 图形验证码
-     */
-    private String imageVerifyCode;
+    private String captcha;
 }

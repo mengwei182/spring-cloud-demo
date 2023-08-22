@@ -24,3 +24,6 @@ spring:
         namespace: spring-cloud-demo
         file-extension: yml
         group: DEFAULT_GROUP
+
+common:
+  skipUrl: /base/login,/base/register,/base/logout

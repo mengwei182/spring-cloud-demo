@@ -14,7 +14,6 @@ import org.example.common.util.TokenUtils;
 import org.example.system.mapper.UserMapper;
 import org.example.system.service.BaseService;
 import org.example.system.service.cache.ResourceCacheService;
-import org.example.system.service.cache.UserCacheService;
 import org.example.common.util.ImageCaptchaUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +22,9 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -40,8 +41,6 @@ public class BaseServiceImpl implements BaseService {
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
-    private UserCacheService userCacheService;
-    @Resource
     private RedisTemplate<String, String> redisTemplate;
     @Resource
     private ResourceCacheService resourceCacheService;
@@ -49,18 +48,31 @@ public class BaseServiceImpl implements BaseService {
     /**
      * 登录
      *
+     * @param request
      * @param usernamePasswordVo
      * @return
      */
     @Override
-    public String login(UsernamePasswordVo usernamePasswordVo) {
+    public String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo) {
         String username = usernamePasswordVo.getUsername();
         String password = usernamePasswordVo.getPassword();
+        String captcha = usernamePasswordVo.getCaptcha();
         if (!StringUtils.hasLength(username)) {
             throw new CommonException(SystemServerResult.USERNAME_NULL);
         }
         if (!StringUtils.hasLength(password)) {
             throw new CommonException(SystemServerResult.PASSWORD_NULL);
+        }
+        if (!StringUtils.hasLength(captcha)) {
+            throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
+        }
+        HttpSession session = request.getSession(false);
+        String captchaMemory = redisTemplate.opsForValue().get(session.getId());
+        if (!StringUtils.hasLength(captchaMemory)) {
+            throw new CommonException(SystemServerResult.VERIFY_CODE_OVERDUE);
+        }
+        if (!captcha.equals(captchaMemory)) {
+            throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(User::getUsername, username);
@@ -101,6 +113,7 @@ public class BaseServiceImpl implements BaseService {
     /**
      * 生成图片验证码
      *
+     * @param request
      * @param response
      * @param width 图片宽度
      * @param height 图片高度
@@ -108,16 +121,15 @@ public class BaseServiceImpl implements BaseService {
      * @throws IOException
      */
     @Override
-    public void generateImageCaptcha(HttpServletResponse response, Integer width, Integer height, Integer captchaSize) throws IOException {
+    public void generateImageCaptcha(HttpServletRequest request, HttpServletResponse response, Integer width, Integer height, Integer captchaSize) throws IOException {
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
         ServletOutputStream os = response.getOutputStream();
-        String captchaCode = CommonUtils.uuid();
-        response.setHeader("captchaCode", captchaCode);
+        HttpSession session = request.getSession(true);
         String captcha = ImageCaptchaUtils.outputCaptchaImage(width, height, os, captchaSize);
-        redisTemplate.opsForValue().set(captchaCode, captcha, 10L, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(session.getId(), captcha, 10L, TimeUnit.MINUTES);
         os.close();
     }
 }

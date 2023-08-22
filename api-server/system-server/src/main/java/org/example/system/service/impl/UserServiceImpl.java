@@ -180,19 +180,14 @@ public class UserServiceImpl implements UserService, UserCacheService {
         if (user == null) {
             throw new CommonException(SystemServerResult.USER_NOT_EXIST);
         }
-        String phone = usernamePasswordVo.getPhone();
-        String phoneVerifyCode = usernamePasswordVo.getPhoneVerifyCode();
-        if (!StringUtils.hasLength(phoneVerifyCode)) {
-            throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
-        }
-        String phoneVerifyCodeCache = getPhoneVerifyCode(phone);
-        if (!StringUtils.hasLength(phoneVerifyCodeCache)) {
-            throw new CommonException(SystemServerResult.VERIFY_CODE_OVERDUE);
+        String password = user.getPassword();
+        String oldPassword = usernamePasswordVo.getOldPassword();
+        if (!passwordEncoder.matches(oldPassword, password)) {
+            throw new CommonException(SystemServerResult.OLD_PASSWORD_ERROR);
         }
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().set(User::getPassword, passwordEncoder.encode(usernamePasswordVo.getPassword())).eq(User::getId, user.getId());
         userMapper.update(null, updateWrapper);
-        deletePhoneVerifyCode(phone);
         return true;
     }
 
@@ -216,15 +211,15 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * 设置手机验证码到redis
      *
      * @param phone
-     * @param verifyCode
+     * @param captcha
      * @param timeout
      */
     @Override
-    public void setPhoneVerifyCode(String phone, String verifyCode, Long timeout) {
+    public void setPhoneCaptcha(String phone, String captcha, Long timeout) {
         if (timeout != null && timeout > 0) {
-            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), verifyCode, timeout, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), captcha, timeout, TimeUnit.MINUTES);
         } else {
-            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), verifyCode);
+            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), captcha);
         }
     }
 
@@ -235,7 +230,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @return
      */
     @Override
-    public String getPhoneVerifyCode(String phone) {
+    public String getPhoneCaptcha(String phone) {
         return (String) redisTemplate.opsForValue().get(PHONE_VERIFY_PREFIX.concat(phone));
     }
 
@@ -245,7 +240,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @param phone
      */
     @Override
-    public void deletePhoneVerifyCode(String phone) {
+    public void deletePhoneCaptcha(String phone) {
         redisTemplate.delete(PHONE_VERIFY_PREFIX.concat(phone));
     }
 
@@ -253,15 +248,15 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * 设置图片验证码到redis
      *
      * @param account
-     * @param verifyCode
+     * @param captcha
      * @param timeout
      */
     @Override
-    public void setImageVerifyCode(String account, String verifyCode, Long timeout) {
+    public void setImageCaptcha(String account, String captcha, Long timeout) {
         if (timeout != null && timeout > 0) {
-            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), verifyCode, timeout, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), captcha, timeout, TimeUnit.MINUTES);
         } else {
-            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), verifyCode);
+            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), captcha);
         }
     }
 
@@ -271,7 +266,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @param account
      */
     @Override
-    public String getImageVerifyCode(String account) {
+    public String getImageCaptcha(String account) {
         return (String) redisTemplate.opsForValue().get(IMAGE_VERIFY_PREFIX.concat(account));
     }
 
@@ -281,7 +276,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @param account
      */
     @Override
-    public void deleteImageVerifyCode(String account) {
+    public void deleteImageCaptcha(String account) {
         redisTemplate.delete(IMAGE_VERIFY_PREFIX.concat(account));
     }
 }
