@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationStarter implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // 生成公私钥对
         RSAEncryptUtils.generatePublicPrivateKey();
     }
 }
