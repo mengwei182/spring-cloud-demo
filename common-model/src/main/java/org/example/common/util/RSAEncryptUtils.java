@@ -1,5 +1,7 @@
 package org.example.common.util;
 
+import lombok.Getter;
+
 import javax.crypto.Cipher;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -13,8 +15,10 @@ import java.util.Base64;
  * @since 2023/8/4
  */
 public class RSAEncryptUtils {
-    public static String publicKey;
-    public static String privateKey;
+    @Getter
+    private static String publicKey;
+    @Getter
+    private static String privateKey;
 
     private RSAEncryptUtils() {
     }
@@ -40,6 +44,17 @@ public class RSAEncryptUtils {
      * RSA公钥加密
      *
      * @param string 加密字符串
+     * @return 加密后的密文
+     * @throws Exception
+     */
+    public static String encrypt(String string) throws Exception {
+        return encrypt(string, getPublicKey());
+    }
+
+    /**
+     * RSA公钥加密
+     *
+     * @param string 加密字符串
      * @param publicKey 公钥
      * @return 加密后的密文
      * @throws Exception
@@ -50,6 +65,17 @@ public class RSAEncryptUtils {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
         return Base64.getEncoder().encodeToString(cipher.doFinal(string.getBytes()));
+    }
+
+    /**
+     * RSA私钥解密
+     *
+     * @param string 加密字符串
+     * @return 解密的明文
+     * @throws Exception
+     */
+    public static String decrypt(String string) throws Exception {
+        return decrypt(string, getPrivateKey());
     }
 
     /**

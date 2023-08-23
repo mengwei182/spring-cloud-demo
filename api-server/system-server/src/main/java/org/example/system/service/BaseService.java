@@ -18,7 +18,7 @@ public interface BaseService {
      * @param usernamePasswordVo
      * @return
      */
-    String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo);
+    String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo) throws Exception;
 
     /**
      * 登出

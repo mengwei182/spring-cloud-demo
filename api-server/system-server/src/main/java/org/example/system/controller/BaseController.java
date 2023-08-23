@@ -2,6 +2,7 @@ package org.example.system.controller;
 
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.model.CommonResult;
+import org.example.common.util.RSAEncryptUtils;
 import org.example.system.service.BaseService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class BaseController {
      * @return
      */
     @RequestMapping("/login")
-    public CommonResult<String> login(HttpServletRequest request, @Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
+    public CommonResult<String> login(HttpServletRequest request, @Valid @RequestBody UsernamePasswordVo usernamePasswordVo) throws Exception {
         return CommonResult.success(baseService.login(request, usernamePasswordVo));
     }
 
@@ -59,5 +60,13 @@ public class BaseController {
     @RequestMapping("/image/captcha")
     public void getImageCaptcha(HttpServletRequest request, HttpServletResponse response, @RequestParam(defaultValue = "130") Integer width, @RequestParam(defaultValue = "30") Integer height, @RequestParam(defaultValue = "4") Integer captchaSize) throws IOException {
         baseService.generateImageCaptcha(request, response, width, height, captchaSize);
+    }
+
+    /**
+     * 获取生成的公钥
+     */
+    @RequestMapping("/publicKey")
+    public CommonResult<String> getPublicKey() {
+        return CommonResult.success(RSAEncryptUtils.getPublicKey());
     }
 }

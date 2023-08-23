@@ -10,11 +10,13 @@ import org.example.common.error.SystemServerResult;
 import org.example.common.error.exception.CommonException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
+import org.example.common.util.ImageCaptchaUtils;
+import org.example.common.util.RSAEncryptUtils;
 import org.example.common.util.TokenUtils;
 import org.example.system.mapper.UserMapper;
 import org.example.system.service.BaseService;
 import org.example.system.service.cache.ResourceCacheService;
-import org.example.common.util.ImageCaptchaUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ public class BaseServiceImpl implements BaseService {
     private RedisTemplate<String, String> redisTemplate;
     @Resource
     private ResourceCacheService resourceCacheService;
+    @Value("${key.encrypt.enable}")
+    private Boolean keyEncryptEnable;
 
     /**
      * 登录
@@ -53,7 +57,7 @@ public class BaseServiceImpl implements BaseService {
      * @return
      */
     @Override
-    public String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo) {
+    public String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo) throws Exception {
         String username = usernamePasswordVo.getUsername();
         String password = usernamePasswordVo.getPassword();
         String captcha = usernamePasswordVo.getCaptcha();
@@ -79,6 +83,10 @@ public class BaseServiceImpl implements BaseService {
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
             throw new CommonException(SystemServerResult.USER_NOT_EXIST);
+        }
+        // 开启使用公私钥后使用私钥解密
+        if (Boolean.TRUE.equals(keyEncryptEnable)) {
+            password = RSAEncryptUtils.decrypt(password);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CommonException(SystemServerResult.PASSWORD_ERROR);

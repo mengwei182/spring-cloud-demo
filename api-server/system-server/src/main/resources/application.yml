@@ -27,3 +27,7 @@ spring:
 
 common:
   skipUrl: /base/login,/base/register,/base/logout
+
+key:
+  encrypt:
+    enable: true
