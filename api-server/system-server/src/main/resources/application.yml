@@ -26,7 +26,7 @@ spring:
         group: DEFAULT_GROUP
 
 common:
-  skipUrl: /base/login,/base/register,/base/logout
+  skipUrl: /base/login,/base/register,/base/logout,/base/image/captcha,/base/publicKey
 
 key:
   encrypt:

@@ -75,7 +75,7 @@ public class BaseServiceImpl implements BaseService {
         if (!StringUtils.hasLength(captchaMemory)) {
             throw new CommonException(SystemServerResult.VERIFY_CODE_OVERDUE);
         }
-        if (!captcha.equals(captchaMemory)) {
+        if (!captcha.equalsIgnoreCase(captchaMemory)) {
             throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
