@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class TreeModel {
     private String id;
-    private String name;
+    private String label;
     private String parentId;
     private List<TreeModel> children;
 }

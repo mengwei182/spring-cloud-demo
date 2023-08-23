@@ -20,7 +20,7 @@ public class Dictionary extends BaseEntity {
     /**
      * 名称
      */
-    @TreeModelField(field = TreeModelFieldEnum.NAME)
+    @TreeModelField(field = TreeModelFieldEnum.LABEL)
     private String name;
     /**
      * 编码

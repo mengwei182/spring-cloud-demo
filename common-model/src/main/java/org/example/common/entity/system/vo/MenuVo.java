@@ -21,7 +21,7 @@ public class MenuVo extends BaseEntity {
      * 名称
      */
     @NotNull(message = "名称不能为空")
-    @TreeModelField(field = TreeModelFieldEnum.NAME)
+    @TreeModelField(field = TreeModelFieldEnum.LABEL)
     @Size(min = 1, max = 255, message = "名称应该在1-255字符之间")
     private String name;
     /**

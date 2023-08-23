@@ -38,8 +38,8 @@ public class TreeModelUtils {
                         case ID:
                             treeModel.setId(String.valueOf(field.get(object)));
                             break;
-                        case NAME:
-                            treeModel.setName(String.valueOf(field.get(object)));
+                        case LABEL:
+                            treeModel.setLabel(String.valueOf(field.get(object)));
                             break;
                         case PARENT_ID:
                             treeModel.setParentId(String.valueOf(field.get(object)));

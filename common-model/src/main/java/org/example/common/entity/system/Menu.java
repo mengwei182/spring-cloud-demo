@@ -23,7 +23,7 @@ public class Menu extends BaseEntity {
     /**
      * 名称
      */
-    @TreeModelField(field = TreeModelFieldEnum.NAME)
+    @TreeModelField(field = TreeModelFieldEnum.LABEL)
     private String name;
     /**
      * 路由地址

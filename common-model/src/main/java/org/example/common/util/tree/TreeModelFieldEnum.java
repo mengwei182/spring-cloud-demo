@@ -1,5 +1,5 @@
 package org.example.common.util.tree;
 
 public enum TreeModelFieldEnum {
-    ID, NAME, PARENT_ID, CHILDREN
+    ID, LABEL, PARENT_ID, CHILDREN
 }
