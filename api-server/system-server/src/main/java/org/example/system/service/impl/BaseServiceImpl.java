@@ -48,6 +48,7 @@ public class BaseServiceImpl implements BaseService {
     private ResourceCacheService resourceCacheService;
     @Value("${key.encrypt.enable}")
     private Boolean keyEncryptEnable;
+    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
 
     /**
      * 登录
@@ -95,10 +96,12 @@ public class BaseServiceImpl implements BaseService {
         // 查询并设置登录用户的resource数据
         userInfoVo.setResources(resourceCacheService.getResourceByUserId(user.getId()));
         Date loginTime = new Date();
-        TokenVo<?> tokenVo = new TokenVo<>(user.getId(), loginTime, userInfoVo);
+        TokenVo<UserInfoVo> tokenVo = new TokenVo<>(user.getId(), loginTime, userInfoVo);
         String token = TokenUtils.sign(tokenVo);
+        // 删除旧token
+        redisTemplate.delete(USER_TOKEN_KEY + user.getId());
         // 设置token到redis，有效期一个小时
-        redisTemplate.opsForValue().set(user.getId(), token, 60, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(USER_TOKEN_KEY + user.getId(), token, 60, TimeUnit.MINUTES);
         return token;
     }
 
@@ -113,7 +116,7 @@ public class BaseServiceImpl implements BaseService {
         if (userInfoVo == null) {
             return true;
         }
-        redisTemplate.delete(userInfoVo.getId());
+        redisTemplate.delete(USER_TOKEN_KEY + userInfoVo.getId());
         UserContext.remove();
         return true;
     }

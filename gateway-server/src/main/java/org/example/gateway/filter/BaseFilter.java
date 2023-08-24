@@ -40,6 +40,7 @@ public class BaseFilter implements GlobalFilter {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     public static final String AUTHORIZATION = "Authorization";
+    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -62,7 +63,7 @@ public class BaseFilter implements GlobalFilter {
         TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(authorization, UserInfoVo.class);
         UserInfoVo userInfoVo = tokenVo.getData();
         // 校验token
-        if (!tokenFilter(userInfoVo)) {
+        if (!tokenFilter(authorization, userInfoVo)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete().onErrorComplete();
         }
@@ -89,14 +90,15 @@ public class BaseFilter implements GlobalFilter {
         return StringUtils.hasLength(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
-    private boolean tokenFilter(UserInfoVo userInfoVo) {
+    private boolean tokenFilter(String authorization, UserInfoVo userInfoVo) {
         // 校验请求中的token参数和数据
         if (userInfoVo == null) {
             return false;
         }
         try {
             // token过期
-            return redisTemplate.opsForValue().get(userInfoVo.getId()) != null;
+            String token = (String) redisTemplate.opsForValue().get(USER_TOKEN_KEY + userInfoVo.getId());
+            return StringUtils.hasLength(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
