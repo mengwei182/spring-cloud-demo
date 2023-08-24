@@ -1,5 +1,6 @@
 package org.example.gateway.filter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
@@ -30,6 +31,7 @@ import java.util.Optional;
  * @author lihui
  * @since 2022/10/26
  */
+@Slf4j
 @Component
 @Order(Integer.MIN_VALUE)
 public class BaseFilter implements GlobalFilter {
@@ -92,9 +94,13 @@ public class BaseFilter implements GlobalFilter {
         if (userInfoVo == null) {
             return false;
         }
-        // token过期
-        Object token = redisTemplate.opsForValue().get(userInfoVo.getId());
-        return token != null;
+        try {
+            // token过期
+            return redisTemplate.opsForValue().get(userInfoVo.getId()) != null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
     private boolean resourceFilter(UserInfoVo userInfoVo, ServerHttpRequest request) {
