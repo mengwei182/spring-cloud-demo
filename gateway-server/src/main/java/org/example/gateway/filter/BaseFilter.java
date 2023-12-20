@@ -1,5 +1,6 @@
 package org.example.gateway.filter;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
@@ -16,7 +17,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -56,7 +56,7 @@ public class BaseFilter implements GlobalFilter {
         }
         // 校验请求中的token参数和数据
         String authorization = authorizationHeaderFilter(request);
-        if (!StringUtils.hasLength(authorization)) {
+        if (StrUtil.isEmpty(authorization)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete().onErrorComplete();
         }
@@ -87,7 +87,7 @@ public class BaseFilter implements GlobalFilter {
         // 校验请求中的token参数和数据
         String authorizationHeader = request.getHeaders().getFirst(AUTHORIZATION);
         String authorizationParameter = request.getQueryParams().getFirst(AUTHORIZATION);
-        return StringUtils.hasLength(authorizationHeader) ? authorizationHeader : authorizationParameter;
+        return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
     private boolean tokenFilter(String authorization, UserInfoVo userInfoVo) {
@@ -98,7 +98,7 @@ public class BaseFilter implements GlobalFilter {
         try {
             // token过期
             String token = (String) redisTemplate.opsForValue().get(USER_TOKEN_KEY + userInfoVo.getId());
-            return StringUtils.hasLength(token) && authorization.equals(token);
+            return !StrUtil.isEmpty(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;

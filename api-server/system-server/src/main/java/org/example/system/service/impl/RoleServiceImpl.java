@@ -1,5 +1,6 @@
 package org.example.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.example.common.entity.system.Role;
@@ -18,7 +19,6 @@ import org.example.system.service.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -114,7 +114,7 @@ public class RoleServiceImpl implements RoleService {
         roleMenuRelationQueryWrapper.lambda().eq(RoleMenuRelation::getRoleId, roleMenuRelationVo.getRoleId());
         roleMenuRelationMapper.delete(roleMenuRelationQueryWrapper);
         List<String> menuIds = roleMenuRelationVo.getMenuIds();
-        if (!CollectionUtils.isEmpty(menuIds)) {
+        if (!CollectionUtil.isEmpty(menuIds)) {
             menuIds.forEach(menuId -> {
                 RoleMenuRelation roleMenuRelation = new RoleMenuRelation();
                 roleMenuRelation.setId(CommonUtils.uuid());

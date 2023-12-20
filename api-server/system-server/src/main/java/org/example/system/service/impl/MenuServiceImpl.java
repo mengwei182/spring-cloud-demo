@@ -1,5 +1,6 @@
 package org.example.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,7 +21,6 @@ import org.example.system.service.MenuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
         String parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
-        if (StringUtils.hasLength(menuVo.getParentId())) {
+        if (!StrUtil.isEmpty(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
                 throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
@@ -59,7 +59,7 @@ public class MenuServiceImpl implements MenuService {
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
         }
         // 无父级id
-        if (!StringUtils.hasLength(menuVo.getParentId())) {
+        if (StrUtil.isEmpty(menuVo.getParentId())) {
             menu.setParentId(BaseEntity.TOP_PARENT_ID);
             menu.setIdChain(BaseEntity.TOP_PARENT_ID);
         }
@@ -107,7 +107,7 @@ public class MenuServiceImpl implements MenuService {
         String parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
-        if (StringUtils.hasLength(menuVo.getParentId())) {
+        if (!StrUtil.isEmpty(menuVo.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVo.getParentId()));
             if (parentMenu == null) {
                 throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
@@ -116,7 +116,7 @@ public class MenuServiceImpl implements MenuService {
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
         }
         // 无父级id
-        if (!StringUtils.hasLength(menuVo.getParentId())) {
+        if (StrUtil.isEmpty(menuVo.getParentId())) {
             menu.setParentId(BaseEntity.TOP_PARENT_ID);
             menu.setIdChain(BaseEntity.TOP_PARENT_ID);
         }

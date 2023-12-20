@@ -1,8 +1,8 @@
 package org.example.common.util;
 
+import cn.hutool.core.collection.CollectionUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cglib.beans.BeanMap;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CommonUtils {
      */
     public static <T> List<T> transformList(List<?> list, Class<T> clazz) {
         List<T> resultList = new ArrayList<>();
-        if (CollectionUtils.isEmpty(list)) {
+        if (CollectionUtil.isEmpty(list)) {
             return resultList;
         }
         for (Object object : list) {

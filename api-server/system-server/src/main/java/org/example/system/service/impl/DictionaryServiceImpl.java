@@ -1,5 +1,7 @@
 package org.example.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.entity.base.BaseEntity;
@@ -15,8 +17,6 @@ import org.example.system.mapper.DictionaryMapper;
 import org.example.system.service.DictionaryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -44,7 +44,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         String parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
-        if (StringUtils.hasLength(dictionaryVo.getParentId())) {
+        if (!StrUtil.isEmpty(dictionaryVo.getParentId())) {
             Dictionary parentDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getId, dictionaryVo.getParentId()));
             if (parentDictionary == null) {
                 throw new CommonException(SystemServerResult.PARENT_NOT_EXIST);
@@ -53,7 +53,7 @@ public class DictionaryServiceImpl implements DictionaryService {
             dictionary.setIdChain(parentDictionary.getIdChain() + "," + parentDictionary.getId());
         }
         // 无父级id
-        if (!StringUtils.hasLength(dictionaryVo.getParentId())) {
+        if (StrUtil.isEmpty(dictionaryVo.getParentId())) {
             dictionary.setParentId(BaseEntity.TOP_PARENT_ID);
             dictionary.setIdChain(BaseEntity.TOP_PARENT_ID);
         }
@@ -83,7 +83,7 @@ public class DictionaryServiceImpl implements DictionaryService {
             throw new CommonException(CommonServerResult.OBJECT_NOT_EXIST);
         }
         List<Dictionary> dictionaries = dictionaryMapper.selectList(new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, id));
-        if (!CollectionUtils.isEmpty(dictionaries)) {
+        if (!CollectionUtil.isEmpty(dictionaries)) {
             throw new CommonException(SystemServerResult.DICTIONARY_CHILD_EXIST);
         }
         dictionaryMapper.deleteById(id);

@@ -1,5 +1,6 @@
 package org.example.redis;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.common.entity.system.vo.ResourceCategoryVo;
@@ -11,7 +12,6 @@ import org.example.dubbo.system.ResourceCategoryDubboService;
 import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -44,7 +44,7 @@ public class ResourceMessageReceiver {
      * @param message
      */
     public void refreshResource(String message) {
-        if (!StringUtils.hasLength(message)) {
+        if (StrUtil.isEmpty(message)) {
             return;
         }
         CommonResult<?> commonResult = GsonUtils.gson().fromJson(message, CommonResult.class);

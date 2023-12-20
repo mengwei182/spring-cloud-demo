@@ -1,5 +1,7 @@
 package org.example.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -23,8 +25,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -72,10 +72,10 @@ public class UserServiceImpl implements UserService, UserCacheService {
     public Boolean addUser(UserInfoVo userInfoVo) {
         String username = userInfoVo.getUsername();
         String password = userInfoVo.getPassword();
-        if (!StringUtils.hasLength(username)) {
+        if (StrUtil.isEmpty(username)) {
             throw new CommonException(SystemServerResult.USERNAME_NULL);
         }
-        if (!StringUtils.hasLength(password)) {
+        if (StrUtil.isEmpty(password)) {
             throw new CommonException(SystemServerResult.PASSWORD_NULL);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
         userMapper.insert(user);
         // 添加角色信息
         List<String> roleIds = userInfoVo.getRoleIds();
-        if (!CollectionUtils.isEmpty(roleIds)) {
+        if (!CollectionUtil.isEmpty(roleIds)) {
             for (String roleId : roleIds) {
                 UserRoleRelation userRoleRelation = new UserRoleRelation();
                 userRoleRelation.setUserId(user.getId());
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      */
     @Override
     public UserInfoVo getUserInfo(String id) {
-        if (!StringUtils.hasLength(id)) {
+        if (StrUtil.isEmpty(id)) {
             throw new CommonException(SystemServerResult.USER_NOT_EXIST);
         }
         User user = userMapper.selectById(id);

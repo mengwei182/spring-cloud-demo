@@ -1,5 +1,6 @@
 package org.example.system.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TokenVo;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -62,18 +62,18 @@ public class BaseServiceImpl implements BaseService {
         String username = usernamePasswordVo.getUsername();
         String password = usernamePasswordVo.getPassword();
         String captcha = usernamePasswordVo.getCaptcha();
-        if (!StringUtils.hasLength(username)) {
+        if (StrUtil.isEmpty(username)) {
             throw new CommonException(SystemServerResult.USERNAME_NULL);
         }
-        if (!StringUtils.hasLength(password)) {
+        if (StrUtil.isEmpty(password)) {
             throw new CommonException(SystemServerResult.PASSWORD_NULL);
         }
-        if (!StringUtils.hasLength(captcha)) {
+        if (StrUtil.isEmpty(captcha)) {
             throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
         }
         HttpSession session = request.getSession(false);
         String captchaMemory = redisTemplate.opsForValue().get(session.getId());
-        if (!StringUtils.hasLength(captchaMemory)) {
+        if (StrUtil.isEmpty(captchaMemory)) {
             throw new CommonException(SystemServerResult.VERIFY_CODE_OVERDUE);
         }
         if (!captcha.equalsIgnoreCase(captchaMemory)) {
