@@ -21,7 +21,7 @@ public abstract class BaseEntity implements Serializable {
      */
     public static final String TOP_PARENT_ID = "0";
     @TableId
-    @TreeModelField(field = TreeModelFieldEnum.ID)
+    @TreeModelField(TreeModelFieldEnum.ID)
     private String id;
     /**
      * 创建者id

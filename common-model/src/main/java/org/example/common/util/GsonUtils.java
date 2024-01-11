@@ -16,7 +16,7 @@ public class GsonUtils {
     /**
      * 返回全局GSON对象
      *
-     * @return
+     * @return 全局唯一GSON对象
      */
     public static Gson gson() {
         return GSON;

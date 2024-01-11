@@ -29,9 +29,9 @@ public class RSAEncryptUtils {
      * @throws NoSuchAlgorithmException
      */
     public static void generatePublicPrivateKey() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
-        keyPairGen.initialize(1024, new SecureRandom());
-        KeyPair keyPair = keyPairGen.generateKeyPair();
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(1024, new SecureRandom());
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());

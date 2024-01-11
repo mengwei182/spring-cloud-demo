@@ -1,5 +1,6 @@
 package org.example.common.util.tree;
 
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TreeModel;
 import org.example.common.error.exception.CommonException;
@@ -17,12 +18,15 @@ public class TreeModelUtils {
     /**
      * 构建树形结构
      *
-     * @param objects
-     * @return
+     * @param objects 待转为树形结构的集合
+     * @return 已转为树形结构的集合
      */
     public static List<TreeModel> buildTreeModel(Collection<?> objects) {
-        List<TreeModel> treeModels = new ArrayList<>();
         List<TreeModel> resultTreeModels = new ArrayList<>();
+        if (CollectionUtil.isEmpty(objects)) {
+            return resultTreeModels;
+        }
+        List<TreeModel> treeModels = new ArrayList<>();
         for (Object object : objects) {
             TreeModel treeModel = new TreeModel();
             Class<?> clazz = object.getClass();
@@ -34,7 +38,7 @@ public class TreeModelUtils {
                     continue;
                 }
                 try {
-                    switch (annotation.field()) {
+                    switch (annotation.value()) {
                         case ID:
                             treeModel.setId(String.valueOf(field.get(object)));
                             break;
@@ -74,12 +78,15 @@ public class TreeModelUtils {
     /**
      * 构建任意类型树形结构
      *
-     * @param objects
-     * @param <T>
-     * @return
+     * @param objects 待转为树形结构的集合
+     * @param <T> 目标类型
+     * @return 已转为树形结构的集合
      */
     public static <T> List<T> buildObjectTree(Collection<T> objects) {
         List<T> resultObjectTrees = new ArrayList<>();
+        if (CollectionUtil.isEmpty(objects)) {
+            return resultObjectTrees;
+        }
         Set<Object> ids = new HashSet<>();
         for (T object : objects) {
             List<Field> fields = new ArrayList<>();
@@ -91,7 +98,7 @@ public class TreeModelUtils {
                     continue;
                 }
                 try {
-                    if (annotation.field() == TreeModelFieldEnum.ID) {
+                    if (annotation.value() == TreeModelFieldEnum.ID) {
                         ids.add(field.get(object));
                         break;
                     }
@@ -109,7 +116,7 @@ public class TreeModelUtils {
                     continue;
                 }
                 try {
-                    if (annotation.field() == TreeModelFieldEnum.PARENT_ID) {
+                    if (annotation.value() == TreeModelFieldEnum.PARENT_ID) {
                         field.setAccessible(true);
                         // 所属的parentId在id集合中不存在，即为根节点
                         if (!ids.contains(field.get(object))) {
@@ -146,11 +153,11 @@ public class TreeModelUtils {
                 continue;
             }
             try {
-                if (annotation.field() == TreeModelFieldEnum.ID) {
+                if (annotation.value() == TreeModelFieldEnum.ID) {
                     field.setAccessible(true);
                     parentObjectId = field.get(object);
                 }
-                if (annotation.field() == TreeModelFieldEnum.CHILDREN) {
+                if (annotation.value() == TreeModelFieldEnum.CHILDREN) {
                     childrenField = field;
                 }
             } catch (Exception e) {
@@ -166,7 +173,7 @@ public class TreeModelUtils {
                     continue;
                 }
                 try {
-                    if (annotation.field() == TreeModelFieldEnum.PARENT_ID) {
+                    if (annotation.value() == TreeModelFieldEnum.PARENT_ID) {
                         field.setAccessible(true);
                         Object parentId = field.get(objectTree);
                         if (parentId.equals(parentObjectId)) {

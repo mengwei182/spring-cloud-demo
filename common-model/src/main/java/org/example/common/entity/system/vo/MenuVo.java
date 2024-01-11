@@ -21,7 +21,7 @@ public class MenuVo extends BaseEntity {
      * 名称
      */
     @NotNull(message = "名称不能为空")
-    @TreeModelField(field = TreeModelFieldEnum.LABEL)
+    @TreeModelField(TreeModelFieldEnum.LABEL)
     @Size(min = 1, max = 255, message = "名称应该在1-255字符之间")
     private String name;
     /**
@@ -37,7 +37,7 @@ public class MenuVo extends BaseEntity {
     /**
      * 父级id
      */
-    @TreeModelField(field = TreeModelFieldEnum.PARENT_ID)
+    @TreeModelField(TreeModelFieldEnum.PARENT_ID)
     private String parentId;
     /**
      * 类型
@@ -70,6 +70,6 @@ public class MenuVo extends BaseEntity {
     /**
      * 子集
      */
-    @TreeModelField(field = TreeModelFieldEnum.CHILDREN)
+    @TreeModelField(TreeModelFieldEnum.CHILDREN)
     private List<MenuVo> children;
 }

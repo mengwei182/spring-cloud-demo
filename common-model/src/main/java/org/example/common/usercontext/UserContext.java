@@ -4,8 +4,6 @@ import lombok.Data;
 import org.example.common.entity.base.vo.UserInfoVo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author lihui
@@ -13,33 +11,17 @@ import java.util.List;
  */
 @Data
 public final class UserContext implements Serializable {
-    private static final ThreadLocal<UserContext> USER_CONTEXTS = new ThreadLocal<>();
-    private static final UserContext EMPTY = new UserContext();
-    private static final List<Class<?>> CLASSES = new ArrayList<>();
-    private String userId;
-    private String username;
-    private UserInfoVo userInfoVo;
+    private static final ThreadLocal<UserInfoVo> USER_CONTEXTS = new ThreadLocal<>();
 
     private UserContext() {
     }
 
-    public UserContext(String userId, String username, UserInfoVo userInfoVo) {
-        this.userId = userId;
-        this.username = username;
-        this.userInfoVo = userInfoVo;
+    public static UserInfoVo get() {
+        return USER_CONTEXTS.get();
     }
 
-    public static UserContext get() {
-        UserContext userContext = USER_CONTEXTS.get();
-        return userContext == null ? EMPTY : userContext;
-    }
-
-    public static UserContext create(String userId, String username, UserInfoVo userInfoVo) {
-        return new UserContext(userId, username, userInfoVo);
-    }
-
-    public static void set(String userId, String username, UserInfoVo userInfoVo) {
-        USER_CONTEXTS.set(create(userId, username, userInfoVo));
+    public static void set(UserInfoVo data) {
+        USER_CONTEXTS.set(data);
     }
 
     public static void remove() {

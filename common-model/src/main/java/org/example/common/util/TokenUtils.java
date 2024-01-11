@@ -2,7 +2,7 @@ package org.example.common.util;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.base.vo.TokenVo;
+import org.example.common.entity.base.Token;
 import org.springframework.beans.BeanUtils;
 
 import javax.crypto.Cipher;
@@ -42,12 +42,12 @@ public class TokenUtils {
     /**
      * 签名并生成token
      *
-     * @param tokenVo
+     * @param token
      * @return
      */
-    public static String sign(TokenVo<?> tokenVo) {
+    public static String sign(Token<?> token) {
         try {
-            byte[] bytes = encryptCipher.doFinal(GsonUtils.gson().toJson(tokenVo).getBytes());
+            byte[] bytes = encryptCipher.doFinal(GsonUtils.gson().toJson(token).getBytes());
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -61,36 +61,36 @@ public class TokenUtils {
      * @param token
      * @return
      */
-    public static TokenVo<?> unsigned(String token) {
+    public static Token<?> unsigned(String token) {
         try {
             byte[] bytes = decryptCipher.doFinal(Base64.getDecoder().decode(token.getBytes()));
-            return GsonUtils.gson().fromJson(new String(bytes), TypeToken.get(TokenVo.class));
+            return GsonUtils.gson().fromJson(new String(bytes), TypeToken.get(Token.class));
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new TokenVo<>();
+            return new Token<>();
         }
     }
 
     /**
      * 解析token
      *
-     * @param token
+     * @param tokenString
      * @param clazz
      * @param <T>
      * @return
      */
-    public static <T> TokenVo<T> unsigned(String token, Class<T> clazz) {
+    public static <T> Token<T> unsigned(String tokenString, Class<T> clazz) {
         try {
-            TokenVo<?> tokenVo = unsigned(token);
-            Object data = tokenVo.getData();
+            Token<?> token = unsigned(tokenString);
+            Object data = token.getData();
             T t = GsonUtils.gson().fromJson(GsonUtils.gson().toJson(data), clazz);
-            TokenVo<T> resultTokenVo = new TokenVo<>();
-            BeanUtils.copyProperties(tokenVo, resultTokenVo);
-            resultTokenVo.setData(t);
-            return resultTokenVo;
+            Token<T> resultToken = new Token<>();
+            BeanUtils.copyProperties(token, resultToken);
+            resultToken.setData(t);
+            return resultToken;
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new TokenVo<>();
+            return new Token<>();
         }
     }
 

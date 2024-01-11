@@ -51,7 +51,7 @@ public class UserController {
      */
     @RequestMapping("/info")
     public CommonResult<UserInfoVo> getUserInfo() {
-        return CommonResult.success(userService.getUserInfo(UserContext.get().getUserId()));
+        return CommonResult.success(userService.getUserInfo(UserContext.get().getId()));
     }
 
     /**

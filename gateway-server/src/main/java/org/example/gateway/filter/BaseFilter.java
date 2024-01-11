@@ -2,7 +2,7 @@ package org.example.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.base.vo.TokenVo;
+import org.example.common.entity.base.Token;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.util.TokenUtils;
@@ -60,8 +60,8 @@ public class BaseFilter implements GlobalFilter {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete().onErrorComplete();
         }
-        TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(authorization, UserInfoVo.class);
-        UserInfoVo userInfoVo = tokenVo.getData();
+        Token<UserInfoVo> token = TokenUtils.unsigned(authorization, UserInfoVo.class);
+        UserInfoVo userInfoVo = token.getData();
         // 校验token
         if (!tokenFilter(authorization, userInfoVo)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);

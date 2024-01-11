@@ -20,7 +20,7 @@ public class CommonUtils {
     /**
      * 生成uuid
      *
-     * @return
+     * @return 去除“-”的uuid
      */
     public static String uuid() {
         return UUID.randomUUID().toString().replaceAll("-", "");
@@ -29,10 +29,10 @@ public class CommonUtils {
     /**
      * 转换list成目标类型集合
      *
-     * @param list
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param list 待转换的集合
+     * @param clazz 目标类型
+     * @param <T> 类型泛型
+     * @return 转换后的集合
      */
     public static <T> List<T> transformList(List<?> list, Class<T> clazz) {
         List<T> resultList = new ArrayList<>();
@@ -48,10 +48,10 @@ public class CommonUtils {
     /**
      * 转换object成目标类型对象
      *
-     * @param object
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param object 待转换的对象
+     * @param clazz 目标类型
+     * @param <T> 类型泛型
+     * @return 转换后的对象
      */
     public static <T> T transformObject(Object object, Class<T> clazz) {
         if (object == null) {

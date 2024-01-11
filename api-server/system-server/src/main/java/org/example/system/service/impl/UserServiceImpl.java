@@ -88,8 +88,8 @@ public class UserServiceImpl implements UserService, UserCacheService {
         BeanUtils.copyProperties(userInfoVo, user);
         user.setId(CommonUtils.uuid());
         user.setPassword(passwordEncoder.encode(password));
-        user.setCreator(UserContext.get().getUserId());
-        user.setUpdater(UserContext.get().getUserId());
+        user.setCreator(UserContext.get().getId());
+        user.setUpdater(UserContext.get().getId());
         userMapper.insert(user);
         // 添加角色信息
         List<String> roleIds = userInfoVo.getRoleIds();
@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService, UserCacheService {
                 UserRoleRelation userRoleRelation = new UserRoleRelation();
                 userRoleRelation.setUserId(user.getId());
                 userRoleRelation.setRoleId(roleId);
-                userRoleRelation.setCreator(UserContext.get().getUserId());
-                userRoleRelation.setUpdater(UserContext.get().getUserId());
+                userRoleRelation.setCreator(UserContext.get().getId());
+                userRoleRelation.setUpdater(UserContext.get().getId());
                 userRoleRelationMapper.insert(userRoleRelation);
             }
         }

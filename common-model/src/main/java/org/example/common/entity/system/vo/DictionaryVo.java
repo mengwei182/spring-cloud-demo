@@ -16,7 +16,7 @@ public class DictionaryVo extends BaseEntity {
     /**
      * 名称
      */
-    @TreeModelField(field = TreeModelFieldEnum.LABEL)
+    @TreeModelField(TreeModelFieldEnum.LABEL)
     private String name;
     /**
      * 编码
@@ -25,7 +25,7 @@ public class DictionaryVo extends BaseEntity {
     /**
      * 父级id
      */
-    @TreeModelField(field = TreeModelFieldEnum.PARENT_ID)
+    @TreeModelField(TreeModelFieldEnum.PARENT_ID)
     private String parentId;
     /**
      * id链

@@ -3,7 +3,7 @@ package org.example.system.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.base.vo.TokenVo;
+import org.example.common.entity.base.Token;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.User;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
@@ -96,13 +96,13 @@ public class BaseServiceImpl implements BaseService {
         // 查询并设置登录用户的resource数据
         userInfoVo.setResources(resourceCacheService.getResourceByUserId(user.getId()));
         Date loginTime = new Date();
-        TokenVo<UserInfoVo> tokenVo = new TokenVo<>(user.getId(), loginTime, userInfoVo);
-        String token = TokenUtils.sign(tokenVo);
+        Token<UserInfoVo> token = new Token<>(user.getId(), loginTime, userInfoVo);
+        String tokenString = TokenUtils.sign(token);
         // 删除旧token
         redisTemplate.delete(USER_TOKEN_KEY + user.getId());
         // 设置token到redis，有效期一个小时
-        redisTemplate.opsForValue().set(USER_TOKEN_KEY + user.getId(), token, 60, TimeUnit.MINUTES);
-        return token;
+        redisTemplate.opsForValue().set(USER_TOKEN_KEY + user.getId(), tokenString, 60, TimeUnit.MINUTES);
+        return tokenString;
     }
 
     /**
@@ -112,7 +112,7 @@ public class BaseServiceImpl implements BaseService {
      */
     @Override
     public Boolean logout() {
-        UserInfoVo userInfoVo = UserContext.get().getUserInfoVo();
+        UserInfoVo userInfoVo = UserContext.get();
         if (userInfoVo == null) {
             return true;
         }

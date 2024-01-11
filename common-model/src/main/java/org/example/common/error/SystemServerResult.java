@@ -28,4 +28,6 @@ public interface SystemServerResult {
     String DICTIONARY_NAME_EXIST = "存在同名字典";
     String DICTIONARY_CODE_EXIST = "存在相同编码字典";
     String DICTIONARY_CHILD_EXIST = "存在子字典";
+    String TOKEN_EXPIRATION_TIMEOUT_MIN = "Token过期时间小于最小值";
+    String TOKEN_EXPIRATION_TIMEOUT_MAX = "Token过期时间大于最大值";
 }

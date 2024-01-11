@@ -2,7 +2,6 @@ package org.example.filter;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.base.vo.TokenVo;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.TokenUtils;
@@ -36,9 +35,7 @@ public class UserContextFilter implements Filter {
         String authorizationParameter = request.getParameter(AUTHORIZATION);
         String authorization = !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
         try {
-            TokenVo<UserInfoVo> tokenVo = TokenUtils.unsigned(authorization, UserInfoVo.class);
-            UserInfoVo userInfoVo = tokenVo.getData();
-            UserContext.set(userInfoVo.getId(), userInfoVo.getUsername(), userInfoVo);
+            UserContext.set(TokenUtils.unsigned(authorization, UserInfoVo.class).getData());
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
