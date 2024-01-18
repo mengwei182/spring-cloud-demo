@@ -35,12 +35,12 @@ import java.util.Optional;
 @Component
 @Order(Integer.MIN_VALUE)
 public class BaseFilter implements GlobalFilter {
+    public static final String AUTHORIZATION = "Authorization";
+    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
     @Resource
     private CommonProperties commonProperties;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
-    public static final String AUTHORIZATION = "Authorization";
-    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

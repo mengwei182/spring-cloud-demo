@@ -17,16 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfiguration implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        ApplicationConfiguration.applicationContext = applicationContext;
-    }
-
     public static <T> T getBean(Class<T> clazz) {
         return applicationContext.getBean(clazz);
     }
@@ -37,5 +27,15 @@ public class ApplicationConfiguration implements ApplicationContextAware {
 
     public static <T> T getBean(String name, Class<T> clazz) {
         return applicationContext.getBean(name, clazz);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        ApplicationConfiguration.applicationContext = applicationContext;
     }
 }

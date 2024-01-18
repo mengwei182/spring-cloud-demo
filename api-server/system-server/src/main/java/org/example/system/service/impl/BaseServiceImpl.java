@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class BaseServiceImpl implements BaseService {
+    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -48,7 +49,6 @@ public class BaseServiceImpl implements BaseService {
     private ResourceCacheService resourceCacheService;
     @Value("${key.encrypt.enable}")
     private Boolean keyEncryptEnable;
-    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
 
     /**
      * 登录

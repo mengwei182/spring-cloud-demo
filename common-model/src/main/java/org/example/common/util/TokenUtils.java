@@ -1,6 +1,5 @@
 package org.example.common.util;
 
-import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.Token;
 import org.springframework.beans.BeanUtils;
