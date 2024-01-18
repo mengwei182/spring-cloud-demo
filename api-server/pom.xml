@@ -3,9 +3,9 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-cloud-demo</artifactId>
         <groupId>org.example</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>spring-cloud-demo</artifactId>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,14 +17,29 @@
         <module>mq-server</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>mq-server</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>system-server</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!--lib start-->
+        <!--module start-->
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>dubbo-server</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
-        <!--lib end-->
+        <!--module end-->
 
         <!--spring boot start-->
         <dependency>
@@ -107,25 +122,4 @@
         </dependency>
         <!--utils end-->
     </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.starter.version}</version>
-                <configuration>
-                    <mainClass>org.example.Application</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

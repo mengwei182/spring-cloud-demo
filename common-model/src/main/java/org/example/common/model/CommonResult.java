@@ -3,12 +3,14 @@ package org.example.common.model;
 import lombok.Data;
 import org.example.common.global.ResultCode;
 
+import java.io.Serializable;
+
 /**
  * @author lihui
  * @since 2023/4/3
  */
 @Data
-public class CommonResult<T> {
+public class CommonResult<T> implements Serializable {
     private Integer code;
     private String message;
     private T data;

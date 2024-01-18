@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
@@ -31,8 +30,7 @@ public class HttpUtils {
 
     static {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setDefaultConnectionConfig(ConnectionConfig.custom().setConnectTimeout(Timeout.ofMinutes(5)).build());
-        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(Timeout.ofMinutes(5)).setResponseTimeout(Timeout.ofMinutes(50)).build();
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(Timeout.ofMinutes(5)).setConnectionRequestTimeout(Timeout.ofMinutes(5)).setResponseTimeout(Timeout.ofMinutes(50)).build();
         HTTP_CLIENT = HttpClients.custom().setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig).build();
     }
 
@@ -127,7 +125,7 @@ public class HttpUtils {
 
         @Override
         public ClassicHttpResponse handleResponse(ClassicHttpResponse response) throws IOException {
-            this.content = response.getEntity().getContent().readAllBytes();
+            this.content = IoUtil.readBytes(response.getEntity().getContent());
             return response;
         }
     }

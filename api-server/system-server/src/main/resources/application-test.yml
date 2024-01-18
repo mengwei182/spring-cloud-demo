@@ -54,6 +54,8 @@ dubbo:
     port: -1
   registry:
     address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    username: nacos
+    password: nacos
     protocol: -1
     port: -1
     parameters:

@@ -64,7 +64,7 @@ public class TokenUtils {
     public static Token<?> unsigned(String token) {
         try {
             byte[] bytes = decryptCipher.doFinal(Base64.getDecoder().decode(token.getBytes()));
-            return GsonUtils.gson().fromJson(new String(bytes), TypeToken.get(Token.class));
+            return GsonUtils.gson().fromJson(new String(bytes), Token.class);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new Token<>();

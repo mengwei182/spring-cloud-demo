@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        server-addr: 172.21.137.17:8848
         username: nacos
         password: nacos
         namespace: spring-cloud-demo
@@ -13,7 +13,7 @@ spring:
         locator:
           enabled: true
   redis:
-    host: localhost
+    host: 172.21.137.17
     database: 1
     port: 6379
     password: mengwei131575585
