@@ -62,6 +62,20 @@
             <artifactId>jedis</artifactId>
         </dependency>
         <!--redis end-->
+
+        <!--sleuth start-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <!--sleuth end-->
+
+        <!--caffeine redis start-->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>caffeine-redis-boot-starter</artifactId>
+        </dependency>
+        <!--caffeine redis end-->
     </dependencies>
 
     <build>

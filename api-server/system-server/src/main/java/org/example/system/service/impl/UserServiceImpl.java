@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.example.CaffeineRedisCache;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.*;
 import org.example.common.entity.system.vo.*;
@@ -21,14 +22,13 @@ import org.example.system.mapper.*;
 import org.example.system.service.UserService;
 import org.example.system.service.cache.UserCacheService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
     @Resource
     private DepartmentMapper departmentMapper;
     @Resource
-    private RedisTemplate<Object, Object> redisTemplate;
+    private CaffeineRedisCache caffeineRedisCache;
     @Resource
     private RoleMenuRelationMapper roleMenuRelationMapper;
     @Resource
@@ -217,9 +217,9 @@ public class UserServiceImpl implements UserService, UserCacheService {
     @Override
     public void setPhoneCaptcha(String phone, String captcha, Long timeout) {
         if (timeout != null && timeout > 0) {
-            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), captcha, timeout, TimeUnit.MINUTES);
+            caffeineRedisCache.put(PHONE_VERIFY_PREFIX.concat(phone), captcha, Duration.ofMinutes(timeout));
         } else {
-            redisTemplate.opsForValue().set(PHONE_VERIFY_PREFIX.concat(phone), captcha);
+            caffeineRedisCache.put(PHONE_VERIFY_PREFIX.concat(phone), captcha);
         }
     }
 
@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      */
     @Override
     public String getPhoneCaptcha(String phone) {
-        return (String) redisTemplate.opsForValue().get(PHONE_VERIFY_PREFIX.concat(phone));
+        return caffeineRedisCache.get(PHONE_VERIFY_PREFIX.concat(phone), String.class);
     }
 
     /**
@@ -241,7 +241,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      */
     @Override
     public void deletePhoneCaptcha(String phone) {
-        redisTemplate.delete(PHONE_VERIFY_PREFIX.concat(phone));
+        caffeineRedisCache.evict(PHONE_VERIFY_PREFIX.concat(phone));
     }
 
     /**
@@ -254,9 +254,9 @@ public class UserServiceImpl implements UserService, UserCacheService {
     @Override
     public void setImageCaptcha(String account, String captcha, Long timeout) {
         if (timeout != null && timeout > 0) {
-            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), captcha, timeout, TimeUnit.MINUTES);
+            caffeineRedisCache.put(IMAGE_VERIFY_PREFIX.concat(account), captcha, Duration.ofMinutes(timeout));
         } else {
-            redisTemplate.opsForValue().set(IMAGE_VERIFY_PREFIX.concat(account), captcha);
+            caffeineRedisCache.put(IMAGE_VERIFY_PREFIX.concat(account), captcha);
         }
     }
 
@@ -267,7 +267,7 @@ public class UserServiceImpl implements UserService, UserCacheService {
      */
     @Override
     public String getImageCaptcha(String account) {
-        return (String) redisTemplate.opsForValue().get(IMAGE_VERIFY_PREFIX.concat(account));
+        return caffeineRedisCache.get(IMAGE_VERIFY_PREFIX.concat(account), String.class);
     }
 
     /**
@@ -277,6 +277,6 @@ public class UserServiceImpl implements UserService, UserCacheService {
      */
     @Override
     public void deleteImageCaptcha(String account) {
-        redisTemplate.delete(IMAGE_VERIFY_PREFIX.concat(account));
+        caffeineRedisCache.evict(IMAGE_VERIFY_PREFIX.concat(account));
     }
 }

@@ -3,7 +3,6 @@ package org.example.properties;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

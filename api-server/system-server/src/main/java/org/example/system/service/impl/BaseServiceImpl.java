@@ -3,6 +3,7 @@ package org.example.system.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.example.CaffeineRedisCache;
 import org.example.common.entity.base.Token;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.User;
@@ -18,7 +19,6 @@ import org.example.system.mapper.UserMapper;
 import org.example.system.service.BaseService;
 import org.example.system.service.cache.ResourceCacheService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author lihui
@@ -44,7 +44,7 @@ public class BaseServiceImpl implements BaseService {
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private CaffeineRedisCache caffeineRedisCache;
     @Resource
     private ResourceCacheService resourceCacheService;
     @Value("${key.encrypt.enable}")
@@ -72,7 +72,7 @@ public class BaseServiceImpl implements BaseService {
             throw new CommonException(SystemServerResult.VERIFY_CODE_ERROR);
         }
         HttpSession session = request.getSession(false);
-        String captchaMemory = redisTemplate.opsForValue().get(session.getId());
+        String captchaMemory = caffeineRedisCache.get(session.getId(), String.class);
         if (StrUtil.isEmpty(captchaMemory)) {
             throw new CommonException(SystemServerResult.VERIFY_CODE_OVERDUE);
         }
@@ -99,9 +99,9 @@ public class BaseServiceImpl implements BaseService {
         Token<UserInfoVo> token = new Token<>(user.getId(), loginTime, userInfoVo);
         String tokenString = TokenUtils.sign(token);
         // 删除旧token
-        redisTemplate.delete(USER_TOKEN_KEY + user.getId());
+        caffeineRedisCache.evict(USER_TOKEN_KEY + user.getId());
         // 设置token到redis，有效期一个小时
-        redisTemplate.opsForValue().set(USER_TOKEN_KEY + user.getId(), tokenString, 60, TimeUnit.MINUTES);
+        caffeineRedisCache.put(USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofMinutes(60));
         return tokenString;
     }
 
@@ -116,7 +116,7 @@ public class BaseServiceImpl implements BaseService {
         if (userInfoVo == null) {
             return true;
         }
-        redisTemplate.delete(USER_TOKEN_KEY + userInfoVo.getId());
+        caffeineRedisCache.evict(USER_TOKEN_KEY + userInfoVo.getId());
         UserContext.remove();
         return true;
     }
@@ -140,7 +140,7 @@ public class BaseServiceImpl implements BaseService {
         ServletOutputStream os = response.getOutputStream();
         HttpSession session = request.getSession(true);
         String captcha = ImageCaptchaUtils.outputCaptchaImage(width, height, os, captchaSize);
-        redisTemplate.opsForValue().set(session.getId(), captcha, 10L, TimeUnit.MINUTES);
+        caffeineRedisCache.put(session.getId(), captcha, Duration.ofMinutes(10));
         os.close();
     }
 }

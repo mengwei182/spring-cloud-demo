@@ -2,6 +2,7 @@ package org.example.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.example.CaffeineRedisCache;
 import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
@@ -11,7 +12,6 @@ import org.example.dubbo.system.ResourceDubboService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
@@ -39,11 +39,11 @@ public class ResourceMessageListener implements MessageListener {
     @Resource
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
     @Resource
-    private RedisTemplate<Object, Object> redisTemplate;
+    private CaffeineRedisCache caffeineRedisCache;
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        CommonResult<?> commonResult = (CommonResult<?>) redisTemplate.getValueSerializer().deserialize(message.getBody());
+        CommonResult<?> commonResult = (CommonResult<?>) caffeineRedisCache.getRedisTemplate().getValueSerializer().deserialize(message.getBody());
         if (commonResult == null || commonResult.getData() == null || !Boolean.TRUE.equals(commonResult.getData())) {
             return;
         }

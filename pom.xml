@@ -140,6 +140,14 @@
                 <version>1.0</version>
             </dependency>
             <!--module end-->
+
+            <!--caffeine redis start-->
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>caffeine-redis-boot-starter</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <!--caffeine redis end-->
         </dependencies>
     </dependencyManagement>
 

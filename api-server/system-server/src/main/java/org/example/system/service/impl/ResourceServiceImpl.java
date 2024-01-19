@@ -3,6 +3,7 @@ package org.example.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.example.CaffeineRedisCache;
 import org.example.common.entity.system.Resource;
 import org.example.common.entity.system.ResourceCategory;
 import org.example.common.entity.system.RoleResourceRelation;
@@ -22,7 +23,6 @@ import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.service.ResourceService;
 import org.example.system.service.cache.ResourceCacheService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +43,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceCacheServic
     @javax.annotation.Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
     @javax.annotation.Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private CaffeineRedisCache caffeineRedisCache;
     @javax.annotation.Resource
     private UserRoleRelationMapper userRoleRelationMapper;
 
@@ -173,7 +173,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceCacheServic
     public void refreshResource() {
         CommonResult<Boolean> commonResult = CommonResult.success();
         commonResult.setData(Boolean.TRUE);
-        redisTemplate.convertAndSend("refresh_resource_topic", commonResult);
+        caffeineRedisCache.convertAndSend("refresh_resource_topic", commonResult);
     }
 
     /**

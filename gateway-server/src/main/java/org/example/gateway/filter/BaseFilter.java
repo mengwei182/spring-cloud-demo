@@ -2,6 +2,7 @@ package org.example.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.example.CaffeineRedisCache;
 import org.example.common.entity.base.Token;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
@@ -13,7 +14,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +43,7 @@ public class BaseFilter implements GlobalFilter {
     @Resource
     private CommonProperties commonProperties;
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private CaffeineRedisCache caffeineRedisCache;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -106,7 +105,7 @@ public class BaseFilter implements GlobalFilter {
         }
         try {
             // token过期
-            String token = (String) redisTemplate.opsForValue().get(USER_TOKEN_KEY + userInfoVo.getId());
+            String token = caffeineRedisCache.get(USER_TOKEN_KEY + userInfoVo.getId(), String.class);
             return !StrUtil.isEmpty(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
