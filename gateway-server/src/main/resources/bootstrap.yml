@@ -1,0 +1,19 @@
+server:
+  port: 9080
+
+spring:
+  application:
+    name: system-server
+  profiles:
+    active: local
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.21.137.17:8848
+        username: nacos
+        password: nacos
+        namespace: spring-cloud-demo
+        file-extension: yml
+        group: DEFAULT_GROUP
+  config:
+    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

@@ -127,5 +127,12 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
         <!--utils end-->
+
+        <!--sleuth start-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <!--sleuth end-->
     </dependencies>
 </project>
