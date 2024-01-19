@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: system-server
+    name: gateway-server
   profiles:
     active: local
   cloud:
