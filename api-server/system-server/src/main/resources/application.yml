@@ -1,29 +1,11 @@
-server:
-  port: 9081
-
 spring:
-  application:
-    name: system-server
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-  profiles:
-    active: local
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-  config:
-    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-  cloud:
-    nacos:
-      config:
-        username: nacos
-        password: nacos
-        server-addr: 172.21.137.17:8848
-        namespace: spring-cloud-demo
-        file-extension: yml
-        group: DEFAULT_GROUP
 
 common:
   skipUrl: /base/login,/base/register,/base/logout,/base/image/captcha,/base/publicKey
