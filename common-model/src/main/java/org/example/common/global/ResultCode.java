@@ -1,9 +1,12 @@
 package org.example.common.global;
 
+import lombok.Getter;
+
 /**
  * @author lihui
  * @since 2023/4/3
  */
+@Getter
 public enum ResultCode {
     SUCCESS(200, "SUCCESS"),
     UNAUTHORIZED(401, "UNAUTHORIZED"),
@@ -15,13 +18,5 @@ public enum ResultCode {
     ResultCode(Integer code, String name) {
         this.code = code;
         this.name = name;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getName() {
-        return name;
     }
 }
