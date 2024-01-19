@@ -1,6 +1,7 @@
 package org.example.common.model;
 
 import lombok.Data;
+import org.example.common.error.CommonServerResult;
 import org.example.common.global.ResultCode;
 
 import java.io.Serializable;
@@ -25,11 +26,11 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static <T> CommonResult<T> success() {
-        return new CommonResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getName(), null);
+        return new CommonResult<>(ResultCode.SUCCESS.getCode(), CommonServerResult.SUCCESS, null);
     }
 
     public static <T> CommonResult<T> success(T data) {
-        return new CommonResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getName(), data);
+        return new CommonResult<>(ResultCode.SUCCESS.getCode(), CommonServerResult.SUCCESS, data);
     }
 
     public static <T> CommonResult<T> success(String message, T data) {
@@ -37,11 +38,11 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static <T> CommonResult<T> error() {
-        return new CommonResult<>(ResultCode.ERROR.getCode(), ResultCode.ERROR.getName(), null);
+        return new CommonResult<>(ResultCode.ERROR.getCode(), CommonServerResult.ERROR, null);
     }
 
     public static <T> CommonResult<T> error(T data) {
-        return new CommonResult<>(ResultCode.ERROR.getCode(), ResultCode.ERROR.getName(), data);
+        return new CommonResult<>(ResultCode.ERROR.getCode(), CommonServerResult.ERROR, data);
     }
 
     public static <T> CommonResult<T> error(String message) {
@@ -53,10 +54,10 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static <T> CommonResult<T> unauthorized() {
-        return new CommonResult<>(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getName(), null);
+        return new CommonResult<>(ResultCode.UNAUTHORIZED.getCode(), CommonServerResult.UNAUTHORIZED, null);
     }
 
     public static <T> CommonResult<T> forbidden() {
-        return new CommonResult<>(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getName(), null);
+        return new CommonResult<>(ResultCode.FORBIDDEN.getCode(), CommonServerResult.FORBIDDEN, null);
     }
 }

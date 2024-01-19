@@ -37,7 +37,7 @@ public class UserContextFilter implements Filter {
         try {
             UserContext.set(TokenUtils.unsigned(authorization, UserInfoVo.class).getData());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.info("request is white list or authorization invalid. url:{}, authorization:{}", request.getRequestURL().toString(), authorization);
         } finally {
             filterChain.doFilter(request, response);
         }

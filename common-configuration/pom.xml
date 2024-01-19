@@ -20,12 +20,16 @@
         </dependency>
         <!--module end-->
 
-        <!--spring boot start-->
+        <!--spring start-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-        <!--spring boot end-->
+        <!--spring end-->
 
         <!--mybatis start-->
         <dependency>

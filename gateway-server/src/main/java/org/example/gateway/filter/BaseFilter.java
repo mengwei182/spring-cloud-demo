@@ -5,12 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.Token;
 import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
+import org.example.common.model.CommonResult;
+import org.example.common.util.GsonUtils;
 import org.example.common.util.TokenUtils;
 import org.example.properties.CommonProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -54,23 +58,28 @@ public class BaseFilter implements GlobalFilter {
         if (urlWhiteFilter(request)) {
             return chain.filter(exchange);
         }
+        byte[] bytes = GsonUtils.gson().toJson(CommonResult.unauthorized()).getBytes();
+        DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
         // 校验请求中的token参数和数据
         String authorization = authorizationHeaderFilter(request);
         if (StrUtil.isEmpty(authorization)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete().onErrorComplete();
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            return response.writeWith(Mono.just(dataBuffer));
         }
         Token<UserInfoVo> token = TokenUtils.unsigned(authorization, UserInfoVo.class);
         UserInfoVo userInfoVo = token.getData();
         // 校验token
         if (!tokenFilter(authorization, userInfoVo)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete().onErrorComplete();
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            return response.writeWith(Mono.just(dataBuffer));
         }
         // 校验资源
         if (!resourceFilter(userInfoVo, request)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return response.setComplete().onErrorComplete();
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            return response.writeWith(Mono.just(dataBuffer));
         }
         return chain.filter(exchange);
     }
