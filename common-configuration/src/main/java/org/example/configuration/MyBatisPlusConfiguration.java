@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2022/10/29
  */
 @Configuration
-public class MyBatisPlusConfig {
+public class MyBatisPlusConfiguration {
     @Bean
     @ConditionalOnClass(name = "com.mysql.cj.jdbc.Driver")
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
