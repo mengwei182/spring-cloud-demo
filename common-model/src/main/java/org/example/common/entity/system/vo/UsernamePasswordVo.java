@@ -22,7 +22,15 @@ public class UsernamePasswordVo {
      */
     private String oldPassword;
     /**
-     * 验证码
+     * 图片验证码
      */
-    private String captcha;
+    private String imageCaptcha;
+    /**
+     * 短信验证码
+     */
+    private String phoneCaptcha;
+    /**
+     * 邮箱验证码
+     */
+    private String emailCaptcha;
 }

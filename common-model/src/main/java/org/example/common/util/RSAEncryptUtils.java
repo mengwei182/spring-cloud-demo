@@ -1,6 +1,6 @@
 package org.example.common.util;
 
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
 import java.security.*;
@@ -14,41 +14,59 @@ import java.util.Base64;
  * @author lihui
  * @since 2023/8/4
  */
+@Slf4j
 public class RSAEncryptUtils {
-    @Getter
-    private static String publicKey;
-    @Getter
-    private static String privateKey;
+    private static final ThreadLocal<String> PUBLIC_KEY_THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<String> PRIVATE_KEY_THREAD_LOCAL = new ThreadLocal<>();
 
     private RSAEncryptUtils() {
     }
 
     /**
-     * 生成RSA加密规则的公私密钥对
+     * 生成一个公私钥队
      *
+     * @return 0位置为公钥，1位置为私钥
      * @throws NoSuchAlgorithmException
      */
-    public static void generatePublicPrivateKey() throws NoSuchAlgorithmException {
+    public static String[] generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024, new SecureRandom());
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
         String privateKeyString = Base64.getEncoder().encodeToString((privateKey.getEncoded()));
-        RSAEncryptUtils.publicKey = publicKeyString;
-        RSAEncryptUtils.privateKey = privateKeyString;
+        PUBLIC_KEY_THREAD_LOCAL.set(publicKeyString);
+        PRIVATE_KEY_THREAD_LOCAL.set(privateKeyString);
+        return new String[]{publicKeyString, privateKeyString};
     }
 
     /**
-     * RSA公钥加密
+     * 获取公钥，同一线程多次调用返回的密钥值相同
      *
-     * @param string 加密字符串
-     * @return 加密后的密文
-     * @throws Exception
+     * @return Base64加密后的公钥字符串
+     * @throws NoSuchAlgorithmException
      */
-    public static String encrypt(String string) throws Exception {
-        return encrypt(string, getPublicKey());
+    public static String getPublicKey() throws NoSuchAlgorithmException {
+        String publicKeyString = PUBLIC_KEY_THREAD_LOCAL.get();
+        if (publicKeyString == null) {
+            generateKeyPair();
+        }
+        return PUBLIC_KEY_THREAD_LOCAL.get();
+    }
+
+    /**
+     * 获取私钥，同一线程多次调用返回的密钥值相同
+     *
+     * @return Base64加密后的私钥字符串
+     * @throws NoSuchAlgorithmException
+     */
+    public static String getPrivateKey() throws NoSuchAlgorithmException {
+        String privateKeyString = PRIVATE_KEY_THREAD_LOCAL.get();
+        if (privateKeyString == null) {
+            generateKeyPair();
+        }
+        return PRIVATE_KEY_THREAD_LOCAL.get();
     }
 
     /**
@@ -57,25 +75,18 @@ public class RSAEncryptUtils {
      * @param string 加密字符串
      * @param publicKey 公钥
      * @return 加密后的密文
-     * @throws Exception
      */
-    public static String encrypt(String string, String publicKey) throws Exception {
-        byte[] decode = Base64.getDecoder().decode(publicKey.getBytes());
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decode));
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
-        return Base64.getEncoder().encodeToString(cipher.doFinal(string.getBytes()));
-    }
-
-    /**
-     * RSA私钥解密
-     *
-     * @param string 加密字符串
-     * @return 解密的明文
-     * @throws Exception
-     */
-    public static String decrypt(String string) throws Exception {
-        return decrypt(string, getPrivateKey());
+    public static String encrypt(String string, String publicKey) {
+        try {
+            byte[] decode = Base64.getDecoder().decode(publicKey.getBytes());
+            RSAPublicKey rsaPublicKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decode));
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(string.getBytes()));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -84,13 +95,17 @@ public class RSAEncryptUtils {
      * @param string 加密字符串
      * @param privateKey 私钥
      * @return 解密的明文
-     * @throws Exception
      */
-    public static String decrypt(String string, String privateKey) throws Exception {
-        byte[] decode = Base64.getDecoder().decode(privateKey.getBytes());
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decode));
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKey);
-        return new String(cipher.doFinal(Base64.getDecoder().decode(string.getBytes())));
+    public static String decrypt(String string, String privateKey) {
+        try {
+            byte[] decode = Base64.getDecoder().decode(privateKey.getBytes());
+            RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decode));
+            Cipher cipher = Cipher.getInstance("RSA");
+            cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKey);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(string.getBytes())));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return null;
     }
 }

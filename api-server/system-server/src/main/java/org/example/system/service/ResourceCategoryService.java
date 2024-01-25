@@ -49,4 +49,12 @@ public interface ResourceCategoryService {
      * @return
      */
     List<ResourceCategoryVo> getAllResourceCategoryList();
+
+    /**
+     * 根据资源分类名称查询资源分类信息
+     *
+     * @param name
+     * @return
+     */
+    ResourceCategoryVo getResourceCategoryByName(String name);
 }

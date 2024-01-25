@@ -8,26 +8,29 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
-import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.*;
 import org.example.common.entity.system.vo.*;
-import org.example.common.error.SystemServerResult;
-import org.example.common.error.exception.CommonException;
+import org.example.common.result.SystemServerResult;
+import org.example.common.result.exception.SystemException;
 import org.example.common.usercontext.UserContext;
 import org.example.common.util.CommonUtils;
 import org.example.common.util.PageUtils;
+import org.example.common.util.RSAEncryptUtils;
 import org.example.common.util.tree.TreeModelUtils;
 import org.example.system.api.UserQueryPage;
 import org.example.system.mapper.*;
 import org.example.system.service.UserService;
-import org.example.system.service.cache.UserCacheService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,9 +40,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService, UserCacheService {
-    private static final String PHONE_VERIFY_PREFIX = "PHONE_VERIFY_PREFIX_";
-    private static final String IMAGE_VERIFY_PREFIX = "IMAGE_VERIFY_PREFIX_";
+public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -64,46 +65,58 @@ public class UserServiceImpl implements UserService, UserCacheService {
     /**
      * 新增用户
      *
-     * @param userInfoVo
+     * @param userVo
      * @return
      */
     @Override
     @Transactional
-    public Boolean addUser(UserInfoVo userInfoVo) {
-        String username = userInfoVo.getUsername();
-        String password = userInfoVo.getPassword();
+    public String addUser(UserVo userVo) {
+        String username = userVo.getUsername();
+        String password = userVo.getPassword();
         if (StrUtil.isEmpty(username)) {
-            throw new CommonException(SystemServerResult.USERNAME_NULL);
+            throw new SystemException(SystemServerResult.USERNAME_NULL);
         }
         if (StrUtil.isEmpty(password)) {
-            throw new CommonException(SystemServerResult.PASSWORD_NULL);
+            throw new SystemException(SystemServerResult.PASSWORD_NULL);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(User::getUsername, username);
         User user = userMapper.selectOne(queryWrapper);
         if (user != null) {
-            throw new CommonException(SystemServerResult.USER_EXIST);
+            throw new SystemException(SystemServerResult.USER_EXIST);
         }
         user = new User();
-        BeanUtils.copyProperties(userInfoVo, user);
-        user.setId(CommonUtils.uuid());
+        BeanUtils.copyProperties(userVo, user);
+        String id = CommonUtils.uuid();
+        user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
+        String tokenExpireTime = userVo.getTokenExpireTime();
+        if (StrUtil.isEmpty(tokenExpireTime)) {
+            // 默认7天有效期
+            user.setTokenExpireTime(Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant()));
+        } else {
+            user.setTokenExpireTime(Date.from(LocalDateTime.parse(tokenExpireTime).atZone(ZoneId.systemDefault()).toInstant()));
+        }
         user.setCreator(UserContext.get().getId());
         user.setUpdater(UserContext.get().getId());
         userMapper.insert(user);
         // 添加角色信息
-        List<String> roleIds = userInfoVo.getRoleIds();
-        if (!CollectionUtil.isEmpty(roleIds)) {
-            for (String roleId : roleIds) {
-                UserRoleRelation userRoleRelation = new UserRoleRelation();
-                userRoleRelation.setUserId(user.getId());
-                userRoleRelation.setRoleId(roleId);
-                userRoleRelation.setCreator(UserContext.get().getId());
-                userRoleRelation.setUpdater(UserContext.get().getId());
-                userRoleRelationMapper.insert(userRoleRelation);
-            }
+        List<String> roleIds = userVo.getRoleIds();
+        if (CollectionUtil.isEmpty(roleIds)) {
+            throw new SystemException(SystemServerResult.ROLE_NULL);
         }
-        return true;
+        for (String roleId : roleIds) {
+            if (Role.ADMIN_ID.equals(roleId)) {
+                throw new SystemException(SystemServerResult.ROLE_ADMIN_EXIST);
+            }
+            UserRoleRelation userRoleRelation = new UserRoleRelation();
+            userRoleRelation.setUserId(user.getId());
+            userRoleRelation.setRoleId(roleId);
+            userRoleRelation.setCreator(UserContext.get().getId());
+            userRoleRelation.setUpdater(UserContext.get().getId());
+            userRoleRelationMapper.insert(userRoleRelation);
+        }
+        return id;
     }
 
     /**
@@ -112,29 +125,44 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @return
      */
     @Override
-    public UserInfoVo getUserInfo(String id) {
+    public UserVo getUserInfo(String id) {
         if (StrUtil.isEmpty(id)) {
-            throw new CommonException(SystemServerResult.USER_NOT_EXIST);
+            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
-        User user = userMapper.selectById(id);
-        UserInfoVo userInfoVo = CommonUtils.transformObject(user, UserInfoVo.class);
-        userInfoVo.setPassword(null);
-        // 查询并填充用户角色信息
-        List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, user.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
-        List<Role> roles = roleMapper.selectBatchIds(roleIds);
-        userInfoVo.setRoles(CommonUtils.transformList(roles, RoleVo.class));
-        // 查询并填充用户菜单信息
-        List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
-        List<Menu> menus = menuMapper.selectBatchIds(menuIds);
-        userInfoVo.setMenus(TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVo.class)));
-        // 查询并填充用户资源信息
-        List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
-        List<org.example.common.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
-        userInfoVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
-        // 查询并填充用户部门信息
-        Department department = departmentMapper.selectById(user.getDepartmentId());
-        userInfoVo.setDepartment(CommonUtils.transformObject(department, DepartmentVo.class));
-        return userInfoVo;
+        UserVo userVo = caffeineRedisCache.get(id, UserVo.class);
+        if (userVo == null) {
+            User user = userMapper.selectById(id);
+            if (user == null) {
+                return null;
+            }
+            // 校验token有效期
+            long time = getTokenExpireTime(user.getId());
+            // token已经过期
+            if (time <= 0) {
+                // 删除旧token
+                caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + user.getId());
+                throw new SystemException(SystemServerResult.TOKEN_EXPIRATION_TIME_INVALID);
+            }
+            userVo = CommonUtils.transformObject(user, UserVo.class);
+            userVo.setPassword(null);
+            // 查询并填充用户角色信息
+            List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, user.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
+            List<Role> roles = roleMapper.selectBatchIds(roleIds);
+            userVo.setRoles(CommonUtils.transformList(roles, RoleVo.class));
+            // 查询并填充用户菜单信息
+            List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
+            List<Menu> menus = menuMapper.selectBatchIds(menuIds);
+            userVo.setMenus(TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVo.class)));
+            // 查询并填充用户资源信息
+            List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
+            List<org.example.common.entity.system.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
+            userVo.setResources(CommonUtils.transformList(resources, ResourceVo.class));
+            // 查询并填充用户部门信息
+            Department department = departmentMapper.selectById(user.getDepartmentId());
+            userVo.setDepartment(CommonUtils.transformObject(department, DepartmentVo.class));
+            caffeineRedisCache.put(id, userVo, Duration.ofMillis(time));
+        }
+        return userVo;
     }
 
     /**
@@ -144,26 +172,26 @@ public class UserServiceImpl implements UserService, UserCacheService {
      * @return
      */
     @Override
-    public Page<UserInfoVo> getUserList(UserQueryPage queryPage) {
+    public Page<UserVo> getUserList(UserQueryPage queryPage) {
         Page<User> page = new Page<>(queryPage.getPageNumber(), queryPage.getPageSize());
         List<User> userList = userMapper.getUserList(page, queryPage);
         page.setRecords(userList);
-        return PageUtils.wrap(page, UserInfoVo.class);
+        return PageUtils.wrap(page, UserVo.class);
     }
 
     /**
      * 更新用户信息
      *
-     * @param userInfoVo
+     * @param userVo
      * @return
      */
     @Override
-    public Boolean updateUser(UserInfoVo userInfoVo) {
-        User user = userMapper.selectById(userInfoVo.getId());
+    public Boolean updateUser(UserVo userVo) {
+        User user = userMapper.selectById(userVo.getId());
         if (user == null) {
-            throw new CommonException(SystemServerResult.USER_NOT_EXIST);
+            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
-        BeanUtils.copyProperties(userInfoVo, user);
+        BeanUtils.copyProperties(userVo, user);
         userMapper.updateById(user);
         return true;
     }
@@ -178,12 +206,12 @@ public class UserServiceImpl implements UserService, UserCacheService {
     public Boolean updateUserPassword(UsernamePasswordVo usernamePasswordVo) {
         User user = userMapper.selectById(usernamePasswordVo.getId());
         if (user == null) {
-            throw new CommonException(SystemServerResult.USER_NOT_EXIST);
+            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
         String password = user.getPassword();
         String oldPassword = usernamePasswordVo.getOldPassword();
         if (!passwordEncoder.matches(oldPassword, password)) {
-            throw new CommonException(SystemServerResult.OLD_PASSWORD_ERROR);
+            throw new SystemException(SystemServerResult.OLD_PASSWORD_ERROR);
         }
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda().set(User::getPassword, passwordEncoder.encode(usernamePasswordVo.getPassword())).eq(User::getId, user.getId());
@@ -208,75 +236,53 @@ public class UserServiceImpl implements UserService, UserCacheService {
     }
 
     /**
-     * 设置手机验证码到redis
+     * 获取用户token有效时间
      *
-     * @param phone
-     * @param captcha
-     * @param timeout
+     * @param id
+     * @return 有效时间，单位毫秒
      */
     @Override
-    public void setPhoneCaptcha(String phone, String captcha, Long timeout) {
-        if (timeout != null && timeout > 0) {
-            caffeineRedisCache.put(PHONE_VERIFY_PREFIX.concat(phone), captcha, Duration.ofMinutes(timeout));
-        } else {
-            caffeineRedisCache.put(PHONE_VERIFY_PREFIX.concat(phone), captcha);
+    public long getTokenExpireTime(String id) {
+        UserVo userVo = caffeineRedisCache.get(id, UserVo.class);
+        if (userVo == null) {
+            User user = userMapper.selectById(id);
+            if (user == null) {
+                return 0;
+            }
+            Date tokenExpireTime = user.getTokenExpireTime();
+            if (tokenExpireTime == null) {
+                // 默认7天有效期
+                tokenExpireTime = Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
+                user.setTokenExpireTime(tokenExpireTime);
+                userMapper.updateById(user);
+                clear(id);
+            }
+            // 校验token有效期
+            long time = tokenExpireTime.getTime() - new Date().getTime();
+            return time <= 0 ? 0 : time;
         }
+        return 0;
     }
 
     /**
-     * 从redis获取手机验证码
+     * 创建密钥
      *
-     * @param phone
+     * @param id
      * @return
      */
     @Override
-    public String getPhoneCaptcha(String phone) {
-        return caffeineRedisCache.get(PHONE_VERIFY_PREFIX.concat(phone), String.class);
+    public String createPublicKey(String id) throws NoSuchAlgorithmException {
+        User user = new User();
+        user.setId(id);
+        user.setPublicKey(RSAEncryptUtils.getPublicKey());
+        user.setPrivateKey(RSAEncryptUtils.getPublicKey());
+        userMapper.updateById(user);
+        clear(id);
+        return RSAEncryptUtils.getPublicKey();
     }
 
-    /**
-     * 从redis删除手机验证码
-     *
-     * @param phone
-     */
     @Override
-    public void deletePhoneCaptcha(String phone) {
-        caffeineRedisCache.evict(PHONE_VERIFY_PREFIX.concat(phone));
-    }
-
-    /**
-     * 设置图片验证码到redis
-     *
-     * @param account
-     * @param captcha
-     * @param timeout
-     */
-    @Override
-    public void setImageCaptcha(String account, String captcha, Long timeout) {
-        if (timeout != null && timeout > 0) {
-            caffeineRedisCache.put(IMAGE_VERIFY_PREFIX.concat(account), captcha, Duration.ofMinutes(timeout));
-        } else {
-            caffeineRedisCache.put(IMAGE_VERIFY_PREFIX.concat(account), captcha);
-        }
-    }
-
-    /**
-     * 从redis获取图片验证码
-     *
-     * @param account
-     */
-    @Override
-    public String getImageCaptcha(String account) {
-        return caffeineRedisCache.get(IMAGE_VERIFY_PREFIX.concat(account), String.class);
-    }
-
-    /**
-     * 从redis删除图片验证码
-     *
-     * @param account
-     */
-    @Override
-    public void deleteImageCaptcha(String account) {
-        caffeineRedisCache.evict(IMAGE_VERIFY_PREFIX.concat(account));
+    public void clear(Object... ids) {
+        caffeineRedisCache.evict(ids[0]);
     }
 }

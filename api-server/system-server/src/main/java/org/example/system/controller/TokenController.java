@@ -21,11 +21,11 @@ public class TokenController {
     /**
      * 刷新token
      *
-     * @param expiration 过期时间
+     * @param userId 用户id
      * @return
      */
     @RequestMapping("/refresh")
-    public CommonResult<String> refresh(@RequestParam Long expiration) {
-        return CommonResult.success(tokenService.refresh(expiration));
+    public CommonResult<String> refresh(@RequestParam String userId) {
+        return CommonResult.success(tokenService.refresh(userId));
     }
 }

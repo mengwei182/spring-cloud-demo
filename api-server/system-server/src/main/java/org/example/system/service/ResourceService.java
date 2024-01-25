@@ -1,6 +1,7 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.common.cache.CacheService;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.system.api.ResourceQueryPage;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author lihui
  * @since 2023/4/3
  */
-public interface ResourceService {
+public interface ResourceService extends CacheService {
     /**
      * 新增资源
      *
@@ -58,7 +59,24 @@ public interface ResourceService {
     ResourceVo getResourceById(String id);
 
     /**
+     * 根据url和分类id查询资源信息
+     *
+     * @param url
+     * @param categoryId
+     * @return
+     */
+    ResourceVo getResource(String url, String categoryId);
+
+    /**
      * 刷新所有系统中所有资源
      */
     void refreshResource();
+
+    /**
+     * 根据用户id获取资源列表
+     *
+     * @param userId
+     * @return
+     */
+    List<ResourceVo> getResourceByUserId(String userId);
 }

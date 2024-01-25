@@ -54,7 +54,31 @@ public class User extends BaseEntity {
      */
     private Date loginTime;
     /**
-     * 状态：0禁用，1正常，2需要手机验证码，3需要图形验证码，4需要手机验证码和图像验证码
+     * 状态：0禁用，1正常
      */
     private Integer status;
+    /**
+     * 其他验证状态，可以组合
+     * 0.关闭
+     * 1.图片验证码
+     * 2.短信验证码
+     * 3.公私钥验证
+     * 4.人脸验证
+     * 5.指纹验证
+     * 6.手势验证
+     * 7.邮箱验证
+     */
+    private String verifyStatus;
+    /**
+     * 公钥
+     */
+    private String publicKey;
+    /**
+     * 私钥
+     */
+    private String privateKey;
+    /**
+     * token过期时间
+     */
+    private Date tokenExpireTime;
 }

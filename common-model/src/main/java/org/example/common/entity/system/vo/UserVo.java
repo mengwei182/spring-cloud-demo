@@ -1,4 +1,4 @@
-package org.example.common.entity.base.vo;
+package org.example.common.entity.system.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserInfoVo extends BaseEntity {
+public class UserVo extends BaseEntity {
     /**
      * 用户名
      */
@@ -83,4 +83,20 @@ public class UserInfoVo extends BaseEntity {
      * 部门信息
      */
     private DepartmentVo department;
+    /**
+     * 其他验证状态
+     * 0.关闭
+     * 1.图片验证码
+     * 2.短信验证码
+     * 3.公私钥验证
+     * 4.人脸验证
+     * 5.指纹验证
+     * 6.手势验证
+     * 7.邮箱验证
+     */
+    private String verifyStatus;
+    /**
+     * token过期时间
+     */
+    private String tokenExpireTime;
 }

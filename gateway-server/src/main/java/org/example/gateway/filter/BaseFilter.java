@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
 import org.example.common.entity.base.Token;
-import org.example.common.entity.base.vo.UserInfoVo;
 import org.example.common.entity.system.vo.ResourceVo;
+import org.example.common.entity.system.vo.UserVo;
 import org.example.common.model.CommonResult;
 import org.example.common.util.GsonUtils;
 import org.example.common.util.TokenUtils;
@@ -66,16 +66,16 @@ public class BaseFilter implements GlobalFilter {
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
             return response.writeWith(Mono.just(dataBuffer));
         }
-        Token<UserInfoVo> token = TokenUtils.unsigned(authorization, UserInfoVo.class);
-        UserInfoVo userInfoVo = token.getData();
+        Token<UserVo> token = TokenUtils.unsigned(authorization, UserVo.class);
+        UserVo userVo = token.getData();
         // 校验token
-        if (!tokenFilter(authorization, userInfoVo)) {
+        if (!tokenFilter(authorization, userVo)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
             return response.writeWith(Mono.just(dataBuffer));
         }
         // 校验资源
-        if (!resourceFilter(userInfoVo, request)) {
+        if (!resourceFilter(userVo, request)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
             return response.writeWith(Mono.just(dataBuffer));
@@ -98,14 +98,14 @@ public class BaseFilter implements GlobalFilter {
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
-    private boolean tokenFilter(String authorization, UserInfoVo userInfoVo) {
+    private boolean tokenFilter(String authorization, UserVo userVo) {
         // 校验请求中的token参数和数据
-        if (userInfoVo == null) {
+        if (userVo == null) {
             return false;
         }
         try {
             // token过期
-            String token = caffeineRedisCache.get(USER_TOKEN_KEY + userInfoVo.getId(), String.class);
+            String token = caffeineRedisCache.get(USER_TOKEN_KEY + userVo.getId(), String.class);
             return !StrUtil.isEmpty(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -113,10 +113,10 @@ public class BaseFilter implements GlobalFilter {
         }
     }
 
-    private boolean resourceFilter(UserInfoVo userInfoVo, ServerHttpRequest request) {
+    private boolean resourceFilter(UserVo userVo, ServerHttpRequest request) {
         String path = request.getPath().value();
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        List<ResourceVo> resourceVos = userInfoVo.getResources();
+        List<ResourceVo> resourceVos = userVo.getResources();
         Optional<ResourceVo> findAny = resourceVos.stream().filter(o -> antPathMatcher.match(o.getUrl(), path)).findAny();
         return findAny.isPresent();
     }

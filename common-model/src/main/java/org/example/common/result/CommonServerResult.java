@@ -1,4 +1,4 @@
-package org.example.common.error;
+package org.example.common.result;
 
 /**
  * @author lihui
@@ -14,4 +14,12 @@ public interface CommonServerResult {
     String NAME_NOT_NULL = "名称不能为空";
     String NAME_LENGTH_ERROR = "名称长度不能超过255个字符";
     String ID_LENGTH_ERROR = "主键长度不能超过32个字符";
+    String AUTHORIZATION = "Authorization";
+
+    String COMMON_EXCEPTION_CODE = "100000";
+    String SYSTEM_EXCEPTION_CODE = "100001";
+
+    String LOGIN = "login_";
+    String REGISTER = "register_";
+    String FORGOT_PASSWORD = "forgot_password_";
 }

@@ -1,15 +1,17 @@
 package org.example.system.service;
 
+import org.example.common.cache.CacheService;
+
 /**
  * @author lihui
  * @since 2023/4/3
  */
-public interface TokenService {
+public interface TokenService extends CacheService {
     /**
      * 刷新token
      *
-     * @param expiration 过期时间
+     * @param userId 用户id
      * @return
      */
-    String refresh(Long expiration);
+    String refresh(String userId);
 }

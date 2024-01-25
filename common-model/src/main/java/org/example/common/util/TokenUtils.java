@@ -93,7 +93,7 @@ public class TokenUtils {
         }
     }
 
-    public static SecretKey generateKey() {
+    private static SecretKey generateKey() {
         return new SecretKeySpec(SALT.getBytes(), TRANSFORMATION);
     }
 }

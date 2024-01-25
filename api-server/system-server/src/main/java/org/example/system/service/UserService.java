@@ -1,22 +1,25 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.entity.base.vo.UserInfoVo;
+import org.example.common.cache.CacheService;
+import org.example.common.entity.system.vo.UserVo;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.system.api.UserQueryPage;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author lihui
  * @since 2023/4/3
  */
-public interface UserService {
+public interface UserService extends CacheService {
     /**
      * 新增用户
      *
-     * @param userInfoVo
+     * @param userVo
      * @return
      */
-    Boolean addUser(UserInfoVo userInfoVo);
+    String addUser(UserVo userVo);
 
     /**
      * 分页查看用户列表
@@ -24,22 +27,22 @@ public interface UserService {
      * @param queryPage
      * @return
      */
-    Page<UserInfoVo> getUserList(UserQueryPage queryPage);
+    Page<UserVo> getUserList(UserQueryPage queryPage);
 
     /**
      * 查看用户详情
      *
      * @return
      */
-    UserInfoVo getUserInfo(String id);
+    UserVo getUserInfo(String id);
 
     /**
      * 更新用户信息
      *
-     * @param userInfoVo
+     * @param userVo
      * @return
      */
-    Boolean updateUser(UserInfoVo userInfoVo);
+    Boolean updateUser(UserVo userVo);
 
     /**
      * 更新密码
@@ -56,4 +59,20 @@ public interface UserService {
      * @return
      */
     Boolean deleteUser(String id);
+
+    /**
+     * 获取用户token有效时间
+     *
+     * @param id
+     * @return 有效时间，单位毫秒
+     */
+    long getTokenExpireTime(String id);
+
+    /**
+     * 创建密钥
+     *
+     * @param id
+     * @return
+     */
+    String createPublicKey(String id) throws NoSuchAlgorithmException;
 }

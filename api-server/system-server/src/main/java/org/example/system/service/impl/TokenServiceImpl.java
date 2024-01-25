@@ -2,17 +2,16 @@ package org.example.system.service.impl;
 
 import org.example.CaffeineRedisCache;
 import org.example.common.entity.base.Token;
-import org.example.common.entity.base.vo.UserInfoVo;
-import org.example.common.error.SystemServerResult;
-import org.example.common.error.exception.CommonException;
-import org.example.common.usercontext.UserContext;
+import org.example.common.entity.system.vo.UserVo;
+import org.example.common.result.SystemServerResult;
+import org.example.common.result.exception.SystemException;
 import org.example.common.util.TokenUtils;
 import org.example.system.service.TokenService;
+import org.example.system.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,39 +21,37 @@ import java.util.Date;
 @Service
 public class TokenServiceImpl implements TokenService {
     @Resource
+    private UserService userService;
+    @Resource
     private CaffeineRedisCache caffeineRedisCache;
 
     /**
      * 刷新token
      *
-     * @param expiration 过期时间
+     * @param userId 用户id
      * @return
      */
     @Override
-    public String refresh(Long expiration) {
-        Date date = new Date();
-        Calendar minCalendar = Calendar.getInstance();
-        minCalendar.setTime(date);
-        minCalendar.add(Calendar.DATE, 1);
-        long minTime = minCalendar.getTime().getTime();
-        if (expiration < minTime) {
-            throw new CommonException(SystemServerResult.TOKEN_EXPIRATION_TIMEOUT_MIN);
+    public String refresh(String userId) {
+        UserVo userVo = userService.getUserInfo(userId);
+        if (userVo == null) {
+            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
-        Calendar maxCalendar = Calendar.getInstance();
-        maxCalendar.setTime(date);
-        maxCalendar.add(Calendar.YEAR, 3);
-        long maxExpiration = maxCalendar.getTime().getTime();
-        if (expiration > maxExpiration) {
-            throw new CommonException(SystemServerResult.TOKEN_EXPIRATION_TIMEOUT_MAX);
+        long time = userService.getTokenExpireTime(userId);
+        // token已经过期
+        if (time <= 0) {
+            // 删除token缓存
+            clear(userId);
+            throw new SystemException(SystemServerResult.TOKEN_EXPIRATION_TIME_INVALID);
         }
-        UserInfoVo userInfoVo = UserContext.get();
-        String userId = userInfoVo.getId();
-        // 删除已存储的用户token
-        caffeineRedisCache.evict(userId);
-        userInfoVo.setLoginTime(date);
-        Token<?> token = new Token<>(userId, date, userInfoVo);
+        Token<UserVo> token = new Token<>(userId, new Date(), userVo);
         // 重新设置token
-        caffeineRedisCache.put(userId, token, Duration.ofSeconds(60 * 60));
+        caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + userId, token, Duration.ofMillis(time));
         return TokenUtils.sign(token);
+    }
+
+    @Override
+    public void clear(Object... ids) {
+        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + ids[0]);
     }
 }

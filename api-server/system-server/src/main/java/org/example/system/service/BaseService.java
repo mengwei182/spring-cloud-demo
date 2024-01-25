@@ -1,5 +1,6 @@
 package org.example.system.service;
 
+import org.example.common.cache.CacheService;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,7 @@ import java.io.IOException;
  * @author lihui
  * @since 2023/4/3
  */
-public interface BaseService {
+public interface BaseService extends CacheService {
     /**
      * 登录
      *
@@ -18,7 +19,7 @@ public interface BaseService {
      * @param usernamePasswordVo
      * @return
      */
-    String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo) throws Exception;
+    String login(HttpServletRequest request, UsernamePasswordVo usernamePasswordVo);
 
     /**
      * 登出

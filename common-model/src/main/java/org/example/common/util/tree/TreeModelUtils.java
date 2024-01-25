@@ -3,7 +3,7 @@ package org.example.common.util.tree;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.entity.base.vo.TreeModel;
-import org.example.common.error.exception.CommonException;
+import org.example.common.result.exception.SystemException;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -187,7 +187,7 @@ public class TreeModelUtils {
             }
         }
         if (childrenField == null) {
-            throw new CommonException("build object tree error, not found children field");
+            throw new SystemException("build object tree error, not found children field");
         }
         try {
             childrenField.setAccessible(true);
