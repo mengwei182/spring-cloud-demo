@@ -89,7 +89,7 @@ public class UserController {
     }
 
     /**
-     * 删除用户
+     * 创建密钥
      *
      * @param id
      * @return
