@@ -7,6 +7,8 @@ import org.example.common.entity.base.Token;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.entity.system.vo.UserVo;
 import org.example.common.model.CommonResult;
+import org.example.common.result.CommonServerResult;
+import org.example.common.result.SystemServerResult;
 import org.example.common.util.GsonUtils;
 import org.example.common.util.TokenUtils;
 import org.example.properties.CommonProperties;
@@ -38,8 +40,6 @@ import java.util.Optional;
 @Component
 @Order(Integer.MIN_VALUE)
 public class BaseFilter implements GlobalFilter {
-    public static final String AUTHORIZATION = "Authorization";
-    private static final String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
     @Resource
     private CommonProperties commonProperties;
     @Resource
@@ -93,8 +93,8 @@ public class BaseFilter implements GlobalFilter {
 
     private String authorizationHeaderFilter(ServerHttpRequest request) {
         // 校验请求中的token参数和数据
-        String authorizationHeader = request.getHeaders().getFirst(AUTHORIZATION);
-        String authorizationParameter = request.getQueryParams().getFirst(AUTHORIZATION);
+        String authorizationHeader = request.getHeaders().getFirst(CommonServerResult.AUTHORIZATION);
+        String authorizationParameter = request.getQueryParams().getFirst(CommonServerResult.AUTHORIZATION);
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
@@ -105,7 +105,7 @@ public class BaseFilter implements GlobalFilter {
         }
         try {
             // token过期
-            String token = caffeineRedisCache.get(USER_TOKEN_KEY + userVo.getId(), String.class);
+            String token = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userVo.getId(), String.class);
             return !StrUtil.isEmpty(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
