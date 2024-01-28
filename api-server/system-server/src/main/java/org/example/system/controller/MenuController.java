@@ -1,6 +1,8 @@
 package org.example.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.example.common.entity.system.vo.MenuVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.MenuQueryPage;
@@ -14,6 +16,7 @@ import java.util.List;
  * @author lihui
  * @since 2023/4/3
  */
+@Api(tags = "菜单管理")
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
@@ -26,7 +29,8 @@ public class MenuController {
      * @param menuVo
      * @return
      */
-    @RequestMapping("/add")
+    @ApiOperation("新增菜单")
+    @PostMapping("/add")
     public CommonResult<Boolean> addMenu(@RequestBody MenuVo menuVo) {
         return CommonResult.success(menuService.addMenu(menuVo));
     }
@@ -37,7 +41,8 @@ public class MenuController {
      * @param id
      * @return
      */
-    @RequestMapping("/delete")
+    @ApiOperation("删除菜单")
+    @DeleteMapping("/delete")
     public CommonResult<Boolean> deleteMenu(@RequestParam String id) {
         return CommonResult.success(menuService.deleteMenu(id));
     }
@@ -48,6 +53,7 @@ public class MenuController {
      * @param menuVo
      * @return
      */
+    @PutMapping("更新菜单")
     @RequestMapping("/update")
     public CommonResult<Boolean> updateMenu(@RequestParam MenuVo menuVo) {
         return CommonResult.success(menuService.updateMenu(menuVo));
@@ -59,7 +65,8 @@ public class MenuController {
      * @param queryPage
      * @return
      */
-    @RequestMapping("/list")
+    @ApiOperation("查询菜单列表")
+    @GetMapping("/list")
     public CommonResult<Page<MenuVo>> getMenuList(@ModelAttribute MenuQueryPage queryPage) {
         return CommonResult.success(menuService.getMenuList(queryPage));
     }
@@ -69,7 +76,8 @@ public class MenuController {
      *
      * @return
      */
-    @RequestMapping("/list/all")
+    @ApiOperation("查询所有菜单列表")
+    @GetMapping("/list/all")
     public CommonResult<List<MenuVo>> getAllMenuList() {
         return CommonResult.success(menuService.getAllMenuList());
     }
@@ -79,7 +87,8 @@ public class MenuController {
      *
      * @return
      */
-    @RequestMapping("/list/tree")
+    @ApiOperation("查询所有菜单树")
+    @GetMapping("/list/tree")
     public CommonResult<List<MenuVo>> getMenuTreeList() {
         return CommonResult.success(menuService.getMenuTreeList());
     }

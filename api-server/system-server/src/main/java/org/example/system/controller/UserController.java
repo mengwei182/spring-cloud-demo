@@ -1,6 +1,8 @@
 package org.example.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.example.common.entity.system.vo.UserVo;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.model.CommonResult;
@@ -17,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
  * @author lihui
  * @since 2023/4/3
  */
+@Api(tags = "用户管理")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -29,7 +32,8 @@ public class UserController {
      * @param userVo
      * @return
      */
-    @RequestMapping("/add")
+    @ApiOperation("新增用户")
+    @PostMapping("/add")
     public CommonResult<String> register(@Valid @RequestBody UserVo userVo) {
         return CommonResult.success(userService.addUser(userVo));
     }
@@ -40,7 +44,8 @@ public class UserController {
      * @param queryPage
      * @return
      */
-    @RequestMapping("/list")
+    @ApiOperation("分页查看用户列表")
+    @GetMapping("/list")
     public CommonResult<Page<UserVo>> getUserList(@ModelAttribute UserQueryPage queryPage) {
         return CommonResult.success(userService.getUserList(queryPage));
     }
@@ -50,7 +55,8 @@ public class UserController {
      *
      * @return
      */
-    @RequestMapping("/info")
+    @ApiOperation("查看用户详情")
+    @GetMapping("/info")
     public CommonResult<UserVo> getUserInfo() {
         return CommonResult.success(userService.getUserInfo(UserContext.get().getId()));
     }
@@ -61,7 +67,8 @@ public class UserController {
      * @param userVo
      * @return
      */
-    @RequestMapping("/update")
+    @ApiOperation("更新用户信息")
+    @PutMapping("/update")
     public CommonResult<Boolean> updateUser(@RequestBody UserVo userVo) {
         return CommonResult.success(userService.updateUser(userVo));
     }
@@ -72,7 +79,8 @@ public class UserController {
      * @param usernamePasswordVo
      * @return
      */
-    @RequestMapping("/updatePassword")
+    @ApiOperation("更新密码")
+    @PostMapping("/updatePassword")
     public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
         return CommonResult.success(userService.updateUserPassword(usernamePasswordVo));
     }
@@ -83,19 +91,21 @@ public class UserController {
      * @param id
      * @return
      */
-    @RequestMapping("/delete")
+    @ApiOperation("删除用户")
+    @DeleteMapping("/delete")
     public CommonResult<Boolean> deleteUser(@RequestParam String id) {
         return CommonResult.success(userService.deleteUser(id));
     }
 
     /**
-     * 创建密钥
+     * 获取密钥
      *
      * @param id
      * @return
      */
-    @RequestMapping("/createPublicKey")
-    public CommonResult<String> createPublicKey(@RequestParam String id) throws NoSuchAlgorithmException {
-        return CommonResult.success(userService.createPublicKey(id));
+    @ApiOperation("获取密钥")
+    @GetMapping("/getPublicKey")
+    public CommonResult<String> getPublicKey(@RequestParam String id) throws NoSuchAlgorithmException {
+        return CommonResult.success(userService.getPublicKey(id));
     }
 }

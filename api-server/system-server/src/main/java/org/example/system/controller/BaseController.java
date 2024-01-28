@@ -1,5 +1,7 @@
 package org.example.system.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 import org.example.common.model.CommonResult;
 import org.example.common.util.RSAEncryptUtils;
@@ -19,6 +21,7 @@ import java.io.IOException;
  * @author lihui
  * @since 2023/4/8
  */
+@Api(tags = "基础管理")
 @RestController
 @RequestMapping("/base")
 public class BaseController {
@@ -32,6 +35,7 @@ public class BaseController {
      * @param usernamePasswordVo
      * @return
      */
+    @ApiOperation("登录")
     @RequestMapping("/login")
     public CommonResult<String> login(HttpServletRequest request, @Valid @RequestBody UsernamePasswordVo usernamePasswordVo) {
         return CommonResult.success(baseService.login(request, usernamePasswordVo));
@@ -42,6 +46,7 @@ public class BaseController {
      *
      * @return
      */
+    @ApiOperation("登出")
     @RequestMapping("/logout")
     public CommonResult<Boolean> logout() {
         return CommonResult.success(baseService.logout());
@@ -57,6 +62,7 @@ public class BaseController {
      * @param captchaSize 验证码位数
      * @throws IOException
      */
+    @ApiOperation("获取图片验证码")
     @RequestMapping("/image/captcha")
     public void getImageCaptcha(HttpServletRequest request, HttpServletResponse response, @RequestParam(defaultValue = "130") Integer width, @RequestParam(defaultValue = "30") Integer height, @RequestParam(defaultValue = "4") Integer captchaSize) throws IOException {
         baseService.generateImageCaptcha(request, response, width, height, captchaSize);

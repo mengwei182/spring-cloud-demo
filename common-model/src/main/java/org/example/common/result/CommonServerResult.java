@@ -15,6 +15,7 @@ public interface CommonServerResult {
     String NAME_LENGTH_ERROR = "名称长度不能超过255个字符";
     String ID_LENGTH_ERROR = "主键长度不能超过32个字符";
     String AUTHORIZATION = "Authorization";
+    String PROFILE_PROD = "prod";
 
     String COMMON_EXCEPTION_CODE = "100000";
     String SYSTEM_EXCEPTION_CODE = "100001";

@@ -243,35 +243,35 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public long getTokenExpireTime(String id) {
+        User user = null;
         UserVo userVo = caffeineRedisCache.get(id, UserVo.class);
         if (userVo == null) {
-            User user = userMapper.selectById(id);
-            if (user == null) {
-                return 0;
-            }
-            Date tokenExpireTime = user.getTokenExpireTime();
-            if (tokenExpireTime == null) {
-                // 默认7天有效期
-                tokenExpireTime = Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
-                user.setTokenExpireTime(tokenExpireTime);
-                userMapper.updateById(user);
-                clear(id);
-            }
-            // 校验token有效期
-            long time = tokenExpireTime.getTime() - new Date().getTime();
-            return time <= 0 ? 0 : time;
+            user = userMapper.selectById(id);
         }
-        return 0;
+        if (user == null) {
+            return 0;
+        }
+        Date tokenExpireTime = user.getTokenExpireTime();
+        if (tokenExpireTime == null) {
+            // 默认7天有效期
+            tokenExpireTime = Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
+            user.setTokenExpireTime(tokenExpireTime);
+            userMapper.updateById(user);
+            clear(id);
+        }
+        // 校验token有效期
+        long time = tokenExpireTime.getTime() - new Date().getTime();
+        return time <= 0 ? 0 : time;
     }
 
     /**
-     * 创建密钥
+     * 获取密钥
      *
      * @param id
      * @return
      */
     @Override
-    public String createPublicKey(String id) throws NoSuchAlgorithmException {
+    public String getPublicKey(String id) throws NoSuchAlgorithmException {
         User user = new User();
         user.setId(id);
         user.setPublicKey(RSAEncryptUtils.getPublicKey());

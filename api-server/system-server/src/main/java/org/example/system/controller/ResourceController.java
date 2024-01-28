@@ -1,6 +1,8 @@
 package org.example.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.model.CommonResult;
 import org.example.system.api.ResourceQueryPage;
@@ -14,6 +16,7 @@ import java.util.List;
  * @author lihui
  * @since 2023/4/3
  */
+@Api(tags = "资源管理")
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
@@ -26,7 +29,8 @@ public class ResourceController {
      * @param resourceVo
      * @return
      */
-    @RequestMapping("/add")
+    @ApiOperation("新增资源")
+    @PostMapping("/add")
     public CommonResult<Boolean> addResource(@RequestBody ResourceVo resourceVo) {
         return CommonResult.success(resourceService.addResource(resourceVo));
     }
@@ -37,7 +41,8 @@ public class ResourceController {
      * @param id
      * @return
      */
-    @RequestMapping("/delete")
+    @ApiOperation("删除资源")
+    @DeleteMapping("/delete")
     public CommonResult<Boolean> deleteResource(@RequestParam String id) {
         return CommonResult.success(resourceService.deleteResource(id));
     }
@@ -48,7 +53,8 @@ public class ResourceController {
      * @param resourceVo
      * @return
      */
-    @RequestMapping("/update")
+    @ApiOperation("更新资源")
+    @PutMapping("/update")
     public CommonResult<Boolean> updateResource(@RequestBody ResourceVo resourceVo) {
         return CommonResult.success(resourceService.updateResource(resourceVo));
     }
@@ -59,7 +65,8 @@ public class ResourceController {
      * @param queryPage
      * @return
      */
-    @RequestMapping("/list")
+    @ApiOperation("分页获取资源列表")
+    @GetMapping("/list")
     public CommonResult<Page<ResourceVo>> getResourceList(@ModelAttribute ResourceQueryPage queryPage) {
         return CommonResult.success(resourceService.getResourceList(queryPage));
     }
@@ -69,7 +76,8 @@ public class ResourceController {
      *
      * @return
      */
-    @RequestMapping("/list/all")
+    @ApiOperation("获取全部资源列表")
+    @GetMapping("/list/all")
     public CommonResult<List<ResourceVo>> getAllResourceList() {
         return CommonResult.success(resourceService.getAllResourceList());
     }
@@ -79,17 +87,19 @@ public class ResourceController {
      *
      * @return
      */
-    @RequestMapping("/{id}")
+    @ApiOperation("根据id获取资源详情")
+    @GetMapping("/{id}")
     public CommonResult<ResourceVo> getResourceById(@PathVariable String id) {
         return CommonResult.success(resourceService.getResourceById(id));
     }
 
     /**
-     * 刷新所有系统中所有资源
+     * 刷新系统中所有资源
      *
      * @return
      */
-    @RequestMapping("/refresh")
+    @ApiOperation("刷新系统中所有资源")
+    @GetMapping("/refresh")
     public CommonResult<?> refreshResource() {
         resourceService.refreshResource();
         return CommonResult.success();

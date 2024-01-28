@@ -69,10 +69,10 @@ public interface UserService extends CacheService {
     long getTokenExpireTime(String id);
 
     /**
-     * 创建密钥
+     * 获取密钥
      *
      * @param id
      * @return
      */
-    String createPublicKey(String id) throws NoSuchAlgorithmException;
+    String getPublicKey(String id) throws NoSuchAlgorithmException;
 }
