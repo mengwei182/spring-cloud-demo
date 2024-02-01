@@ -1,4 +1,4 @@
-package org.example.common.util;
+package org.example.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import org.springframework.beans.BeanUtils;

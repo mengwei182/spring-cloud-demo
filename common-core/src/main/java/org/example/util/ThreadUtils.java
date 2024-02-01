@@ -1,4 +1,4 @@
-package org.example.common.util;
+package org.example.util;
 
 import java.util.concurrent.*;
 

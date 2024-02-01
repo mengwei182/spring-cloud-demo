@@ -3,10 +3,6 @@ package org.example.common.entity.system.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.base.BaseEntity;
-import org.example.common.entity.system.vo.DepartmentVo;
-import org.example.common.entity.system.vo.MenuVo;
-import org.example.common.entity.system.vo.ResourceVo;
-import org.example.common.entity.system.vo.RoleVo;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

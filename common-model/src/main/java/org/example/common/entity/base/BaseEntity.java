@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.example.common.util.tree.TreeModelField;
-import org.example.common.util.tree.TreeModelFieldEnum;
+import org.example.common.tree.TreeModelField;
+import org.example.common.tree.TreeModelFieldEnum;
 
 import java.io.Serializable;
 import java.util.Date;

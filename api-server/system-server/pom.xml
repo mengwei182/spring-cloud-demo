@@ -20,14 +20,6 @@
             <groupId>org.example</groupId>
             <artifactId>mq-server</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common-configuration</artifactId>
-        </dependency>
         <!--module end-->
     </dependencies>
 

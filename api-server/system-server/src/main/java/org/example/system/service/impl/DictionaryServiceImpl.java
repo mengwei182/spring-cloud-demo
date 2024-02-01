@@ -10,11 +10,11 @@ import org.example.common.entity.system.vo.DictionaryVo;
 import org.example.common.result.CommonServerResult;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
-import org.example.common.util.CommonUtils;
-import org.example.common.util.PageUtils;
 import org.example.system.api.DictionaryQueryPage;
 import org.example.system.mapper.DictionaryMapper;
 import org.example.system.service.DictionaryService;
+import org.example.util.CommonUtils;
+import org.example.util.PageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

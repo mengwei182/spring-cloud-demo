@@ -5,9 +5,9 @@ import org.example.common.entity.base.Token;
 import org.example.common.entity.system.vo.UserVo;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
-import org.example.common.util.TokenUtils;
 import org.example.system.service.TokenService;
 import org.example.system.service.UserService;
+import org.example.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

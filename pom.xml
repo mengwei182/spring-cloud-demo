@@ -20,7 +20,7 @@
         <module>common-model</module>
         <module>dubbo-server</module>
         <module>api-server</module>
-        <module>common-configuration</module>
+        <module>common-core</module>
     </modules>
 
     <properties>
@@ -136,7 +136,7 @@
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
-                <artifactId>common-configuration</artifactId>
+                <artifactId>common-core</artifactId>
                 <version>1.0</version>
             </dependency>
             <!--module end-->

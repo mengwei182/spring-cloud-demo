@@ -28,7 +28,17 @@
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
+                <artifactId>common-core</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
                 <artifactId>system-server</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>dubbo-server</artifactId>
                 <version>1.0</version>
             </dependency>
         </dependencies>
@@ -38,8 +48,11 @@
         <!--module start-->
         <dependency>
             <groupId>org.example</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
             <artifactId>dubbo-server</artifactId>
-            <version>1.0</version>
         </dependency>
         <!--module end-->
 

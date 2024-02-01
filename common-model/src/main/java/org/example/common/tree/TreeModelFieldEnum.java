@@ -1,4 +1,4 @@
-package org.example.common.util.tree;
+package org.example.common.tree;
 
 /**
  * 树形字段枚举

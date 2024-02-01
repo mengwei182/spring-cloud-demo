@@ -1,8 +1,8 @@
 package org.example.common.model;
 
 import lombok.Data;
-import org.example.common.result.CommonServerResult;
 import org.example.common.global.ResultCode;
+import org.example.common.result.CommonServerResult;
 
 import java.io.Serializable;
 

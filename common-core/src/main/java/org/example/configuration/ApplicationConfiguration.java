@@ -9,6 +9,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Map;
+
 /**
  * @author lihui
  * @since 2023/4/3
@@ -27,6 +29,10 @@ public class ApplicationConfiguration implements ApplicationContextAware {
 
     public static <T> T getBean(String name, Class<T> clazz) {
         return applicationContext.getBean(name, clazz);
+    }
+
+    public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
+        return applicationContext.getBeansOfType(clazz);
     }
 
     @Bean

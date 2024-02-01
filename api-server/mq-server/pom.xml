@@ -12,19 +12,6 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
-    <dependencies>
-        <!--module start-->
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>common-configuration</artifactId>
-        </dependency>
-        <!--module end-->
-    </dependencies>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>

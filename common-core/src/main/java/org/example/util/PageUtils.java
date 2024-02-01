@@ -1,4 +1,4 @@
-package org.example.common.util;
+package org.example.util;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;

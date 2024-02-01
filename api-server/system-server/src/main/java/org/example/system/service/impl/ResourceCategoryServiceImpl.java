@@ -9,12 +9,12 @@ import org.example.common.entity.system.vo.ResourceCategoryVo;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
-import org.example.common.util.CommonUtils;
-import org.example.common.util.PageUtils;
 import org.example.system.api.ResourceCategoryQueryPage;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.service.ResourceCategoryService;
+import org.example.util.CommonUtils;
+import org.example.util.PageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

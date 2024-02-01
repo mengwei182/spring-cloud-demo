@@ -8,7 +8,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>common-configuration</artifactId>
+    <artifactId>common-core</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
 
@@ -34,6 +34,13 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
         <!--spring end-->
+
+        <!--kafka start-->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!--kafka end-->
 
         <!--nacos start-->
         <dependency>

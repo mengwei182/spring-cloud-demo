@@ -1,7 +1,7 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.cache.CacheService;
+import org.example.cache.CacheService;
 import org.example.common.entity.system.vo.ResourceVo;
 import org.example.system.api.ResourceQueryPage;
 

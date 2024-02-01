@@ -1,6 +1,6 @@
 package org.example.system.service;
 
-import org.example.common.cache.CacheService;
+import org.example.cache.CacheService;
 import org.example.common.entity.system.vo.UsernamePasswordVo;
 
 import javax.servlet.http.HttpServletRequest;

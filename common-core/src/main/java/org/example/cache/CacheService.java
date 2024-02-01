@@ -1,4 +1,4 @@
-package org.example.common.cache;
+package org.example.cache;
 
 /**
  * @author lihui
