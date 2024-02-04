@@ -7,14 +7,14 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.example.mq.kafka.consumer.DefaultMessageConsumer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * 注册到{@link DispatcherMessageListener#topics}中的消息都会经过该处理器分发
+ * 注册到{@link DispatcherMessageListener#topics}中的消息都会经过该处理器分发。
  *
  * @author lihui
  * @since 2024/1/29
@@ -23,10 +23,10 @@ import java.util.Set;
 @Slf4j
 public class DispatcherMessageListener implements MessageListener<Object, Object> {
     private Set<String> topics;
-    private AbstractMessageListener<Object, Object> defaultMessageConsumer = new DefaultMessageConsumer();
-    private Map<String, AbstractMessageListener<Object, Object>> listeners = new HashMap<>();
+    private AbstractMessageListener defaultMessageConsumer = new DefaultMessageConsumer();
+    private Map<String, AbstractMessageListener> listeners = new HashMap<>();
 
-    private AbstractMessageListener<Object, Object> getMessageListener(ConsumerRecord<Object, Object> data) {
+    private AbstractMessageListener getMessageListener(ConsumerRecord<Object, Object> data) {
         if (data == null || listeners.get(data.topic()) == null) {
             return defaultMessageConsumer;
         }
@@ -34,22 +34,46 @@ public class DispatcherMessageListener implements MessageListener<Object, Object
     }
 
     @Override
-    public void onMessage(@NonNull ConsumerRecord<Object, Object> data) {
-        getMessageListener(data).onMessage(data);
+    public void onMessage(ConsumerRecord<Object, Object> data) {
+        try {
+            getMessageListener(data).onMessage(data);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
-    public void onMessage(@NonNull ConsumerRecord<Object, Object> data, Acknowledgment acknowledgment) {
-        getMessageListener(data).onMessage(data, acknowledgment);
+    public void onMessage(ConsumerRecord<Object, Object> data, @Nullable Acknowledgment acknowledgment) {
+        try {
+            getMessageListener(data).onMessage(data, acknowledgment);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            if (acknowledgment != null) {
+                acknowledgment.acknowledge();
+            }
+        }
     }
 
     @Override
-    public void onMessage(@NonNull ConsumerRecord<Object, Object> data, @NonNull Consumer<?, ?> consumer) {
-        getMessageListener(data).onMessage(data, consumer);
+    public void onMessage(ConsumerRecord<Object, Object> data, Consumer<?, ?> consumer) {
+        try {
+            getMessageListener(data).onMessage(data, consumer);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
-    public void onMessage(@NonNull ConsumerRecord<Object, Object> data, Acknowledgment acknowledgment, @NonNull Consumer<?, ?> consumer) {
-        getMessageListener(data).onMessage(data, acknowledgment, consumer);
+    public void onMessage(ConsumerRecord<Object, Object> data, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer) {
+        try {
+            getMessageListener(data).onMessage(data, acknowledgment, consumer);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            if (acknowledgment != null) {
+                acknowledgment.acknowledge();
+            }
+        }
     }
 }

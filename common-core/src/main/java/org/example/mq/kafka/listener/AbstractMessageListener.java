@@ -11,18 +11,18 @@ import org.springframework.lang.Nullable;
  * @since 2024/1/31
  */
 @Getter
-public abstract class AbstractMessageListener<K, V> {
+public abstract class AbstractMessageListener {
     private final String topic;
 
     public AbstractMessageListener(String topic) {
         this.topic = topic;
     }
 
-    public abstract void onMessage(ConsumerRecord<K, V> data);
+    public abstract void onMessage(ConsumerRecord<Object, Object> data);
 
-    public abstract void onMessage(ConsumerRecord<K, V> data, @Nullable Acknowledgment acknowledgment);
+    public abstract void onMessage(ConsumerRecord<Object, Object> data, @Nullable Acknowledgment acknowledgment);
 
-    public abstract void onMessage(ConsumerRecord<K, V> data, Consumer<?, ?> consumer);
+    public abstract void onMessage(ConsumerRecord<Object, Object> data, Consumer<?, ?> consumer);
 
-    public abstract void onMessage(ConsumerRecord<K, V> data, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer);
+    public abstract void onMessage(ConsumerRecord<Object, Object> data, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer);
 }

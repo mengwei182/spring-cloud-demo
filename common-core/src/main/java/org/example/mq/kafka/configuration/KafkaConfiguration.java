@@ -37,10 +37,10 @@ public class KafkaConfiguration {
     public DispatcherMessageListener dispatcherMessageListener() {
         DispatcherMessageListener dispatcherMessageListener = new DispatcherMessageListener();
         Set<String> topics = new HashSet<>();
-        Map<String, AbstractMessageListener<Object, Object>> listeners = new HashMap<>();
+        Map<String, AbstractMessageListener> listeners = new HashMap<>();
         Map<String, AbstractMessageListener> beansOfType = ApplicationConfiguration.getBeansOfType(AbstractMessageListener.class);
         for (String key : beansOfType.keySet()) {
-            AbstractMessageListener<Object, Object> messageListener = beansOfType.get(key);
+            AbstractMessageListener messageListener = beansOfType.get(key);
             String topic = messageListener.getTopic();
             topics.add(messageListener.getTopic());
             listeners.put(topic, messageListener);
@@ -52,7 +52,7 @@ public class KafkaConfiguration {
 
     @Bean
     @ConditionalOnBean(DispatcherMessageListener.class)
-    public AbstractMessageListener<Object, Object> defaultMessageConsumer() {
+    public AbstractMessageListener defaultMessageConsumer() {
         return new DefaultMessageConsumer();
     }
 }

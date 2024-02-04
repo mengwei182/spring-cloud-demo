@@ -12,7 +12,7 @@ import org.springframework.kafka.support.Acknowledgment;
  * @since 2024/1/31
  */
 @Slf4j
-public class DefaultMessageConsumer extends AbstractMessageListener<Object, Object> {
+public class DefaultMessageConsumer extends AbstractMessageListener {
     public DefaultMessageConsumer() {
         super(Topic.KafkaTopic.DEFAULT_TOPIC);
     }
