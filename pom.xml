@@ -24,9 +24,6 @@
     </modules>
 
     <properties>
-        <java.version>8</java.version>
-        <maven.compiler>${java.version}</maven.compiler>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <mysql.version>8.0.33</mysql.version>
         <nacos.version>2021.0.5.0</nacos.version>
