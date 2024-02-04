@@ -7,6 +7,7 @@ package org.example.common.result;
 public interface CommonServerResult {
     String SUCCESS = "成功";
     String ERROR = "错误";
+    String SYSTEM_ERROR = "系统错误";
     String OBJECT_NOT_EXIST = "对象不存在";
     String TOKEN_TIME_OUT = "token过期";
     String UNAUTHORIZED = "访问无权限";
