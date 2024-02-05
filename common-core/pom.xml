@@ -1,4 +1,5 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +17,18 @@
         <!--module start-->
         <dependency>
             <groupId>org.example</groupId>
+            <artifactId>system-entity</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
             <artifactId>common-model</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>system-dubbo</artifactId>
+            <version>1.0</version>
         </dependency>
         <!--module end-->
 
@@ -32,6 +44,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <!--spring end-->
 
@@ -64,6 +84,13 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
         <!--utils end-->
+
+        <!--caffeine redis start-->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>caffeine-redis-boot-starter</artifactId>
+        </dependency>
+        <!--caffeine redis end-->
     </dependencies>
 
     <build>

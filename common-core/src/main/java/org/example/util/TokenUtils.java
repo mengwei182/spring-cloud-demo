@@ -1,7 +1,7 @@
 package org.example.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.entity.base.Token;
+import org.example.common.entity.Token;
 import org.springframework.beans.BeanUtils;
 
 import javax.crypto.Cipher;
