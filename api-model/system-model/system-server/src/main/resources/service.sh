@@ -1,7 +1,7 @@
 ulimit -SHn 65535
-appName=authentication-server
-jpsCommand=authentication-server
-port=9081
+appName=system-server
+jpsCommand=system-server
+port=9082
 
 JAVA_OPTS="-Xms512m -Xmx512m -Xmn256m"
 

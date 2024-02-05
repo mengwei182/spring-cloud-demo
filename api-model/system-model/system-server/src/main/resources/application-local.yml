@@ -1,0 +1,64 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.21.137.17:8848
+        username: nacos
+        password: nacos
+        namespace: spring-cloud-demo
+        group: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.21.137.17:3306/spring_cloud_demo?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: mengwei131575585
+  redis:
+    host: 172.21.137.17
+    database: 1
+    port: 6379
+    password: mengwei131575585
+    timeout: 3000ms
+    lettuce:
+      pool:
+        enabled: true
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: 180000
+  kafka:
+    bootstrap-servers: 172.21.137.17:9092
+    listener:
+      missing-topics-fatal: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: spring_cloud_demo_group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    id: ${spring.application.name}
+    qos-enable: false
+    qos-accept-foreign-ip: false
+    metadata-type: ${spring.cloud.nacos.discovery.group}
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    username: nacos
+    password: nacos
+    protocol: -1
+    port: -1
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+      group: ${spring.cloud.nacos.discovery.group}
+    use-as-config-center: false
+    check: false
+    simplified: true
+  consumer:
+    check: false
+    retries: 2
