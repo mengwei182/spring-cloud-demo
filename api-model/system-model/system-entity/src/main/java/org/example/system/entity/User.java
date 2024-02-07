@@ -42,10 +42,6 @@ public class User extends BaseEntity {
      */
     private String name;
     /**
-     * 部门ID
-     */
-    private String departmentId;
-    /**
      * 描述
      */
     private String description;

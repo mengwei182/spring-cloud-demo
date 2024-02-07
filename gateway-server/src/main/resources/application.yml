@@ -7,12 +7,4 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
-common:
-  skip-url:
-    [
-      /base/login,
-      /base/register,
-      /base/logout,
-      /base/image/captcha,
-      /base/publicKey
-    ]
+skip-urls: /base/login,/base/register,/base/image/captcha

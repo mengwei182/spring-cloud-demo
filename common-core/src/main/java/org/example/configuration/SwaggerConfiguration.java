@@ -1,8 +1,8 @@
 package org.example.configuration;
 
+import com.alibaba.nacos.api.config.annotation.NacosValue;
 import io.swagger.annotations.ApiOperation;
 import org.example.common.result.CommonServerResult;
-import org.example.properties.CommonProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class SwaggerConfiguration {
     private String serverPort;
     @Value("${spring.profiles.active}")
     private String profile;
-    @Resource
-    private CommonProperties commonProperties;
+    @Value("${skip-urls}")
+    private String skipUrls;
 
     @Bean
     public Docket openApi() {
@@ -75,7 +75,6 @@ public class SwaggerConfiguration {
 
     private List<SecurityScheme> getSecuritySchemes() {
         return Collections.singletonList(new ApiKey(CommonServerResult.AUTHORIZATION, CommonServerResult.AUTHORIZATION, ParameterType.HEADER.getIn()));
-
     }
 
     private List<SecurityContext> getSecurityContexts() {
@@ -86,7 +85,7 @@ public class SwaggerConfiguration {
                         .scopes(new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})
                         .build()))
                 // 需要认证的请求路径
-                .operationSelector(operationContext -> commonProperties.getSkipUrl().stream().noneMatch(o -> antPathMatcher.match(o, operationContext.requestMappingPattern())))
+                .operationSelector(operationContext -> Arrays.stream(skipUrls.split(",")).noneMatch(o -> antPathMatcher.match(o, operationContext.requestMappingPattern())))
                 .build());
     }
 }

@@ -1,6 +1,6 @@
 package org.example.system.dubbo;
 
-import org.example.system.vo.ResourceVO;
+import org.example.system.entity.vo.ResourceVO;
 
 import java.util.List;
 

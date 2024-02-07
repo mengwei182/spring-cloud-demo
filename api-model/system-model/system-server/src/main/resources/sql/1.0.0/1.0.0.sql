@@ -153,7 +153,6 @@ CREATE TABLE `user`
     `phone` VARCHAR(11) COMMENT '手机号',
     `email` VARCHAR(255) COMMENT '邮箱',
     `name` VARCHAR(32) COMMENT '姓名',
-    `department_id` VARCHAR(255) COMMENT '部门ID',
     `description` VARCHAR(255) COMMENT '描述',
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态',
     `login_time` TIMESTAMP COMMENT '登录时间',
@@ -186,6 +185,20 @@ CREATE TABLE `user_role_relation`
 ) COMMENT '用户角色信息表';
 INSERT INTO user_role_relation(`id`, `user_id`, `role_id`)
 VALUES ('1', '1', '1');
+
+DROP TABLE IF EXISTS `user_department_relation`;
+CREATE TABLE `user_department_relation`
+(
+    `id` VARCHAR(32) NOT NULL,
+    `user_id` VARCHAR(255) NOT NULL COMMENT '用户ID',
+    `department_id` VARCHAR(255) NOT NULL COMMENT '部门ID',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '0未删除，1已删除',
+    `creator` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '创建者id',
+    `updater` VARCHAR(32) NOT NULL DEFAULT 0 COMMENT '更新者id',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) COMMENT '用户部门信息表';
 
 DROP TABLE IF EXISTS `dictionary`;
 CREATE TABLE `dictionary`

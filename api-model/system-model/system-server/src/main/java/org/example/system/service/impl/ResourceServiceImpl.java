@@ -8,6 +8,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
+import org.example.mq.Topic;
 import org.example.system.dubbo.ResourceDubboService;
 import org.example.system.entity.Resource;
 import org.example.system.entity.ResourceCategory;
@@ -18,26 +19,16 @@ import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.query.ResourceQueryPage;
-import org.example.system.service.ResourceCategoryService;
 import org.example.system.service.ResourceService;
-import org.example.system.vo.ResourceCategoryVO;
-import org.example.system.vo.ResourceVO;
-import org.example.util.CommonUtils;
-import org.example.util.PageUtils;
+import org.example.system.entity.vo.ResourceVO;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.util.pattern.PathPattern;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,20 +37,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@DubboService(interfaceClass = ResourceDubboService.class, interfaceName = "resourceDubboService")
+@DubboService(interfaceClass = ResourceDubboService.class)
 public class ResourceServiceImpl implements ResourceService, ResourceDubboService {
-    @Value("${spring.application.name}")
-    private String applicationName;
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;
     @javax.annotation.Resource
     private ResourceCategoryMapper resourceCategoryMapper;
     @javax.annotation.Resource
-    private ResourceCategoryService resourceCategoryService;
-    @javax.annotation.Resource
     private RoleResourceRelationMapper roleResourceRelationMapper;
-    @javax.annotation.Resource
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
     @javax.annotation.Resource
     private UserRoleRelationMapper userRoleRelationMapper;
     @javax.annotation.Resource
@@ -189,45 +174,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      */
     @Override
     public void refreshResource() {
-        Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
-        Set<RequestMappingInfo> requestMappingInfos = map.keySet();
-        for (RequestMappingInfo requestMappingInfo : requestMappingInfos) {
-            // controller类名称
-            HandlerMethod handlerMethod = map.get(requestMappingInfo);
-            // controller类全限定名
-            String name = handlerMethod.getBeanType().getName();
-            // 请求地址
-            PathPatternsRequestCondition pathPatternsCondition = requestMappingInfo.getPathPatternsCondition();
-            if (pathPatternsCondition == null) {
-                continue;
-            }
-            String categoryName = applicationName + "_" + name;
-            String categoryId = CommonUtils.uuid();
-            ResourceCategoryVO resourceCategoryVO = resourceCategoryService.getResourceCategoryByName(categoryName);
-            // 资源分类不存在
-            if (resourceCategoryVO == null) {
-                resourceCategoryVO = new ResourceCategoryVO();
-                resourceCategoryVO.setId(categoryId);
-                resourceCategoryVO.setName(categoryName);
-                resourceCategoryVO = resourceCategoryService.addResourceCategory(resourceCategoryVO);
-                log.info("add resource category:{}", resourceCategoryVO.getName());
-            }
-            categoryId = resourceCategoryVO.getId();
-            Set<PathPattern> patterns = pathPatternsCondition.getPatterns();
-            for (PathPattern pattern : patterns) {
-                ResourceVO resourceVO = getResource(pattern.getPatternString(), categoryId);
-                // 资源已存在，直接跳过
-                if (resourceVO != null) {
-                    continue;
-                }
-                resourceVO = new ResourceVO();
-                resourceVO.setName(handlerMethod.getMethod().getName());
-                resourceVO.setCategoryId(categoryId);
-                resourceVO.setUrl(pattern.getPatternString());
-                addResource(resourceVO);
-                log.info("add resource:{}", resourceVO.getName());
-            }
-        }
+        caffeineRedisCache.convertAndSend(Topic.RedisTopic.REFRESH_RESOURCE_TOPIC, Boolean.TRUE);
     }
 
     /**

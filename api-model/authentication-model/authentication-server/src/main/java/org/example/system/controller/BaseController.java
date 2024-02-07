@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.example.common.model.CommonResult;
 import org.example.system.service.BaseService;
-import org.example.system.vo.UserLoginVO;
+import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

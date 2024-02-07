@@ -68,6 +68,11 @@
             <artifactId>nacos-client</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-common</artifactId>
+            <version>${dubbo.spring.boot.starter.version}</version>
+        </dependency>
         <!--nacos end-->
 
         <!--mybatis start-->

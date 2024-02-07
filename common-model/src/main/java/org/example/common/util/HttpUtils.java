@@ -1,4 +1,4 @@
-package org.example.util;
+package org.example.common.util;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.Getter;

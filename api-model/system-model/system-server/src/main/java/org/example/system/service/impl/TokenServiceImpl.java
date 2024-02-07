@@ -5,12 +5,11 @@ import org.example.CaffeineRedisCache;
 import org.example.common.entity.Token;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
-import org.example.system.dubbo.RoleResourceRelationDubboService;
 import org.example.system.dubbo.TokenDubboService;
 import org.example.system.service.TokenService;
 import org.example.system.service.UserService;
-import org.example.system.vo.UserVO;
-import org.example.util.TokenUtils;
+import org.example.system.entity.vo.UserVO;
+import org.example.common.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +21,7 @@ import java.util.Date;
  * @since 2023/4/3
  */
 @Service
-@DubboService(interfaceClass = TokenDubboService.class, interfaceName = "tokenDubboService")
+@DubboService(interfaceClass = TokenDubboService.class)
 public class TokenServiceImpl implements TokenService, TokenDubboService {
     @Resource
     private UserService userService;

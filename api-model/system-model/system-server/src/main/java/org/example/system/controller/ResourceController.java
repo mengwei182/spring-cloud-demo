@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.example.common.model.CommonResult;
 import org.example.system.query.ResourceQueryPage;
 import org.example.system.service.ResourceService;
-import org.example.system.vo.ResourceVO;
+import org.example.system.entity.vo.ResourceVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
  * @since 2023/4/3
  */
 @Service
-@DubboService(interfaceClass = RoleResourceRelationDubboService.class, interfaceName = "roleResourceRelationDubboService")
+@DubboService(interfaceClass = RoleResourceRelationDubboService.class)
 public class RoleResourceRelationServiceImpl implements RoleResourceRelationService, RoleResourceRelationDubboService {
 }

@@ -1,4 +1,4 @@
-package org.example.system.vo;
+package org.example.system.entity.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -56,13 +56,13 @@ public class UserVO extends BaseEntity {
      */
     private Integer status;
     /**
-     * 部门ID
-     */
-    private String departmentId;
-    /**
      * 角色ID集合
      */
     private List<String> roleIds;
+    /**
+     * 部门ID集合
+     */
+    private List<String> departmentIds;
     /**
      * 菜单信息
      */

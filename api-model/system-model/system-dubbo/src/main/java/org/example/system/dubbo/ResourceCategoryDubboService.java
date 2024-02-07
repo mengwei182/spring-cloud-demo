@@ -1,6 +1,6 @@
 package org.example.system.dubbo;
 
-import org.example.system.vo.ResourceCategoryVO;
+import org.example.system.entity.vo.ResourceCategoryVO;
 
 public interface ResourceCategoryDubboService {
     /**

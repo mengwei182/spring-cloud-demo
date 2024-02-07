@@ -15,15 +15,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
-common:
-  skip-url:
-    [
-      /base/login,
-      /base/register,
-      /base/image/captcha,
-      /swagger-ui/**,
-      /swagger-ui.html,
-      /swagger-resources/**,
-      /v2/api-docs,
-      /v3/api-docs
-    ]
+skip-urls:
+  [
+    /swagger-ui/**,
+    /swagger-ui.html,
+    /swagger-resources/**,
+    /v2/api-docs,
+    /v3/api-docs
+  ]

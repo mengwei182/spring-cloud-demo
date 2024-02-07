@@ -1,17 +1,18 @@
 package org.example.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
 import org.example.common.entity.Token;
 import org.example.common.model.CommonResult;
 import org.example.common.result.CommonServerResult;
 import org.example.common.result.SystemServerResult;
-import org.example.properties.CommonProperties;
-import org.example.system.vo.ResourceVO;
-import org.example.system.vo.UserVO;
-import org.example.util.GsonUtils;
-import org.example.util.TokenUtils;
+import org.example.common.util.GsonUtils;
+import org.example.common.util.TokenUtils;
+import org.example.system.entity.vo.ResourceVO;
+import org.example.system.entity.vo.UserVO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -19,6 +20,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +43,9 @@ import java.util.Optional;
 @Component
 @Order(Integer.MIN_VALUE)
 public class BaseFilter implements GlobalFilter {
-    @Resource
-    private CommonProperties commonProperties;
+    @Value("${skip-urls}")
+    @NacosValue(value = "${skip-urls}", autoRefreshed = true)
+    private String skipUrls;
     @Resource
     private CaffeineRedisCache caffeineRedisCache;
 
@@ -63,7 +67,7 @@ public class BaseFilter implements GlobalFilter {
         String authorization = authorizationHeaderFilter(request);
         if (StrUtil.isEmpty(authorization)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
         }
         Token<UserVO> token = TokenUtils.unsigned(authorization, UserVO.class);
@@ -71,13 +75,13 @@ public class BaseFilter implements GlobalFilter {
         // 校验token
         if (!tokenFilter(authorization, userVO)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
         }
         // 校验资源
         if (!resourceFilter(request.getPath().value(), userVO)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
+            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
         }
         return chain.filter(exchange);
@@ -87,8 +91,7 @@ public class BaseFilter implements GlobalFilter {
         String path = request.getPath().value();
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         // 校验是否是不需要验证token的url
-        Optional<String> first = commonProperties.getSkipUrl().stream().filter(o -> antPathMatcher.match(o, path)).findFirst();
-        return first.isPresent();
+        return Arrays.stream(skipUrls.split(",")).anyMatch(o -> antPathMatcher.match(o, path));
     }
 
     private String authorizationHeaderFilter(ServerHttpRequest request) {

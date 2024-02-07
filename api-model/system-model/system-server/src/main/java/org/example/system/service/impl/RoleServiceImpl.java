@@ -17,10 +17,10 @@ import org.example.system.mapper.RoleMenuRelationMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
 import org.example.system.query.RoleQueryPage;
 import org.example.system.service.RoleService;
-import org.example.system.vo.RoleMenuRelationVO;
-import org.example.system.vo.RoleVO;
-import org.example.util.CommonUtils;
-import org.example.util.PageUtils;
+import org.example.system.entity.vo.RoleMenuRelationVO;
+import org.example.system.entity.vo.RoleVO;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-@DubboService(interfaceClass = RoleDubboService.class, interfaceName = "roleDubboService")
+@DubboService(interfaceClass = RoleDubboService.class)
 public class RoleServiceImpl implements RoleService, RoleDubboService {
     @Resource
     private RoleMapper roleMapper;

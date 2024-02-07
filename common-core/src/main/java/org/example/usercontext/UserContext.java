@@ -1,7 +1,7 @@
 package org.example.usercontext;
 
 import lombok.Data;
-import org.example.system.vo.UserVO;
+import org.example.system.entity.vo.UserVO;
 
 import java.io.Serializable;
 

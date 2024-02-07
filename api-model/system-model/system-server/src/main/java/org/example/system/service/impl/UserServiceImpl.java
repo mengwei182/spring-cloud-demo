@@ -12,18 +12,17 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
-import org.example.system.dubbo.TokenDubboService;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
+import org.example.common.util.RSAEncryptUtils;
+import org.example.common.util.TreeModelUtils;
 import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.*;
+import org.example.system.entity.vo.*;
 import org.example.system.mapper.*;
 import org.example.system.query.UserQueryPage;
 import org.example.system.service.UserService;
-import org.example.system.vo.*;
 import org.example.usercontext.UserContext;
-import org.example.util.CommonUtils;
-import org.example.util.PageUtils;
-import org.example.util.RSAEncryptUtils;
-import org.example.util.TreeModelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@DubboService(interfaceClass = UserDubboService.class, interfaceName = "userDubboService")
+@DubboService(interfaceClass = UserDubboService.class)
 public class UserServiceImpl implements UserService, UserDubboService {
     @Resource
     private UserMapper userMapper;
@@ -152,25 +151,37 @@ public class UserServiceImpl implements UserService, UserDubboService {
             }
             userVO = CommonUtils.transformObject(user, UserVO.class);
             userVO.setPassword(null);
-            // 查询并填充用户角色信息
-            List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, user.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
-            List<Role> roles = roleMapper.selectBatchIds(roleIds);
-            userVO.setRoles(CommonUtils.transformList(roles, RoleVO.class));
-            // 查询并填充用户菜单信息
-            List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
-            List<Menu> menus = menuMapper.selectBatchIds(menuIds);
-            userVO.setMenus(TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVO.class)));
-            // 查询并填充用户资源信息
-            List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
-            List<org.example.system.entity.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
-            userVO.setResources(CommonUtils.transformList(resources, ResourceVO.class));
-            // 查询并填充用户部门信息
-            List<String> departmentId = userDepartmentRelationMapper.selectList(new LambdaQueryWrapper<UserDepartmentRelation>().in(UserDepartmentRelation::getUserId, user.getId())).stream().map(UserDepartmentRelation::getDepartmentId).collect(Collectors.toList());
-            List<Department> departments = departmentMapper.selectBatchIds(departmentId);
-            userVO.setDepartments(TreeModelUtils.buildObjectTree(CommonUtils.transformList(departments, DepartmentVO.class)));
+            loadUserInfo(userVO);
             caffeineRedisCache.put(id, userVO, Duration.ofMillis(time));
         }
         return userVO;
+    }
+
+    private void loadUserInfo(UserVO userVO) {
+        // 查询并填充用户角色信息
+        List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userVO.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(roleIds)) {
+            List<Role> roles = roleMapper.selectBatchIds(roleIds);
+            userVO.setRoles(CommonUtils.transformList(roles, RoleVO.class));
+        }
+        // 查询并填充用户菜单信息
+        List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(menuIds)) {
+            List<Menu> menus = menuMapper.selectBatchIds(menuIds);
+            userVO.setMenus(TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVO.class)));
+        }
+        // 查询并填充用户资源信息
+        List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(resourceIds)) {
+            List<org.example.system.entity.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
+            userVO.setResources(CommonUtils.transformList(resources, ResourceVO.class));
+        }
+        // 查询并填充用户部门信息
+        List<String> departmentIds = userDepartmentRelationMapper.selectList(new LambdaQueryWrapper<UserDepartmentRelation>().in(UserDepartmentRelation::getUserId, userVO.getId())).stream().map(UserDepartmentRelation::getDepartmentId).collect(Collectors.toList());
+        if (CollectionUtil.isNotEmpty(departmentIds)) {
+            List<Department> departments = departmentMapper.selectBatchIds(departmentIds);
+            userVO.setDepartments(TreeModelUtils.buildObjectTree(CommonUtils.transformList(departments, DepartmentVO.class)));
+        }
     }
 
     /**

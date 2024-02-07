@@ -1,4 +1,4 @@
-package org.example.util;
+package org.example.common.util;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

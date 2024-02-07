@@ -1,10 +1,8 @@
-package org.example.system.vo;
+package org.example.system.entity.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.example.common.entity.BaseEntity;
-
-import java.util.List;
 
 /**
  * @author lihui
@@ -12,9 +10,9 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ResourceCategoryVO extends BaseEntity {
+public class RoleVO extends BaseEntity {
     /**
-     * 分类名称
+     * 名称
      */
     private String name;
     /**
@@ -22,11 +20,11 @@ public class ResourceCategoryVO extends BaseEntity {
      */
     private Integer sort;
     /**
+     * 状态
+     */
+    private Integer status;
+    /**
      * 描述
      */
     private String description;
-    /**
-     * 资源列表
-     */
-    private List<ResourceVO> resources;
 }

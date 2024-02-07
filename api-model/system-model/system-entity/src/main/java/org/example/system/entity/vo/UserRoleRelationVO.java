@@ -1,4 +1,4 @@
-package org.example.system.vo;
+package org.example.system.entity.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,21 +12,21 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleMenuRelationVO extends BaseEntity {
+public class UserRoleRelationVO extends BaseEntity {
+    /**
+     * 用户id
+     */
+    private String userId;
     /**
      * 角色id
      */
     private String roleId;
     /**
-     * 菜单id
+     * 用户id集合
      */
-    private String menuId;
+    private List<String> userIds;
     /**
      * 角色id集合
      */
     private List<String> roleIds;
-    /**
-     * 菜单id集合
-     */
-    private List<String> menuIds;
 }

@@ -12,9 +12,9 @@ import org.example.system.entity.Dictionary;
 import org.example.system.query.DictionaryQueryPage;
 import org.example.system.mapper.DictionaryMapper;
 import org.example.system.service.DictionaryService;
-import org.example.system.vo.DictionaryVO;
-import org.example.util.CommonUtils;
-import org.example.util.PageUtils;
+import org.example.system.entity.vo.DictionaryVO;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

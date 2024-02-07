@@ -7,17 +7,16 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.example.common.result.SystemServerResult;
 import org.example.common.result.exception.SystemException;
 import org.example.system.dubbo.ResourceCategoryDubboService;
-import org.example.system.dubbo.ResourceDubboService;
 import org.example.system.entity.Resource;
 import org.example.system.entity.ResourceCategory;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.query.ResourceCategoryQueryPage;
 import org.example.system.service.ResourceCategoryService;
-import org.example.system.vo.ResourceCategoryVO;
-import org.example.system.vo.ResourceVO;
-import org.example.util.CommonUtils;
-import org.example.util.PageUtils;
+import org.example.system.entity.vo.ResourceCategoryVO;
+import org.example.system.entity.vo.ResourceVO;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.PageUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ import java.util.List;
  * @since 2023/4/3
  */
 @Service
-@DubboService(interfaceClass = ResourceCategoryDubboService.class, interfaceName = "resourceCategoryDubboService")
+@DubboService(interfaceClass = ResourceCategoryDubboService.class)
 public class ResourceCategoryServiceImpl implements ResourceCategoryService, ResourceCategoryDubboService {
     @javax.annotation.Resource
     private ResourceMapper resourceMapper;

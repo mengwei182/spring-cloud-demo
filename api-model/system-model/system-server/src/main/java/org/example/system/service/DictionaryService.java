@@ -2,7 +2,7 @@ package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.system.query.DictionaryQueryPage;
-import org.example.system.vo.DictionaryVO;
+import org.example.system.entity.vo.DictionaryVO;
 
 /**
  * @author lihui

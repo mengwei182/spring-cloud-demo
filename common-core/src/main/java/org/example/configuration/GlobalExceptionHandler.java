@@ -1,4 +1,4 @@
-package org.example.system.configuration;
+package org.example.configuration;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
     }
 
     private void printErrorInformation(Exception e, HttpServletRequest request) {
-        log.error(System.lineSeparator() + "exception:{}" + System.lineSeparator() + "message:{}" + System.lineSeparator() + "request:{}", e.getClass().getSimpleName(), e.getMessage(), buildRequestInformation(request));
+        log.error("异常信息:", e);
+        log.error("请求信息:{}", buildRequestInformation(request));
     }
 
     private String buildRequestInformation(HttpServletRequest request) {

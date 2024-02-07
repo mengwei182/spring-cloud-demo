@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiOperation;
 import org.example.common.model.CommonResult;
 import org.example.system.query.RoleQueryPage;
 import org.example.system.service.RoleService;
-import org.example.system.vo.RoleMenuRelationVO;
-import org.example.system.vo.RoleVO;
+import org.example.system.entity.vo.RoleMenuRelationVO;
+import org.example.system.entity.vo.RoleVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

@@ -29,8 +29,8 @@ public interface SystemServerResult {
     String DICTIONARY_CODE_EXIST = "存在相同编码字典";
     String DICTIONARY_CHILD_EXIST = "存在子字典";
     String TOKEN_EXPIRATION_TIME_INVALID = "令牌超时";
-    String ROLE_NULL = "令牌超时";
-    String ROLE_ADMIN_EXIST = "超级管理员已存在";
+    String ROLE_NULL = "角色不能为空";
+    String ROLE_ADMIN_EXIST = "不允许设定为超级管理员";
     String USER_TOKEN_KEY = "USER_TOKEN_KEY_";
     String RESOURCE_KEY = "RESOURCE_KEY_";
 }

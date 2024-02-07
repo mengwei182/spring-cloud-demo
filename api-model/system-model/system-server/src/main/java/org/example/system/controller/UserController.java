@@ -7,8 +7,8 @@ import org.example.common.model.CommonResult;
 import org.example.usercontext.UserContext;
 import org.example.system.query.UserQueryPage;
 import org.example.system.service.UserService;
-import org.example.system.vo.UserVO;
-import org.example.system.vo.UserLoginVO;
+import org.example.system.entity.vo.UserVO;
+import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

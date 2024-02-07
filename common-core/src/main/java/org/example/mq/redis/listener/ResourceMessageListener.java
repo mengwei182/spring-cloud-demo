@@ -3,16 +3,14 @@ package org.example.mq.redis.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
-import org.example.common.model.CommonResult;
 import org.example.system.dubbo.ResourceCategoryDubboService;
 import org.example.system.dubbo.ResourceDubboService;
-import org.example.system.vo.ResourceCategoryVO;
-import org.example.system.vo.ResourceVO;
-import org.example.util.CommonUtils;
+import org.example.system.entity.vo.ResourceCategoryVO;
+import org.example.system.entity.vo.ResourceVO;
+import org.example.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -28,7 +26,6 @@ import java.util.Set;
  * @since 2023/4/25
  */
 @Slf4j
-@Component
 public class ResourceMessageListener implements MessageListener {
     @Value("${spring.application.name}")
     private String applicationName;
@@ -43,8 +40,8 @@ public class ResourceMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        CommonResult<?> commonResult = (CommonResult<?>) caffeineRedisCache.getRedisTemplate().getValueSerializer().deserialize(message.getBody());
-        if (commonResult == null || commonResult.getData() == null || !Boolean.TRUE.equals(commonResult.getData())) {
+        Boolean body = (Boolean) caffeineRedisCache.getRedisTemplate().getValueSerializer().deserialize(message.getBody());
+        if (!Boolean.TRUE.equals(body)) {
             return;
         }
         Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();

@@ -10,8 +10,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @since 2023/4/3
  */
 @EnableDiscoveryClient
-@EnableDubbo(scanBasePackages = "org.example.*")
-@SpringBootApplication(scanBasePackages = "org.example.*")
+@EnableDubbo(scanBasePackages = "org.example")
+@SpringBootApplication(scanBasePackages = "org.example")
 public class SystemServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(SystemServerApplication.class, args);

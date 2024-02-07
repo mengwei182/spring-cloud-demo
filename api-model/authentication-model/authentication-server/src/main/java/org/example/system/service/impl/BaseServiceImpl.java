@@ -1,8 +1,8 @@
 package org.example.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
 import org.example.common.entity.Token;
 import org.example.common.enums.UserVerifyStatusEnum;
@@ -15,12 +15,12 @@ import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.User;
 import org.example.usercontext.UserContext;
 import org.example.system.service.BaseService;
-import org.example.system.vo.UserLoginVO;
-import org.example.system.vo.UserVO;
-import org.example.util.CommonUtils;
-import org.example.util.ImageCaptchaUtils;
-import org.example.util.RSAEncryptUtils;
-import org.example.util.TokenUtils;
+import org.example.system.entity.vo.UserLoginVO;
+import org.example.system.entity.vo.UserVO;
+import org.example.common.util.CommonUtils;
+import org.example.common.util.ImageCaptchaUtils;
+import org.example.common.util.RSAEncryptUtils;
+import org.example.common.util.TokenUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +40,15 @@ import java.util.Date;
 @Slf4j
 @Service
 public class BaseServiceImpl implements BaseService {
-    @Resource
+    @DubboReference
     private UserDubboService userDubboService;
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
     private CaffeineRedisCache caffeineRedisCache;
-    @Resource
+    @DubboReference
     private ResourceDubboService resourceDubboService;
-    @Resource
+    @DubboReference
     private TokenDubboService tokenDubboService;
 
     /**

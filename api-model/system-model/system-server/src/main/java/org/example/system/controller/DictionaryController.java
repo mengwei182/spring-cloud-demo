@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.example.common.model.CommonResult;
 import org.example.system.query.DictionaryQueryPage;
 import org.example.system.service.DictionaryService;
-import org.example.system.vo.DictionaryVO;
+import org.example.system.entity.vo.DictionaryVO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

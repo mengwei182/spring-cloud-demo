@@ -1,6 +1,6 @@
 package org.example.system.service;
 
-import org.example.system.vo.UserLoginVO;
+import org.example.system.entity.vo.UserLoginVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
