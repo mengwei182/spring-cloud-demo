@@ -14,7 +14,7 @@
 
     <modules>
         <module>system-entity</module>
-        <module>system-dubbo</module>
+        <module>system-api</module>
         <module>system-server</module>
     </modules>
 </project>

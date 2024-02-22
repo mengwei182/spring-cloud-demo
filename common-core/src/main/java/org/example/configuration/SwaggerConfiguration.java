@@ -1,6 +1,5 @@
 package org.example.configuration;
 
-import com.alibaba.nacos.api.config.annotation.NacosValue;
 import io.swagger.annotations.ApiOperation;
 import org.example.common.result.CommonServerResult;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +11,13 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.ParameterType;
+import springfox.documentation.service.RequestParameter;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;

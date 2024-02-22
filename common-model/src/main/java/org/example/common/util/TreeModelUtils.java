@@ -2,13 +2,18 @@ package org.example.common.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.tree.TreeModel;
 import org.example.common.result.exception.SystemException;
+import org.example.common.tree.TreeModel;
 import org.example.common.tree.TreeModelField;
 import org.example.common.tree.TreeModelFieldEnum;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

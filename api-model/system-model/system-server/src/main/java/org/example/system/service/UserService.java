@@ -1,9 +1,9 @@
 package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.system.query.UserQueryPage;
 import org.example.system.entity.vo.UserLoginVO;
 import org.example.system.entity.vo.UserVO;
+import org.example.system.query.UserQueryPage;
 
 import java.security.NoSuchAlgorithmException;
 

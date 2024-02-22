@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>system-dubbo</artifactId>
+            <artifactId>system-api</artifactId>
             <version>1.0</version>
         </dependency>
         <!--module end-->
