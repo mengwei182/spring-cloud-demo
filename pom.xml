@@ -16,7 +16,7 @@
     <version>1.0</version>
 
     <modules>
-        <module>api-model</module>
+        <module>server-model</module>
         <module>common-core</module>
         <module>common-model</module>
         <module>gateway-server</module>

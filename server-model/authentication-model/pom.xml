@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.example</groupId>
-        <artifactId>api-model</artifactId>
+        <artifactId>server-model</artifactId>
         <version>1.0</version>
     </parent>
 
