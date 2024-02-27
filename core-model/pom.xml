@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>common-core</artifactId>
+    <artifactId>core-model</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
 

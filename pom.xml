@@ -17,7 +17,7 @@
 
     <modules>
         <module>server-model</module>
-        <module>common-core</module>
+        <module>core-model</module>
         <module>common-model</module>
         <module>gateway-server</module>
     </modules>

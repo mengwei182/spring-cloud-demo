@@ -18,7 +18,7 @@
         <!--module start-->
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>common-core</artifactId>
+            <artifactId>core-model</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
