@@ -2,7 +2,7 @@ package org.example.system.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.example.common.model.CommonResult;
+import org.example.common.result.CommonResult;
 import org.example.system.service.TokenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

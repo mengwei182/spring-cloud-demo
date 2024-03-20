@@ -2,7 +2,7 @@ package org.example.configuration;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.model.CommonResult;
+import org.example.common.result.CommonResult;
 import org.example.common.result.CommonServerResult;
 import org.example.common.result.exception.CommonException;
 import org.springframework.validation.FieldError;

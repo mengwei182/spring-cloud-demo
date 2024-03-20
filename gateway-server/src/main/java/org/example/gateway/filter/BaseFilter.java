@@ -5,7 +5,7 @@ import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
 import org.example.common.entity.Token;
-import org.example.common.model.CommonResult;
+import org.example.common.result.CommonResult;
 import org.example.common.result.CommonServerResult;
 import org.example.common.result.SystemServerResult;
 import org.example.common.util.GsonUtils;

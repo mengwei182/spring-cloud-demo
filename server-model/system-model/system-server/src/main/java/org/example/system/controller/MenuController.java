@@ -3,7 +3,7 @@ package org.example.system.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.example.common.model.CommonResult;
+import org.example.common.result.CommonResult;
 import org.example.system.entity.vo.MenuVO;
 import org.example.system.query.MenuQueryPage;
 import org.example.system.service.MenuService;
