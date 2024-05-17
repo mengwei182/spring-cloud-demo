@@ -1,15 +1,15 @@
 package org.example.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
-import org.example.common.entity.Token;
-import org.example.common.result.CommonResult;
-import org.example.common.result.CommonServerResult;
-import org.example.common.result.SystemServerResult;
-import org.example.common.util.GsonUtils;
-import org.example.common.util.TokenUtils;
+import org.example.common.core.entity.Token;
+import org.example.common.core.result.CommonResult;
+import org.example.common.core.result.CommonServerResult;
+import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.util.TokenUtils;
 import org.example.system.entity.vo.ResourceVO;
 import org.example.system.entity.vo.UserVO;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +61,7 @@ public class BaseFilter implements GlobalFilter {
         if (urlWhiteFilter(request)) {
             return chain.filter(exchange);
         }
-        byte[] bytes = GsonUtils.gson().toJson(CommonResult.unauthorized()).getBytes();
+        byte[] bytes = JSON.toJSONString(CommonResult.unauthorized()).getBytes();
         DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
         // 校验请求中的token参数和数据
         String authorization = authorizationHeaderFilter(request);
