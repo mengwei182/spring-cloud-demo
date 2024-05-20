@@ -29,4 +29,15 @@ public abstract class AbstractMessageListener {
      * @return
      */
     public abstract ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messages, ConsumeConcurrentlyContext context);
+
+    /**
+     * 获取message id的默认方法，用来校验消息幂等性，子类可以重写该方法
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    public String getMessageId(MessageExt message, ConsumeConcurrentlyContext context) {
+        return message.getMsgId();
+    }
 }

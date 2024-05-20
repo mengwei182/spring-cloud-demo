@@ -3,12 +3,7 @@ package org.example.common.kafka.listener;
 import lombok.Getter;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.example.common.core.configuration.ApplicationConfiguration;
-import org.example.common.redis.service.RedisService;
-import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.lang.Nullable;
 
-import java.time.Duration;
 import java.util.Set;
 
 /**
@@ -27,7 +22,28 @@ public abstract class AbstractMessageListener {
         this.topic = topic;
     }
 
+    /**
+     * 消息消费逻辑
+     *
+     * @param data
+     */
     public abstract void onMessage(ConsumerRecord<Object, Object> data);
 
+    /**
+     * 消息消费逻辑
+     *
+     * @param data
+     * @param consumer
+     */
     public abstract void onMessage(ConsumerRecord<Object, Object> data, Consumer<?, ?> consumer);
+
+    /**
+     * 获取message id的默认方法，用来校验消息幂等性，子类可以重写该方法
+     *
+     * @param data
+     * @return
+     */
+    public String getMessageId(ConsumerRecord<Object, Object> data) {
+        return data.topic() + "-" + data.partition() + "-" + data.offset();
+    }
 }
