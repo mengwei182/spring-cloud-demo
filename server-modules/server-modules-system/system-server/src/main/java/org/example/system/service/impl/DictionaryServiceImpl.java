@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.example.common.core.entity.BaseEntity;
+import org.example.common.core.domain.BaseEntity;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
 import org.example.common.core.result.exception.SystemException;

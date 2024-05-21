@@ -5,16 +5,16 @@
     <parent>
         <groupId>org.example</groupId>
         <artifactId>server-modules</artifactId>
-        <version>1.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>server-modules-system</artifactId>
-    <version>1.0</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>system-entity</module>
         <module>system-api</module>
+        <module>system-domain</module>
         <module>system-server</module>
     </modules>
 </project>

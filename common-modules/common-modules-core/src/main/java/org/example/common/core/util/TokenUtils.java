@@ -2,7 +2,7 @@ package org.example.common.core.util;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.core.entity.Token;
+import org.example.common.core.domain.Token;
 import org.springframework.beans.BeanUtils;
 
 import javax.crypto.Cipher;

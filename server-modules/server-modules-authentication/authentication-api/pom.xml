@@ -6,18 +6,18 @@
     <parent>
         <groupId>org.example</groupId>
         <artifactId>server-modules-authentication</artifactId>
-        <version>1.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>authentication-api</artifactId>
-    <version>1.0</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <!--module start-->
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>authentication-entity</artifactId>
+            <artifactId>authentication-domain</artifactId>
         </dependency>
         <!--module end-->
     </dependencies>

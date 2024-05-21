@@ -2,7 +2,7 @@ package org.example.system.service.impl;
 
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
-import org.example.common.core.entity.Token;
+import org.example.common.core.domain.Token;
 import org.example.common.core.result.SystemServerResult;
 import org.example.common.core.result.exception.SystemException;
 import org.example.common.core.util.TokenUtils;

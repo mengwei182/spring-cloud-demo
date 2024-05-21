@@ -5,7 +5,6 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.example.common.kafka.Topic;
 import org.example.common.kafka.listener.AbstractMessageListener;
-import org.springframework.kafka.support.Acknowledgment;
 
 /**
  * @author lihui

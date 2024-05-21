@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.example</groupId>
         <artifactId>server-modules-authentication</artifactId>
-        <version>1.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>authentication-server</artifactId>
-    <version>1.0</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>system-entity</artifactId>
+            <artifactId>system-domain</artifactId>
         </dependency>
         <!--module end-->
 

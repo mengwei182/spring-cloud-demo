@@ -576,6 +576,22 @@ public enum HttpStatus {
     }
 
     /**
+     * Return the enum constant of this type with the specified numeric value.
+     *
+     * @param statusCode the numeric value of the enum to be returned
+     * @return the enum constant with the specified numeric value
+     * @throws IllegalArgumentException if this enum has no constant for the specified numeric value
+     */
+    public static HttpStatus valueOf(int statusCode) {
+        for (HttpStatus httpStatus : values()) {
+            if (httpStatus.value == statusCode) {
+                return httpStatus;
+            }
+        }
+        throw new IllegalArgumentException("No matching constant for [" + statusCode + "]");
+    }
+
+    /**
      * Return the integer value of this status code.
      */
     public int value() {
@@ -689,23 +705,6 @@ public enum HttpStatus {
 
 
     /**
-     * Return the enum constant of this type with the specified numeric value.
-     *
-     * @param statusCode the numeric value of the enum to be returned
-     * @return the enum constant with the specified numeric value
-     * @throws IllegalArgumentException if this enum has no constant for the specified numeric value
-     */
-    public static HttpStatus valueOf(int statusCode) {
-        for (HttpStatus httpStatus : values()) {
-            if (httpStatus.value == statusCode) {
-                return httpStatus;
-            }
-        }
-        throw new IllegalArgumentException("No matching constant for [" + statusCode + "]");
-    }
-
-
-    /**
      * Enumeration of generic status series.
      * <p>Retrievable via {@link HttpStatus#series()}.
      */
@@ -727,13 +726,6 @@ public enum HttpStatus {
             this.value = value;
         }
 
-        /**
-         * Return the integer value of this status series. Ranges from 1 to 5.
-         */
-        public int value() {
-            return this.value;
-        }
-
         public static Series valueOf(int status) {
             int seriesCode = status / 100;
             for (Series series : values()) {
@@ -746,6 +738,13 @@ public enum HttpStatus {
 
         public static Series valueOf(HttpStatus httpStatus) {
             return valueOf(httpStatus.value);
+        }
+
+        /**
+         * Return the integer value of this status series. Ranges from 1 to 5.
+         */
+        public int value() {
+            return this.value;
         }
     }
 

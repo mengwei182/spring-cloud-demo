@@ -19,10 +19,6 @@
             <groupId>org.example</groupId>
             <artifactId>common-modules-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>system-entity</artifactId>
-        </dependency>
         <!--module end-->
 
         <!--spring boot start-->

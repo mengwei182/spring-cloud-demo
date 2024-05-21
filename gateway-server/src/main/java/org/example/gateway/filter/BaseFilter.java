@@ -5,13 +5,12 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
-import org.example.common.core.entity.Token;
+import org.example.common.core.domain.Token;
+import org.example.common.core.domain.UserContextEntity;
 import org.example.common.core.result.CommonResult;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
 import org.example.common.core.util.TokenUtils;
-import org.example.system.entity.vo.ResourceVO;
-import org.example.system.entity.vo.UserVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -31,7 +30,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 基础过滤器
@@ -70,16 +68,16 @@ public class BaseFilter implements GlobalFilter {
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
         }
-        Token<UserVO> token = TokenUtils.unsigned(authorization, UserVO.class);
-        UserVO userVO = token.getData();
+        Token<UserContextEntity> token = TokenUtils.unsigned(authorization, UserContextEntity.class);
+        UserContextEntity userContextEntity = token.getData();
         // 校验token
-        if (!tokenFilter(authorization, userVO)) {
+        if (!tokenFilter(authorization, userContextEntity.getId())) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
         }
         // 校验资源
-        if (!resourceFilter(request.getPath().value(), userVO)) {
+        if (!resourceFilter(request.getPath().value(), userContextEntity.getResourceIds())) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             return response.writeWith(Mono.just(dataBuffer));
@@ -101,14 +99,14 @@ public class BaseFilter implements GlobalFilter {
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
-    private boolean tokenFilter(String authorization, UserVO userVO) {
+    private boolean tokenFilter(String authorization, String userId) {
         // 校验请求中的token参数和数据
-        if (userVO == null) {
+        if (StrUtil.isEmpty(userId)) {
             return false;
         }
         try {
             // token过期
-            String token = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userVO.getId(), String.class);
+            String token = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userId, String.class);
             return !StrUtil.isEmpty(token) && authorization.equals(token);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -116,10 +114,8 @@ public class BaseFilter implements GlobalFilter {
         }
     }
 
-    private boolean resourceFilter(String path, UserVO userVO) {
+    private boolean resourceFilter(String path, List<String> resourceIds) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        List<ResourceVO> resourceVOS = userVO.getResources();
-        Optional<ResourceVO> findAny = resourceVOS.stream().filter(o -> antPathMatcher.match(o.getUrl(), path)).findAny();
-        return findAny.isPresent();
+        return resourceIds.stream().anyMatch(o -> antPathMatcher.match(o, path));
     }
 }

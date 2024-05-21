@@ -85,7 +85,7 @@
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
-                <artifactId>authentication-entity</artifactId>
+                <artifactId>authentication-domain</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -95,7 +95,7 @@
             </dependency>
             <dependency>
                 <groupId>org.example</groupId>
-                <artifactId>system-entity</artifactId>
+                <artifactId>system-domain</artifactId>
                 <version>${revision}</version>
             </dependency>
             <!--module end-->
@@ -179,7 +179,7 @@
             <dependency>
                 <groupId>org.example</groupId>
                 <artifactId>caffeine-redis-boot-starter</artifactId>
-                <version>1.0</version>
+                <version>${revision}</version>
             </dependency>
             <!--caffeine redis end-->
         </dependencies>
