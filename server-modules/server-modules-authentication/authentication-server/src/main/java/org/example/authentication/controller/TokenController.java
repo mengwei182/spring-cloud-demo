@@ -1,12 +1,11 @@
-package org.example.system.controller;
+package org.example.authentication.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.example.authentication.service.TokenService;
 import org.example.common.core.result.CommonResult;
-import org.example.system.service.TokenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -25,12 +24,11 @@ public class TokenController {
     /**
      * 刷新token
      *
-     * @param userId 用户id
      * @return
      */
     @ApiOperation("刷新token")
     @GetMapping("/refresh")
-    public CommonResult<String> refresh(@RequestParam String userId) {
-        return CommonResult.success(tokenService.refresh(userId));
+    public CommonResult<String> refresh() {
+        return CommonResult.success(tokenService.refresh());
     }
 }

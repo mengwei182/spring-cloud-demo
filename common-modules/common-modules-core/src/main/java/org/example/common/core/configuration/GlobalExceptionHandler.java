@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.core.result.CommonResult;
 import org.example.common.core.result.CommonServerResult;
-import org.example.common.core.result.exception.CommonException;
+import org.example.common.core.exception.CommonException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

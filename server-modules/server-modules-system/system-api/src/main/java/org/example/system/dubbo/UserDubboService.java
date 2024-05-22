@@ -24,14 +24,6 @@ public interface UserDubboService {
     User getUserByUsername(String username);
 
     /**
-     * 获取用户token有效时间
-     *
-     * @param userId
-     * @return 过期剩余时间，单位毫秒
-     */
-    long getTokenExpireTime(String userId);
-
-    /**
      * 清理用户信息缓存
      *
      * @param userId

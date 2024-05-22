@@ -1,4 +1,4 @@
-package org.example.common.core.result.exception;
+package org.example.common.core.exception;
 
 import org.example.common.core.result.CommonServerResult;
 

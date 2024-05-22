@@ -20,6 +20,7 @@ public interface CommonServerResult {
 
     String COMMON_EXCEPTION_CODE = "100000";
     String SYSTEM_EXCEPTION_CODE = "100001";
+    String AUTHENTICATION_EXCEPTION_CODE = "100002";
 
     String LOGIN = "login_";
     String REGISTER = "register_";

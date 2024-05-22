@@ -60,14 +60,6 @@ public interface UserService {
     Boolean deleteUser(String id);
 
     /**
-     * 获取用户token有效时间
-     *
-     * @param id
-     * @return 有效时间，单位毫秒
-     */
-    long getTokenExpireTime(String id);
-
-    /**
      * 获取密钥
      *
      * @param id

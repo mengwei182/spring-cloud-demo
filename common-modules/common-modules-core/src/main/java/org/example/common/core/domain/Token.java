@@ -1,6 +1,8 @@
 package org.example.common.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -9,21 +11,18 @@ import java.util.Date;
  * @since 2022/10/29
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Token<T> {
+    /**
+     * 过期时间，单位天
+     */
+    public static final Integer EXPIRATION_DAY = 7;
     private Object id;
     // 签名时间
-    private Date signTime;
+    private Date signDate;
     // 过期时间，单位秒
-    private Long expiration;
+    private Date expirationDate;
     // token数据
     private T data;
-
-    public Token() {
-    }
-
-    public Token(Object id, Date signTime, T data) {
-        this.id = id;
-        this.signTime = signTime;
-        this.data = data;
-    }
 }

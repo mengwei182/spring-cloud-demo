@@ -1,10 +1,10 @@
-package org.example.system.controller;
+package org.example.authentication.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.example.authentication.service.LoginService;
 import org.example.common.core.result.CommonResult;
 import org.example.system.entity.vo.UserLoginVO;
-import org.example.system.service.LoginService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

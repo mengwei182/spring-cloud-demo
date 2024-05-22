@@ -1,4 +1,4 @@
-package org.example.system.service;
+package org.example.authentication.service;
 
 /**
  * @author lihui
@@ -8,8 +8,7 @@ public interface TokenService {
     /**
      * 刷新token
      *
-     * @param userId 用户id
      * @return
      */
-    String refresh(String userId);
+    String refresh();
 }

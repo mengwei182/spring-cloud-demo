@@ -68,9 +68,9 @@ public class UserVO extends BaseEntity {
      */
     private List<RoleVO> roles;
     /**
-     * 资源信息
+     * 资源URL信息
      */
-    private List<ResourceVO> resources;
+    private List<String> resourceUrls;
     /**
      * 部门信息
      */

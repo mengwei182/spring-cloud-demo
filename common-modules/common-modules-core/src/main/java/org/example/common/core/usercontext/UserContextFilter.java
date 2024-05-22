@@ -2,7 +2,7 @@ package org.example.common.core.usercontext;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.core.domain.UserContextEntity;
+import org.example.common.core.domain.LoginUser;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.util.TokenUtils;
 import org.springframework.core.annotation.Order;
@@ -39,7 +39,7 @@ public class UserContextFilter implements Filter {
         // 校验是否是不需要验证token的url
         if (StrUtil.isNotEmpty(authorization)) {
             try {
-                UserContext.set(TokenUtils.unsigned(authorization, UserContextEntity.class).getData());
+                UserContext.set(TokenUtils.unsigned(authorization, LoginUser.class).getData());
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

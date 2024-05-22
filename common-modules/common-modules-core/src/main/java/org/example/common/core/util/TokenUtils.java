@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.common.core.domain.Token;
 import org.springframework.beans.BeanUtils;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -61,14 +63,9 @@ public class TokenUtils {
      * @param token
      * @return
      */
-    public static Token<?> unsigned(String token) {
-        try {
-            byte[] bytes = decryptCipher.doFinal(Base64.getDecoder().decode(token.getBytes()));
-            return JSON.parseObject(new String(bytes), Token.class);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new Token<>();
-        }
+    public static Token<?> unsigned(String token) throws IllegalBlockSizeException, BadPaddingException {
+        byte[] bytes = decryptCipher.doFinal(Base64.getDecoder().decode(token.getBytes()));
+        return JSON.parseObject(new String(bytes), Token.class);
     }
 
     /**
@@ -79,19 +76,14 @@ public class TokenUtils {
      * @param <T>
      * @return
      */
-    public static <T> Token<T> unsigned(String tokenString, Class<T> clazz) {
-        try {
-            Token<?> token = unsigned(tokenString);
-            Object data = token.getData();
-            T t = JSON.parseObject(JSON.toJSONString(data), clazz);
-            Token<T> resultToken = new Token<>();
-            BeanUtils.copyProperties(token, resultToken);
-            resultToken.setData(t);
-            return resultToken;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new Token<>();
-        }
+    public static <T> Token<T> unsigned(String tokenString, Class<T> clazz) throws IllegalBlockSizeException, BadPaddingException {
+        Token<?> token = unsigned(tokenString);
+        Object data = token.getData();
+        T t = JSON.parseObject(JSON.toJSONString(data), clazz);
+        Token<T> resultToken = new Token<>();
+        BeanUtils.copyProperties(token, resultToken);
+        resultToken.setData(t);
+        return resultToken;
     }
 
     private static SecretKey generateKey() {

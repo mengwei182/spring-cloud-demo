@@ -1,4 +1,4 @@
-package org.example.system;
+package org.example.authentication;
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;

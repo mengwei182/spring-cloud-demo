@@ -1,15 +1,17 @@
-package org.example.system.service.impl;
+package org.example.authentication.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
+import org.example.authentication.service.LoginService;
+import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
-import org.example.common.core.domain.UserContextEntity;
 import org.example.common.core.enums.UserVerifyStatusEnum;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
-import org.example.common.core.result.exception.SystemException;
+import org.example.common.core.exception.SystemException;
 import org.example.common.core.usercontext.UserContext;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.ImageCaptchaUtils;
@@ -21,7 +23,6 @@ import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.User;
 import org.example.system.entity.vo.ResourceVO;
 import org.example.system.entity.vo.UserLoginVO;
-import org.example.system.service.LoginService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -143,21 +146,26 @@ public class LoginServiceImpl implements LoginService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SystemException(SystemServerResult.PASSWORD_ERROR);
         }
-        long time = userDubboService.getTokenExpireTime(user.getId());
-        // token已经过期
-        if (time <= 0) {
-            // 删除旧token
-            userDubboService.clearUserCache(user.getId());
-            throw new SystemException(SystemServerResult.TOKEN_EXPIRATION_TIME_INVALID);
-        }
-        UserContextEntity userContextEntity = CommonUtils.transformObject(user, UserContextEntity.class);
+        caffeineRedisCache.evict(user.getId());
+        LoginUser loginUser = CommonUtils.transformObject(user, LoginUser.class);
         // 查询并设置登录用户的resource数据
         List<ResourceVO> resources = resourceDubboService.getResourceByUserId(user.getId());
-        userContextEntity.setResourceIds(resources.stream().map(ResourceVO::getId).collect(Collectors.toList()));
-        Token<UserContextEntity> token = new Token<>(user.getId(), new Date(), userContextEntity);
+        if (!CollectionUtil.isEmpty(resources)) {
+            loginUser.setResourceUrls(resources.stream().map(ResourceVO::getUrl).collect(Collectors.toList()));
+        }
+        // 登录时间
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Date loginDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        // 过期时间
+        LocalDateTime expirationDateTime = localDateTime.plusDays(Token.EXPIRATION_DAY);
+        Date expirationDate = Date.from(expirationDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        // 生成token
+        Token<LoginUser> token = new Token<>(user.getId(), loginDate, expirationDate, loginUser);
         String tokenString = TokenUtils.sign(token);
-        userDubboService.clearUserCache(user.getId());
-        caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofMillis(time));
+        // 删除旧缓存
+        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + user.getId());
+        caffeineRedisCache.put(user.getId(), loginUser, Duration.ofDays(Token.EXPIRATION_DAY));
+        caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofDays(Token.EXPIRATION_DAY));
         return tokenString;
     }
 
@@ -168,14 +176,14 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public Boolean logout() {
-        UserContextEntity userContextEntity = UserContext.get();
-        if (userContextEntity == null) {
+        LoginUser loginUser = UserContext.get();
+        if (loginUser == null) {
             return true;
         }
-        userDubboService.clearUserCache(userContextEntity.getId());
-        tokenDubboService.clearTokenCache(userContextEntity.getId());
-        resourceDubboService.clearResourceCache(userContextEntity.getId());
-        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + userContextEntity.getId());
+        userDubboService.clearUserCache(loginUser.getId());
+        tokenDubboService.clearTokenCache(loginUser.getId());
+        resourceDubboService.clearResourceCache(loginUser.getId());
+        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + loginUser.getId());
         UserContext.remove();
         return true;
     }

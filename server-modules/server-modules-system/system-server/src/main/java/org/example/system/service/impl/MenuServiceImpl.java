@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.core.domain.BaseEntity;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
-import org.example.common.core.result.exception.SystemException;
+import org.example.common.core.exception.SystemException;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.common.core.util.TreeModelUtils;

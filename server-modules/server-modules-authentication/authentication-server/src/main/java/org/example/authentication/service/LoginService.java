@@ -1,4 +1,4 @@
-package org.example.system.service;
+package org.example.authentication.service;
 
 import org.example.system.entity.vo.UserLoginVO;
 

@@ -10,8 +10,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
+import org.example.common.core.domain.LoginUser;
 import org.example.common.core.result.SystemServerResult;
-import org.example.common.core.result.exception.SystemException;
+import org.example.common.core.exception.SystemException;
 import org.example.common.core.usercontext.UserContext;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
@@ -155,25 +156,18 @@ public class UserServiceImpl implements UserService, UserDubboService {
         if (StrUtil.isEmpty(id)) {
             throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
-        UserVO userVO = caffeineRedisCache.get(id, UserVO.class);
-        if (userVO == null) {
+        UserVO userVO;
+        LoginUser loginUser = caffeineRedisCache.get(id, LoginUser.class);
+        if (loginUser == null) {
             User user = userMapper.selectById(id);
             if (user == null) {
                 return null;
             }
-            // 校验token有效期
-            long time = getTokenExpireTime(user.getId());
-            // token已经过期
-            if (time <= 0) {
-                // 删除旧token
-                caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + user.getId());
-                throw new SystemException(SystemServerResult.TOKEN_EXPIRATION_TIME_INVALID);
-            }
             userVO = CommonUtils.transformObject(user, UserVO.class);
-            userVO.setPassword(null);
-            loadUserInfo(userVO);
-            caffeineRedisCache.put(id, userVO, Duration.ofMillis(time));
+        } else {
+            userVO = CommonUtils.transformObject(loginUser, UserVO.class);
         }
+        loadUserInfo(userVO);
         return userVO;
     }
 
@@ -194,7 +188,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
         List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(resourceIds)) {
             List<org.example.system.entity.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
-            userVO.setResources(CommonUtils.transformList(resources, ResourceVO.class));
+            userVO.setResourceUrls(resources.stream().map(org.example.system.entity.Resource::getUrl).collect(Collectors.toList()));
         }
         // 查询并填充用户部门信息
         List<String> departmentIds = userDepartmentRelationMapper.selectList(new LambdaQueryWrapper<UserDepartmentRelation>().in(UserDepartmentRelation::getUserId, userVO.getId())).stream().map(UserDepartmentRelation::getDepartmentId).collect(Collectors.toList());
@@ -294,35 +288,6 @@ public class UserServiceImpl implements UserService, UserDubboService {
     @Override
     public User getUserByUsername(String username) {
         return userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, username));
-    }
-
-    /**
-     * 获取用户token有效时间
-     *
-     * @param id
-     * @return 有效时间，单位毫秒
-     */
-    @Override
-    public long getTokenExpireTime(String id) {
-        User user = null;
-        UserVO userVO = caffeineRedisCache.get(id, UserVO.class);
-        if (userVO == null) {
-            user = userMapper.selectById(id);
-        }
-        if (user == null) {
-            return 0;
-        }
-        Date tokenExpireTime = user.getTokenExpireTime();
-        if (tokenExpireTime == null) {
-            // 默认7天有效期
-            tokenExpireTime = Date.from(LocalDateTime.now().plusDays(7).atZone(ZoneId.systemDefault()).toInstant());
-            user.setTokenExpireTime(tokenExpireTime);
-            userMapper.updateById(user);
-            clearUserCache(id);
-        }
-        // 校验token有效期
-        long time = tokenExpireTime.getTime() - new Date().getTime();
-        return time <= 0 ? 0 : time;
     }
 
     /**

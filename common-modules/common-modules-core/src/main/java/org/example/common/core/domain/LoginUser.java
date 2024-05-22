@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserContextEntity extends BaseEntity {
+public class LoginUser extends BaseEntity {
     /**
      * 用户名
      */
@@ -52,21 +52,9 @@ public class UserContextEntity extends BaseEntity {
      */
     private List<String> menuIds;
     /**
-     * 资源信息
+     * 资源URL信息
      */
-    private List<String> resourceIds;
-    /**
-     * 其他验证状态
-     * 0.关闭
-     * 1.图片验证码
-     * 2.短信验证码
-     * 3.公私钥验证
-     * 4.人脸验证
-     * 5.指纹验证
-     * 6.手势验证
-     * 7.邮箱验证
-     */
-    private String verifyStatus;
+    private List<String> resourceUrls;
     /**
      * token过期时间
      */

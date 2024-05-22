@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
+import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
-import org.example.common.core.domain.UserContextEntity;
 import org.example.common.core.result.CommonResult;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
@@ -29,6 +29,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,28 +60,25 @@ public class BaseFilter implements GlobalFilter {
         if (urlWhiteFilter(request)) {
             return chain.filter(exchange);
         }
-        byte[] bytes = JSON.toJSONString(CommonResult.unauthorized()).getBytes();
-        DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
         // 校验请求中的token参数和数据
         String authorization = authorizationHeaderFilter(request);
         if (StrUtil.isEmpty(authorization)) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            return response.writeWith(Mono.just(dataBuffer));
+            return writeUnauthorized(response);
         }
-        Token<UserContextEntity> token = TokenUtils.unsigned(authorization, UserContextEntity.class);
-        UserContextEntity userContextEntity = token.getData();
+        Token<LoginUser> token;
+        try {
+            token = TokenUtils.unsigned(authorization, LoginUser.class);
+        } catch (Exception e) {
+            return writeUnauthorized(response);
+        }
+        LoginUser loginUser = token.getData();
         // 校验token
-        if (!tokenFilter(authorization, userContextEntity.getId())) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            return response.writeWith(Mono.just(dataBuffer));
+        if (!tokenFilter(authorization, loginUser.getId())) {
+            return writeUnauthorized(response);
         }
         // 校验资源
-        if (!resourceFilter(request.getPath().value(), userContextEntity.getResourceIds())) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-            return response.writeWith(Mono.just(dataBuffer));
+        if (!resourceFilter(request.getPath().value(), loginUser.getResourceUrls())) {
+            return writeUnauthorized(response);
         }
         return chain.filter(exchange);
     }
@@ -105,17 +103,31 @@ public class BaseFilter implements GlobalFilter {
             return false;
         }
         try {
-            // token过期
-            String token = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userId, String.class);
-            return !StrUtil.isEmpty(token) && authorization.equals(token);
+            // token是否有效
+            String tokenString = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userId, String.class);
+            boolean tokenValid = !StrUtil.isEmpty(tokenString) && authorization.equals(tokenString);
+            // token是否过期
+            Token<?> token = TokenUtils.unsigned(authorization);
+            Date currentDate = new Date();
+            Date expirationDate = token.getExpirationDate();
+            boolean tokenExpiration = expirationDate.getTime() <= currentDate.getTime();
+            return tokenValid && tokenExpiration;
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
         }
     }
 
-    private boolean resourceFilter(String path, List<String> resourceIds) {
+    private boolean resourceFilter(String servletPath, List<String> resourceUrls) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        return resourceIds.stream().anyMatch(o -> antPathMatcher.match(o, path));
+        return resourceUrls.stream().anyMatch(o -> antPathMatcher.match(o, servletPath));
+    }
+
+    private Mono<Void> writeUnauthorized(ServerHttpResponse response){
+        byte[] bytes = JSON.toJSONString(CommonResult.unauthorized()).getBytes();
+        DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return response.writeWith(Mono.just(dataBuffer));
     }
 }

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
 import org.example.common.core.result.SystemServerResult;
-import org.example.common.core.result.exception.SystemException;
+import org.example.common.core.exception.SystemException;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.common.redis.Topic;
