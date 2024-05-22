@@ -41,7 +41,7 @@ import java.util.List;
 @Slf4j
 @Component
 @Order(Integer.MIN_VALUE)
-public class BaseFilter implements GlobalFilter {
+public class AuthenticationFilter implements GlobalFilter {
     @Value("${skip-urls}")
     @NacosValue(value = "${skip-urls}", autoRefreshed = true)
     private String skipUrls;
@@ -72,12 +72,12 @@ public class BaseFilter implements GlobalFilter {
             return writeUnauthorized(response);
         }
         LoginUser loginUser = token.getData();
-        // 校验token
-        if (!tokenFilter(authorization, loginUser.getId())) {
+        // token是否有效
+        if (!tokenValid(authorization, loginUser.getId())) {
             return writeUnauthorized(response);
         }
-        // 校验资源
-        if (!resourceFilter(request.getPath().value(), loginUser.getResourceUrls())) {
+        // resource是否有效
+        if (!resourceValid(request.getPath().value(), loginUser.getResourceUrls())) {
             return writeUnauthorized(response);
         }
         return chain.filter(exchange);
@@ -97,7 +97,7 @@ public class BaseFilter implements GlobalFilter {
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
-    private boolean tokenFilter(String authorization, String userId) {
+    private boolean tokenValid(String authorization, String userId) {
         // 校验请求中的token参数和数据
         if (StrUtil.isEmpty(userId)) {
             return false;
@@ -110,7 +110,7 @@ public class BaseFilter implements GlobalFilter {
             Token<?> token = TokenUtils.unsigned(authorization);
             Date currentDate = new Date();
             Date expirationDate = token.getExpirationDate();
-            boolean tokenExpiration = expirationDate.getTime() <= currentDate.getTime();
+            boolean tokenExpiration = expirationDate.getTime() > currentDate.getTime();
             return tokenValid && tokenExpiration;
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -118,12 +118,12 @@ public class BaseFilter implements GlobalFilter {
         }
     }
 
-    private boolean resourceFilter(String servletPath, List<String> resourceUrls) {
+    private boolean resourceValid(String servletPath, List<String> resourceUrls) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         return resourceUrls.stream().anyMatch(o -> antPathMatcher.match(o, servletPath));
     }
 
-    private Mono<Void> writeUnauthorized(ServerHttpResponse response){
+    private Mono<Void> writeUnauthorized(ServerHttpResponse response) {
         byte[] bytes = JSON.toJSONString(CommonResult.unauthorized()).getBytes();
         DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
         response.setStatusCode(HttpStatus.UNAUTHORIZED);

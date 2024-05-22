@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
 import org.example.authentication.service.LoginService;
+import org.example.authentication.service.LoginVerifyStrategy;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
 import org.example.common.core.enums.UserVerifyStatusEnum;
@@ -79,69 +80,20 @@ public class LoginServiceImpl implements LoginService {
             throw new SystemException(SystemServerResult.USER_NOT_EXIST);
         }
         String verifyStatusString = user.getVerifyStatus();
+        // 没有指定登录验证类型，默认为账号密码验证类型
         if (StrUtil.isEmpty(verifyStatusString)) {
-            verifyStatusString = String.valueOf(UserVerifyStatusEnum.NULL.getStatus());
+            verifyStatusString = String.valueOf(UserVerifyStatusEnum.USERNAME_PASSWORD.getStatus());
         }
-        // 登录验证流程，可以改写为策略模式
+        // 登录验证流程
         String[] verifyStatusSplit = verifyStatusString.split(",");
         for (String vs : verifyStatusSplit) {
-            int verifyStatus = Integer.parseInt(vs);
-            if (verifyStatus == UserVerifyStatusEnum.NULL.getStatus()) {
-                break;
+            int verifyStatus;
+            try {
+                verifyStatus = Integer.parseInt(vs);
+            } catch (Exception e) {
+                throw new SystemException(SystemServerResult.LOGIN_VERIFY_STATUS_ERROR);
             }
-            // 图片验证码
-            if (verifyStatus == UserVerifyStatusEnum.IMAGE.getStatus()) {
-                String imageCaptcha = userLoginVO.getImageCaptcha();
-                HttpSession session = request.getSession(false);
-                if (StrUtil.isEmpty(imageCaptcha) || session == null) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                String imageCaptchaCache = caffeineRedisCache.get(CommonServerResult.LOGIN + session.getId(), String.class);
-                if (StrUtil.isEmpty(imageCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_OVERDUE);
-                }
-                if (!imageCaptcha.equalsIgnoreCase(imageCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                caffeineRedisCache.evict(CommonServerResult.LOGIN + session.getId());
-            }
-            // 短信验证码
-            if (verifyStatus == UserVerifyStatusEnum.PHONE.getStatus()) {
-                String phoneCaptcha = userLoginVO.getPhoneCaptcha();
-                if (StrUtil.isEmpty(phoneCaptcha)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                String phoneCaptchaCache = caffeineRedisCache.get(CommonServerResult.LOGIN + user.getPhone(), String.class);
-                if (StrUtil.isEmpty(phoneCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_OVERDUE);
-                }
-                if (!phoneCaptcha.equalsIgnoreCase(phoneCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                caffeineRedisCache.evict(CommonServerResult.LOGIN + user.getPhone());
-            }
-            // 开启使用公私钥后使用私钥解密
-            if (verifyStatus == UserVerifyStatusEnum.SECRET_KEY.getStatus()) {
-                password = RSAEncryptUtils.decrypt(password, user.getPublicKey());
-                if (StrUtil.isEmpty(password)) {
-                    throw new SystemException(SystemServerResult.PASSWORD_ERROR);
-                }
-            }
-            // 邮箱验证码
-            if (verifyStatus == UserVerifyStatusEnum.EMAIL.getStatus()) {
-                String emailCaptcha = userLoginVO.getEmailCaptcha();
-                if (StrUtil.isEmpty(emailCaptcha)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                String emailCaptchaCache = caffeineRedisCache.get(CommonServerResult.LOGIN + user.getEmail(), String.class);
-                if (StrUtil.isEmpty(emailCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_OVERDUE);
-                }
-                if (!emailCaptcha.equalsIgnoreCase(emailCaptchaCache)) {
-                    throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
-                }
-                caffeineRedisCache.evict(CommonServerResult.LOGIN + user.getEmail());
-            }
+            LoginVerifyStrategy.verify(verifyStatus, request, userLoginVO, user);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SystemException(SystemServerResult.PASSWORD_ERROR);

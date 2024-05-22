@@ -7,6 +7,7 @@ package org.example.common.core.result;
 public interface SystemServerResult {
     String USERNAME_NULL = "用户名为空";
     String PASSWORD_NULL = "密码为空";
+    String LOGIN_VERIFY_STATUS_ERROR = "登录验证类型错误";
     String USER_EXIST = "用户已存在";
     String USER_NOT_EXIST = "用户不存在";
     String PASSWORD_ERROR = "密码错误";
