@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
-    <property name="log.file.path" value="logs/system-server.log"/>
+    <springProperty scope="context" name="log.file.path" source="log.file.path"/>
+    <springProperty scope="context" name="log.file.name" source="log.file.name"/>
+
     <property name="consoleLogPattern" value="%date{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) %cyan(%logger):%msg%n"/>
     <property name="fileLogPattern" value="%date %level [%thread] %logger{36} [%file : %line] %msg%n"/>
 
@@ -17,14 +19,14 @@
         </layout>
     </appender>
     <appender name="fileLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.file.path}</file>
+        <file>${log.file.name}</file>
         <append>true</append>
         <encoder>
             <pattern>${fileLogPattern}</pattern>
             <charset class="java.nio.charset.Charset">UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.file.path}.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <fileNamePattern>${log.file.path}/${log.file.name}.%d{yyyy-MM-dd}.zip</fileNamePattern>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>

@@ -14,12 +14,3 @@ mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
-
-skip-urls:
-  [
-    /swagger-ui/**,
-    /swagger-ui.html,
-    /swagger-resources/**,
-    /v2/api-docs,
-    /v3/api-docs
-  ]

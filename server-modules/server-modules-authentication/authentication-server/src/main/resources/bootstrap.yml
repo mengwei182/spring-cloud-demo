@@ -15,5 +15,8 @@ spring:
         namespace: spring-cloud-demo
         file-extension: yml
         group: DEFAULT_GROUP
-  config:
-    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+log:
+  file:
+    name: gateway-server.log
+    path: logs
