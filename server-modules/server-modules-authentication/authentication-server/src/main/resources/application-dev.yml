@@ -46,8 +46,11 @@ dubbo:
     password: nacos
     use-as-config-center: false
     use-as-metadata-center: false
-    group: ${spring.profiles.active}
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+      group: ${spring.cloud.nacos.discovery.group}
   protocol:
     name: dubbo
     port: -1
-    threads: 200
+  consumer:
+    check: false
