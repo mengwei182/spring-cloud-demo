@@ -18,6 +18,12 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>common-modules-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--module end-->
 

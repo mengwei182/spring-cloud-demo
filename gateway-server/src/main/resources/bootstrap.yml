@@ -14,7 +14,7 @@ spring:
         password: nacos
         namespace: spring-cloud-demo
         file-extension: yml
-        group: local
+        group: ${spring.profiles.active}
 
 log:
   file:

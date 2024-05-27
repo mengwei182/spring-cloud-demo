@@ -6,6 +6,16 @@ spring:
     name: system-server
   profiles:
     active: local
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   cloud:
     nacos:
       config:
@@ -14,9 +24,14 @@ spring:
         password: nacos
         namespace: spring-cloud-demo
         file-extension: yml
-        group: DEFAULT_GROUP
+        group: ${spring.profiles.active}
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 log:
   file:
-    name: gateway-server.log
+    name: system-server.log
     path: logs

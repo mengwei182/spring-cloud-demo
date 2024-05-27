@@ -6,7 +6,7 @@ spring:
         username: nacos
         password: nacos
         namespace: spring-cloud-demo
-        group: test
+        group: ${spring.profiles.active}
     gateway:
       enabled: true
       discovery:

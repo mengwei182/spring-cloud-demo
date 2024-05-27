@@ -7,9 +7,9 @@ import org.example.authentication.service.TokenService;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
 import org.example.common.core.exception.AuthenticationException;
+import org.example.common.core.exception.SystemException;
 import org.example.common.core.result.AuthenticationResult;
 import org.example.common.core.result.SystemServerResult;
-import org.example.common.core.exception.SystemException;
 import org.example.common.core.usercontext.UserContext;
 import org.example.common.core.util.TokenUtils;
 import org.example.system.dubbo.TokenDubboService;
@@ -56,9 +56,10 @@ public class TokenServiceImpl implements TokenService, TokenDubboService {
             Date expirationDate = Date.from(expirationDateTime.atZone(ZoneId.systemDefault()).toInstant());
             // 重新签名生成token
             Token<?> token = new Token<>(userId, oldToken.getSignDate(), expirationDate, oldToken.getData());
+            String refresh = TokenUtils.sign(token);
             // 重新设置token
             caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + userId, token, Duration.ofDays(Token.EXPIRATION_DAY));
-            return TokenUtils.sign(token);
+            return refresh;
         } catch (Exception e) {
             throw new AuthenticationException(AuthenticationResult.TOKEN_REFRESH_FAIL);
         }

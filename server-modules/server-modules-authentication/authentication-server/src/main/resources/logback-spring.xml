@@ -19,7 +19,7 @@
         </layout>
     </appender>
     <appender name="fileLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.file.name}</file>
+        <file>${log.file.path}/${log.file.name}</file>
         <append>true</append>
         <encoder>
             <pattern>${fileLogPattern}</pattern>

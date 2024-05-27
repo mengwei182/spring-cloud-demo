@@ -16,7 +16,6 @@ import javax.annotation.Resource;
  * @since 2024/5/17
  */
 @Slf4j
-@Component
 public class HashKeyExpirationEventMessageListener extends KeyExpirationEventMessageListener {
     @Resource
     private RedisService redisService;

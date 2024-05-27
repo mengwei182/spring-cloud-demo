@@ -18,5 +18,5 @@ spring:
 
 log:
   file:
-    name: gateway-server.log
+    name: authentication-server.log
     path: logs
