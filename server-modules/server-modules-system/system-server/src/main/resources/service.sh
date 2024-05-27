@@ -49,8 +49,8 @@ function start() {
     exit
   fi
   export LANG=zh_CN.UTF-8
-  nohup java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar -Dspring.config.location=application.yml $jpsCommand.jar >/dev/null 2>&1 &
-  #nohup java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n $JAVA_OPTS -Djava.ext.dirs=./lib/:$JAVA_HOME/jre/lib/ext -Djava.security.egd=file:/dev/./urandom -jar -Dspring.config.location=application.yml $jpsCommand.jar > /dev/null 2>&1 &
+  nohup java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar -Dspring.config.location=bootstrap.yml $jpsCommand.jar >/dev/null 2>&1 &
+  #nohup java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n $JAVA_OPTS -Djava.ext.dirs=./lib/:$JAVA_HOME/jre/lib/ext -Djava.security.egd=file:/dev/./urandom -jar -Dspring.config.location=bootstrap.yml $jpsCommand.jar > /dev/null 2>&1 &
   printf "Waiting for start $appName ..."
   while true; do
     lsof -i:$port | grep LISTEN >/dev/null 2>&1
