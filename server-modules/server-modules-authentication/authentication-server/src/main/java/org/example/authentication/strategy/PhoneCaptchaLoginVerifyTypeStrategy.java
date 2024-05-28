@@ -1,9 +1,8 @@
-package org.example.authentication.service.impl;
+package org.example.authentication.strategy;
 
 import cn.hutool.core.util.StrUtil;
 import org.example.CaffeineRedisCache;
-import org.example.authentication.service.LoginVerifyStrategy;
-import org.example.common.core.enums.UserVerifyStatusEnum;
+import org.example.common.core.enums.UserVerifyTypeStatusEnum;
 import org.example.common.core.exception.SystemException;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
@@ -19,12 +18,12 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2024/5/22
  */
 @Service
-public class PhoneCaptchaLoginVerifyStrategy extends LoginVerifyStrategy {
+public class PhoneCaptchaLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
     @Resource
     private CaffeineRedisCache caffeineRedisCache;
 
-    public PhoneCaptchaLoginVerifyStrategy() {
-        super(UserVerifyStatusEnum.PHONE_CAPTCHA.getStatus());
+    public PhoneCaptchaLoginVerifyTypeStrategy() {
+        super(UserVerifyTypeStatusEnum.PHONE_CAPTCHA.getType());
     }
 
     @Override

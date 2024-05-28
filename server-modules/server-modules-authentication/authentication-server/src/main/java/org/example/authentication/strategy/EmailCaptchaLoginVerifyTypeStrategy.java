@@ -1,9 +1,8 @@
-package org.example.authentication.service.impl;
+package org.example.authentication.strategy;
 
 import cn.hutool.core.util.StrUtil;
 import org.example.CaffeineRedisCache;
-import org.example.authentication.service.LoginVerifyStrategy;
-import org.example.common.core.enums.UserVerifyStatusEnum;
+import org.example.common.core.enums.UserVerifyTypeStatusEnum;
 import org.example.common.core.exception.SystemException;
 import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.result.SystemServerResult;
@@ -13,35 +12,33 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * @author lihui
  * @since 2024/5/22
  */
 @Service
-public class ImageCaptchaLoginVerifyStrategy extends LoginVerifyStrategy {
+public class EmailCaptchaLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
     @Resource
     private CaffeineRedisCache caffeineRedisCache;
 
-    public ImageCaptchaLoginVerifyStrategy() {
-        super(UserVerifyStatusEnum.IMAGE_CAPTCHA.getStatus());
+    public EmailCaptchaLoginVerifyTypeStrategy() {
+        super(UserVerifyTypeStatusEnum.EMAIL_CAPTCHA.getType());
     }
 
     @Override
     public void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user) {
-        String imageCaptcha = userLoginVO.getImageCaptcha();
-        HttpSession session = request.getSession(false);
-        if (StrUtil.isEmpty(imageCaptcha) || session == null) {
+        String emailCaptcha = userLoginVO.getEmailCaptcha();
+        if (StrUtil.isEmpty(emailCaptcha)) {
             throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
         }
-        String imageCaptchaCache = caffeineRedisCache.get(CommonServerResult.LOGIN + session.getId(), String.class);
-        if (StrUtil.isEmpty(imageCaptchaCache)) {
+        String emailCaptchaCache = caffeineRedisCache.get(CommonServerResult.LOGIN + user.getEmail(), String.class);
+        if (StrUtil.isEmpty(emailCaptchaCache)) {
             throw new SystemException(SystemServerResult.VERIFY_CODE_OVERDUE);
         }
-        if (!imageCaptcha.equalsIgnoreCase(imageCaptchaCache)) {
+        if (!emailCaptcha.equalsIgnoreCase(emailCaptchaCache)) {
             throw new SystemException(SystemServerResult.VERIFY_CODE_ERROR);
         }
-        caffeineRedisCache.evict(CommonServerResult.LOGIN + session.getId());
+        caffeineRedisCache.evict(CommonServerResult.LOGIN + user.getEmail());
     }
 }

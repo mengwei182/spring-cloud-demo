@@ -1,4 +1,4 @@
-package org.example.authentication.service;
+package org.example.authentication.strategy;
 
 import lombok.Data;
 import org.example.system.entity.User;
@@ -13,19 +13,19 @@ import java.util.Map;
  * @since 2024/5/22
  */
 @Data
-public abstract class LoginVerifyStrategy {
-    private static Map<Integer, LoginVerifyStrategy> loginVerifyStrategyMap = new HashMap<>();
+public abstract class LoginVerifyTypeStrategy {
+    private static Map<Integer, LoginVerifyTypeStrategy> loginVerifyStrategyMap = new HashMap<>();
 
-    public LoginVerifyStrategy(int type) {
+    public LoginVerifyTypeStrategy(int type) {
         loginVerifyStrategyMap.put(type, this);
     }
 
     public static void verify(int type, HttpServletRequest request, UserLoginVO userLoginVO, User user) {
-        LoginVerifyStrategy loginVerifyStrategy = loginVerifyStrategyMap.get(type);
-        if (loginVerifyStrategy == null) {
+        LoginVerifyTypeStrategy loginVerifyTypeStrategy = loginVerifyStrategyMap.get(type);
+        if (loginVerifyTypeStrategy == null) {
             return;
         }
-        loginVerifyStrategy.strategy(request, userLoginVO, user);
+        loginVerifyTypeStrategy.strategy(request, userLoginVO, user);
     }
 
     public abstract void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user);

@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
 import org.example.authentication.service.LoginService;
-import org.example.authentication.service.LoginVerifyStrategy;
+import org.example.authentication.strategy.LoginVerifyTypeStrategy;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
-import org.example.common.core.enums.UserVerifyStatusEnum;
+import org.example.common.core.enums.UserVerifyTypeStatusEnum;
 import org.example.common.core.exception.SystemException;
 import org.example.common.core.result.SystemServerResult;
 import org.example.common.core.usercontext.UserContext;
@@ -80,7 +80,7 @@ public class LoginServiceImpl implements LoginService {
         String verifyStatusString = user.getVerifyStatus();
         // 没有指定登录验证类型，默认为账号密码验证类型
         if (StrUtil.isEmpty(verifyStatusString)) {
-            verifyStatusString = String.valueOf(UserVerifyStatusEnum.USERNAME_PASSWORD.getStatus());
+            verifyStatusString = String.valueOf(UserVerifyTypeStatusEnum.USERNAME_PASSWORD.getType());
         }
         // 登录验证流程
         String[] verifyStatusSplit = verifyStatusString.split(",");
@@ -91,7 +91,7 @@ public class LoginServiceImpl implements LoginService {
             } catch (Exception e) {
                 throw new SystemException(SystemServerResult.LOGIN_VERIFY_STATUS_ERROR);
             }
-            LoginVerifyStrategy.verify(verifyStatus, request, userLoginVO, user);
+            LoginVerifyTypeStrategy.verify(verifyStatus, request, userLoginVO, user);
         }
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SystemException(SystemServerResult.PASSWORD_ERROR);
