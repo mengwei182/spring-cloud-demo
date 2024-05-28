@@ -5,7 +5,6 @@ import org.example.common.redis.service.RedisService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
