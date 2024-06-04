@@ -5,15 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.core.domain.BaseEntity;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.CommonServerResult;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.common.core.util.TreeModelUtils;
 import org.example.system.entity.Menu;
 import org.example.system.entity.RoleMenuRelation;
 import org.example.system.entity.vo.MenuVO;
+import org.example.system.exception.SystemException;
 import org.example.system.mapper.MenuMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
 import org.example.system.query.MenuQueryPage;
@@ -53,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
         if (!StrUtil.isEmpty(menuVO.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVO.getParentId()));
             if (parentMenu == null) {
-                throw new SystemException(SystemServerResult.PARENT_NOT_EXIST);
+                throw new SystemException(ExceptionInformation.SYSTEM_3002.getCode(), ExceptionInformation.SYSTEM_3002.getMessage());
             }
             parentId = menuVO.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -65,7 +64,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVO.getName()));
         if (resultMenu != null) {
-            throw new SystemException(SystemServerResult.MENU_NAME_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3001.getCode(), ExceptionInformation.SYSTEM_3001.getMessage());
         }
         menuMapper.insert(menu);
         return true;
@@ -82,7 +81,7 @@ public class MenuServiceImpl implements MenuService {
     public Boolean deleteMenu(String id) {
         Menu menu = menuMapper.selectById(id);
         if (menu == null) {
-            throw new SystemException(CommonServerResult.OBJECT_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.EXCEPTION_1001.getCode(), ExceptionInformation.EXCEPTION_1001.getMessage());
         }
         menuMapper.deleteById(id);
         QueryWrapper<RoleMenuRelation> roleMenuRelationQueryWrapper = new QueryWrapper<>();
@@ -101,7 +100,7 @@ public class MenuServiceImpl implements MenuService {
     public Boolean updateMenu(MenuVO menuVO) {
         Menu menu = menuMapper.selectById(menuVO.getId());
         if (menu == null) {
-            throw new SystemException(CommonServerResult.OBJECT_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.EXCEPTION_1001.getCode(), ExceptionInformation.EXCEPTION_1001.getMessage());
         }
         BeanUtils.copyProperties(menuVO, menu);
         String parentId = BaseEntity.TOP_PARENT_ID;
@@ -110,7 +109,7 @@ public class MenuServiceImpl implements MenuService {
         if (!StrUtil.isEmpty(menuVO.getParentId())) {
             Menu parentMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getId, menuVO.getParentId()));
             if (parentMenu == null) {
-                throw new SystemException(SystemServerResult.PARENT_NOT_EXIST);
+                throw new SystemException(ExceptionInformation.SYSTEM_3002.getCode(), ExceptionInformation.SYSTEM_3002.getMessage());
             }
             parentId = menuVO.getParentId();
             menu.setIdChain(parentMenu.getIdChain() + "," + parentMenu.getId());
@@ -122,7 +121,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu resultMenu = menuMapper.selectOne(queryWrapper.eq(Menu::getParentId, parentId).eq(Menu::getName, menuVO.getName()));
         if (resultMenu != null) {
-            throw new SystemException(SystemServerResult.MENU_NAME_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3001.getCode(), ExceptionInformation.SYSTEM_3001.getMessage());
         }
         menuMapper.updateById(menu);
         return true;

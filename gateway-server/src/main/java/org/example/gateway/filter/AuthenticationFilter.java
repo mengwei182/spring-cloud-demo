@@ -5,11 +5,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.extern.slf4j.Slf4j;
 import org.example.CaffeineRedisCache;
+import org.example.common.core.constant.CommonConstant;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
 import org.example.common.core.result.CommonResult;
-import org.example.common.core.result.CommonServerResult;
-import org.example.common.core.result.SystemServerResult;
 import org.example.common.core.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -92,8 +91,8 @@ public class AuthenticationFilter implements GlobalFilter {
 
     private String authorizationHeaderFilter(ServerHttpRequest request) {
         // 校验请求中的token参数和数据
-        String authorizationHeader = request.getHeaders().getFirst(CommonServerResult.AUTHORIZATION);
-        String authorizationParameter = request.getQueryParams().getFirst(CommonServerResult.AUTHORIZATION);
+        String authorizationHeader = request.getHeaders().getFirst(CommonConstant.AUTHORIZATION);
+        String authorizationParameter = request.getQueryParams().getFirst(CommonConstant.AUTHORIZATION);
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
@@ -104,7 +103,7 @@ public class AuthenticationFilter implements GlobalFilter {
         }
         try {
             // token是否有效
-            String tokenString = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userId, String.class);
+            String tokenString = caffeineRedisCache.get("USER_TOKEN_KEY_" + userId, String.class);
             boolean tokenValid = !StrUtil.isEmpty(tokenString) && authorization.equals(tokenString);
             // token是否过期
             Token<?> token = TokenUtils.unsigned(authorization);

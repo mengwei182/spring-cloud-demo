@@ -2,9 +2,11 @@ package org.example.system.entity.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.example.common.core.constant.CommonConstant;
 import org.example.common.core.domain.BaseEntity;
 import org.example.common.core.tree.TreeModelField;
 import org.example.common.core.tree.TreeModelFieldEnum;
+import org.example.system.constant.SystemServerConstant;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,15 +22,15 @@ public class MenuVO extends BaseEntity {
     /**
      * 名称
      */
-    @NotNull(message = "名称不能为空")
+    @NotNull(message = CommonConstant.NAME_NOT_NULL)
     @TreeModelField(TreeModelFieldEnum.LABEL)
-    @Size(min = 1, max = 255, message = "名称应该在1-255字符之间")
+    @Size(min = 1, max = 255, message = CommonConstant.NAME_LENGTH_ERROR)
     private String name;
     /**
      * 路由地址
      */
-    @NotNull(message = "路由地址不能为空")
-    @Size(min = 1, max = 255, message = "路由地址应该在1-255字符之间")
+    @NotNull(message = SystemServerConstant.PATH_NOT_NULL)
+    @Size(min = 1, max = 255, message = SystemServerConstant.PATH_LENGTH_ERROR)
     private String path;
     /**
      * 组件

@@ -1,9 +1,9 @@
 package org.example.authentication.strategy;
 
 import cn.hutool.core.util.StrUtil;
+import org.example.authentication.exception.AuthenticationException;
 import org.example.common.core.enums.UserVerifyTypeStatusEnum;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.common.core.util.RSAEncryptUtils;
 import org.example.system.entity.User;
 import org.example.system.entity.vo.UserLoginVO;
@@ -26,7 +26,7 @@ public class SecretKeyLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
         String password = userLoginVO.getPassword();
         password = RSAEncryptUtils.decrypt(password, user.getPublicKey());
         if (StrUtil.isEmpty(password)) {
-            throw new SystemException(SystemServerResult.PASSWORD_ERROR);
+            throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2012.getCode(), ExceptionInformation.AUTHENTICATION_2012.getMessage());
         }
     }
 }

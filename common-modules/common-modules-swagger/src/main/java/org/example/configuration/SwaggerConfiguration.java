@@ -1,7 +1,7 @@
 package org.example.configuration;
 
 import io.swagger.annotations.ApiOperation;
-import org.example.common.core.result.CommonServerResult;
+import org.example.common.core.constant.CommonConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +57,7 @@ public class SwaggerConfiguration {
 
         // globalRequestParameters
         RequestParameterBuilder requestParameterBuilder = new RequestParameterBuilder();
-        requestParameterBuilder.name(CommonServerResult.AUTHORIZATION);
+        requestParameterBuilder.name(CommonConstant.AUTHORIZATION);
         requestParameterBuilder.description("token");
         requestParameterBuilder.in(ParameterType.HEADER);
         requestParameterBuilder.required(false);
@@ -74,19 +74,19 @@ public class SwaggerConfiguration {
         docket.globalRequestParameters(Collections.singletonList(requestParameter));
         docket.securitySchemes(getSecuritySchemes());
         docket.securityContexts(getSecurityContexts());
-        docket.enable(!CommonServerResult.PROFILE_PROD.equals(profile));
+        docket.enable(!CommonConstant.PROFILE_PROD.equals(profile));
         return docket;
     }
 
     private List<SecurityScheme> getSecuritySchemes() {
-        return Collections.singletonList(new ApiKey(CommonServerResult.AUTHORIZATION, CommonServerResult.AUTHORIZATION, ParameterType.HEADER.getIn()));
+        return Collections.singletonList(new ApiKey(CommonConstant.AUTHORIZATION, CommonConstant.AUTHORIZATION, ParameterType.HEADER.getIn()));
     }
 
     private List<SecurityContext> getSecurityContexts() {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         return Collections.singletonList(SecurityContext.builder()
                 .securityReferences(Collections.singletonList(SecurityReference.builder()
-                        .reference(CommonServerResult.AUTHORIZATION)
+                        .reference(CommonConstant.AUTHORIZATION)
                         .scopes(new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})
                         .build()))
                 // 需要认证的请求路径

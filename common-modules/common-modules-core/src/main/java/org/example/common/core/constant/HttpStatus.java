@@ -1,4 +1,4 @@
-package org.example.common.core.global;
+package org.example.common.core.constant;
 
 /**
  * Enumeration of generic status codes base on HTTP status codes.

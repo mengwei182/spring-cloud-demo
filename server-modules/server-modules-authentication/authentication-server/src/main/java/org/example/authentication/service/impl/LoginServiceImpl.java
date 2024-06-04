@@ -5,17 +5,18 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
+import org.example.authentication.exception.AuthenticationException;
 import org.example.authentication.service.LoginService;
 import org.example.authentication.strategy.LoginVerifyTypeStrategy;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
 import org.example.common.core.enums.UserVerifyTypeStatusEnum;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.common.core.usercontext.UserContext;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.ImageCaptchaUtils;
 import org.example.common.core.util.TokenUtils;
+import org.example.system.constant.SystemServerConstant;
 import org.example.system.dubbo.ResourceDubboService;
 import org.example.system.dubbo.TokenDubboService;
 import org.example.system.dubbo.UserDubboService;
@@ -68,14 +69,14 @@ public class LoginServiceImpl implements LoginService {
         String username = userLoginVO.getUsername();
         String password = userLoginVO.getPassword();
         if (StrUtil.isEmpty(username)) {
-            throw new SystemException(SystemServerResult.USERNAME_NULL);
+            throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2007.getCode(), ExceptionInformation.AUTHENTICATION_2007.getMessage());
         }
         if (StrUtil.isEmpty(password)) {
-            throw new SystemException(SystemServerResult.PASSWORD_NULL);
+            throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2008.getCode(), ExceptionInformation.AUTHENTICATION_2008.getMessage());
         }
         User user = userDubboService.getUserByUsername(username);
         if (user == null) {
-            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
+            throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2011.getCode(), ExceptionInformation.AUTHENTICATION_2011.getMessage());
         }
         String verifyStatusString = user.getVerifyStatus();
         // 没有指定登录验证类型，默认为账号密码验证类型
@@ -89,14 +90,10 @@ public class LoginServiceImpl implements LoginService {
             try {
                 verifyStatus = Integer.parseInt(vs);
             } catch (Exception e) {
-                throw new SystemException(SystemServerResult.LOGIN_VERIFY_STATUS_ERROR);
+                throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2009.getCode(), ExceptionInformation.AUTHENTICATION_2009.getMessage());
             }
             LoginVerifyTypeStrategy.verify(verifyStatus, request, userLoginVO, user);
         }
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new SystemException(SystemServerResult.PASSWORD_ERROR);
-        }
-        caffeineRedisCache.evict(user.getId());
         LoginUser loginUser = CommonUtils.transformObject(user, LoginUser.class);
         // 查询并设置登录用户的resource数据
         List<ResourceVO> resources = resourceDubboService.getResourceByUserId(user.getId());
@@ -113,9 +110,11 @@ public class LoginServiceImpl implements LoginService {
         Token<LoginUser> token = new Token<>(user.getId(), loginDate, expirationDate, loginUser);
         String tokenString = TokenUtils.sign(token);
         // 删除旧缓存
-        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + user.getId());
+        caffeineRedisCache.evict(user.getId());
+        caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + user.getId());
+        // 设置新缓存
         caffeineRedisCache.put(user.getId(), loginUser, Duration.ofDays(Token.EXPIRATION_DAY));
-        caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofDays(Token.EXPIRATION_DAY));
+        caffeineRedisCache.put(SystemServerConstant.USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofDays(Token.EXPIRATION_DAY));
         return tokenString;
     }
 
@@ -133,7 +132,7 @@ public class LoginServiceImpl implements LoginService {
         userDubboService.clearUserCache(loginUser.getId());
         tokenDubboService.clearTokenCache(loginUser.getId());
         resourceDubboService.clearResourceCache(loginUser.getId());
-        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + loginUser.getId());
+        caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + loginUser.getId());
         UserContext.remove();
         return true;
     }

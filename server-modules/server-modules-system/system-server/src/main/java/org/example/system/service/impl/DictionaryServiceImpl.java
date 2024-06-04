@@ -5,13 +5,12 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.core.domain.BaseEntity;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.CommonServerResult;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.system.entity.Dictionary;
 import org.example.system.entity.vo.DictionaryVO;
+import org.example.system.exception.SystemException;
 import org.example.system.mapper.DictionaryMapper;
 import org.example.system.query.DictionaryQueryPage;
 import org.example.system.service.DictionaryService;
@@ -47,7 +46,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (!StrUtil.isEmpty(dictionaryVO.getParentId())) {
             Dictionary parentDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getId, dictionaryVO.getParentId()));
             if (parentDictionary == null) {
-                throw new SystemException(SystemServerResult.PARENT_NOT_EXIST);
+                throw new SystemException(ExceptionInformation.SYSTEM_3002.getCode(), ExceptionInformation.SYSTEM_3002.getMessage());
             }
             parentId = dictionaryVO.getParentId();
             dictionary.setIdChain(parentDictionary.getIdChain() + "," + parentDictionary.getId());
@@ -59,12 +58,12 @@ public class DictionaryServiceImpl implements DictionaryService {
         }
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVO.getName()));
         if (resultDictionary != null) {
-            throw new SystemException(SystemServerResult.DICTIONARY_NAME_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3013.getCode(), ExceptionInformation.SYSTEM_3013.getMessage());
         }
         // 校验编码唯一性
         resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getCode, dictionaryVO.getCode()));
         if (resultDictionary != null) {
-            throw new SystemException(SystemServerResult.DICTIONARY_CODE_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3014.getCode(), ExceptionInformation.SYSTEM_3014.getMessage());
         }
         dictionaryMapper.insert(dictionary);
         return true;
@@ -80,11 +79,11 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Boolean deleteDictionary(String id) {
         Dictionary dictionary = dictionaryMapper.selectById(id);
         if (dictionary == null) {
-            throw new SystemException(CommonServerResult.OBJECT_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.EXCEPTION_1001.getCode(), ExceptionInformation.EXCEPTION_1001.getMessage());
         }
         List<Dictionary> dictionaries = dictionaryMapper.selectList(new LambdaQueryWrapper<Dictionary>().eq(Dictionary::getParentId, id));
         if (!CollectionUtil.isEmpty(dictionaries)) {
-            throw new SystemException(SystemServerResult.DICTIONARY_CHILD_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3015.getCode(), ExceptionInformation.SYSTEM_3015.getMessage());
         }
         dictionaryMapper.deleteById(id);
         return true;
@@ -102,7 +101,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<>();
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVO.getName()));
         if (resultDictionary != null) {
-            throw new SystemException(SystemServerResult.DICTIONARY_NAME_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3013.getCode(), ExceptionInformation.SYSTEM_3013.getMessage());
         }
         Dictionary dictionary = new Dictionary();
         dictionary.setId(dictionaryVO.getId());

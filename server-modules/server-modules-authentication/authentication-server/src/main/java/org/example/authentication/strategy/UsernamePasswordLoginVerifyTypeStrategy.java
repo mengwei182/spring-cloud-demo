@@ -1,8 +1,8 @@
 package org.example.authentication.strategy;
 
+import org.example.authentication.exception.AuthenticationException;
 import org.example.common.core.enums.UserVerifyTypeStatusEnum;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.system.entity.User;
 import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +28,7 @@ public class UsernamePasswordLoginVerifyTypeStrategy extends LoginVerifyTypeStra
     public void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user) {
         String password = userLoginVO.getPassword();
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new SystemException(SystemServerResult.PASSWORD_ERROR);
+            throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2012.getCode(), ExceptionInformation.AUTHENTICATION_2012.getMessage());
         }
     }
 }

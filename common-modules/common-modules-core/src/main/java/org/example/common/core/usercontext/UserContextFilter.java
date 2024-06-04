@@ -2,8 +2,8 @@ package org.example.common.core.usercontext;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.example.common.core.constant.CommonConstant;
 import org.example.common.core.domain.LoginUser;
-import org.example.common.core.result.CommonServerResult;
 import org.example.common.core.util.TokenUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,8 @@ public class UserContextFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String authorizationHeader = request.getHeader(CommonServerResult.AUTHORIZATION);
-        String authorizationParameter = request.getParameter(CommonServerResult.AUTHORIZATION);
+        String authorizationHeader = request.getHeader(CommonConstant.AUTHORIZATION);
+        String authorizationParameter = request.getParameter(CommonConstant.AUTHORIZATION);
         String authorization = !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
         // 校验是否是不需要验证token的url
         if (StrUtil.isNotEmpty(authorization)) {

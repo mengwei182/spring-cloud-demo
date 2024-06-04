@@ -6,17 +6,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.example.CaffeineRedisCache;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
 import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.common.redis.Topic;
+import org.example.system.constant.SystemServerConstant;
 import org.example.system.dubbo.ResourceDubboService;
 import org.example.system.entity.Resource;
 import org.example.system.entity.ResourceCategory;
 import org.example.system.entity.RoleResourceRelation;
 import org.example.system.entity.UserRoleRelation;
 import org.example.system.entity.vo.ResourceVO;
+import org.example.system.exception.SystemException;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
@@ -60,11 +61,11 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     public Boolean addResource(ResourceVO resourceVO) {
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVO.getCategoryId());
         if (resourceCategory == null) {
-            throw new SystemException(SystemServerResult.CATEGORY_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3003.getCode(), ExceptionInformation.SYSTEM_3003.getMessage());
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, resourceVO.getCategoryId()).eq(Resource::getName, resourceVO.getName()));
         if (count != null && count > 0) {
-            throw new SystemException(SystemServerResult.RESOURCE_NAME_DUPLICATE);
+            throw new SystemException(ExceptionInformation.SYSTEM_3007.getCode(), ExceptionInformation.SYSTEM_3007.getMessage());
         }
         Resource resource = new Resource();
         BeanUtils.copyProperties(resourceVO, resource);
@@ -84,7 +85,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     public Boolean deleteResource(String id) {
         Resource resource = resourceMapper.selectById(id);
         if (resource == null) {
-            throw new SystemException(SystemServerResult.RESOURCE_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3005.getCode(), ExceptionInformation.SYSTEM_3005.getMessage());
         }
         // 删除角色资源表的关联信息
         roleResourceRelationMapper.delete(new LambdaQueryWrapper<RoleResourceRelation>().eq(RoleResourceRelation::getResourceId, id));
@@ -102,15 +103,15 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
     public Boolean updateResource(ResourceVO resourceVO) {
         Resource resource = resourceMapper.selectById(resourceVO.getId());
         if (resource == null) {
-            throw new SystemException(SystemServerResult.RESOURCE_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3005.getCode(), ExceptionInformation.SYSTEM_3005.getMessage());
         }
         ResourceCategory resourceCategory = resourceCategoryMapper.selectById(resourceVO.getCategoryId());
         if (resourceCategory == null) {
-            throw new SystemException(SystemServerResult.CATEGORY_NOT_EXIST);
+            throw new SystemException(ExceptionInformation.SYSTEM_3003.getCode(), ExceptionInformation.SYSTEM_3003.getMessage());
         }
         Long count = resourceMapper.selectCount(new LambdaQueryWrapper<Resource>().eq(Resource::getCategoryId, resourceVO.getCategoryId()).eq(Resource::getName, resourceVO.getName()));
         if (count != null && count > 0) {
-            throw new SystemException(SystemServerResult.RESOURCE_NAME_DUPLICATE);
+            throw new SystemException(ExceptionInformation.SYSTEM_3007.getCode(), ExceptionInformation.SYSTEM_3007.getMessage());
         }
         Resource insterResource = new Resource();
         BeanUtils.copyProperties(resourceVO, insterResource);
@@ -185,7 +186,7 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      */
     @Override
     public List<ResourceVO> getResourceByUserId(String userId) {
-        String key = SystemServerResult.RESOURCE_KEY + userId;
+        String key = SystemServerConstant.RESOURCE_KEY + userId;
         List<ResourceVO> resourceVOs = (List<ResourceVO>) caffeineRedisCache.get(key, List.class);
         if (CollectionUtil.isEmpty(resourceVOs)) {
             List<UserRoleRelation> userRoleRelations = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userId));
@@ -210,6 +211,6 @@ public class ResourceServiceImpl implements ResourceService, ResourceDubboServic
      */
     @Override
     public void clearResourceCache(String userId) {
-        caffeineRedisCache.evict(SystemServerResult.RESOURCE_KEY + userId);
+        caffeineRedisCache.evict(SystemServerConstant.RESOURCE_KEY + userId);
     }
 }

@@ -6,12 +6,11 @@ import org.example.CaffeineRedisCache;
 import org.example.authentication.service.TokenService;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
-import org.example.common.core.exception.AuthenticationException;
-import org.example.common.core.exception.SystemException;
-import org.example.common.core.result.AuthenticationResult;
-import org.example.common.core.result.SystemServerResult;
+import org.example.common.core.exception.ExceptionInformation;
+import org.example.common.core.exception.ServerException;
 import org.example.common.core.usercontext.UserContext;
 import org.example.common.core.util.TokenUtils;
+import org.example.system.constant.SystemServerConstant;
 import org.example.system.dubbo.TokenDubboService;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +39,13 @@ public class TokenServiceImpl implements TokenService, TokenDubboService {
     public String refresh() {
         LoginUser loginUser = UserContext.get();
         if (loginUser == null) {
-            throw new SystemException(SystemServerResult.USER_NOT_EXIST);
+            throw new ServerException(ExceptionInformation.AUTHENTICATION_2011.getCode(), ExceptionInformation.AUTHENTICATION_2011.getMessage());
         }
         try {
             String userId = loginUser.getId();
-            String tokenString = caffeineRedisCache.get(SystemServerResult.USER_TOKEN_KEY + userId, String.class);
+            String tokenString = caffeineRedisCache.get(SystemServerConstant.USER_TOKEN_KEY + userId, String.class);
             if (StrUtil.isEmpty(tokenString)) {
-                throw new AuthenticationException(AuthenticationResult.TOKEN_VALID);
+                throw new ServerException(ExceptionInformation.AUTHENTICATION_2005.getCode(), ExceptionInformation.AUTHENTICATION_2005.getMessage());
             }
             Token<?> oldToken = TokenUtils.unsigned(tokenString);
             // 删除token缓存
@@ -58,10 +57,10 @@ public class TokenServiceImpl implements TokenService, TokenDubboService {
             Token<?> token = new Token<>(userId, oldToken.getSignDate(), expirationDate, oldToken.getData());
             String refresh = TokenUtils.sign(token);
             // 重新设置token
-            caffeineRedisCache.put(SystemServerResult.USER_TOKEN_KEY + userId, refresh, Duration.ofDays(Token.EXPIRATION_DAY));
+            caffeineRedisCache.put(SystemServerConstant.USER_TOKEN_KEY + userId, refresh, Duration.ofDays(Token.EXPIRATION_DAY));
             return refresh;
         } catch (Exception e) {
-            throw new AuthenticationException(AuthenticationResult.TOKEN_REFRESH_FAIL);
+            throw new ServerException(ExceptionInformation.AUTHENTICATION_2004.getCode(), ExceptionInformation.AUTHENTICATION_2004.getMessage());
         }
     }
 
@@ -72,6 +71,6 @@ public class TokenServiceImpl implements TokenService, TokenDubboService {
      */
     @Override
     public void clearTokenCache(String userId) {
-        caffeineRedisCache.evict(SystemServerResult.USER_TOKEN_KEY + userId);
+        caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + userId);
     }
 }

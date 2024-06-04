@@ -2,10 +2,11 @@ package org.example.common.core.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.core.exception.SystemException;
+import org.example.common.core.exception.ServerException;
 import org.example.common.core.tree.TreeModel;
 import org.example.common.core.tree.TreeModelField;
 import org.example.common.core.tree.TreeModelFieldEnum;
+import org.omg.CORBA.SystemException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -194,7 +195,7 @@ public class TreeModelUtils {
             }
         }
         if (childrenField == null) {
-            throw new SystemException("build object tree error, not found children field");
+            throw new ServerException("build object tree error, not found children field");
         }
         try {
             childrenField.setAccessible(true);

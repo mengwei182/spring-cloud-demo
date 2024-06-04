@@ -1,10 +1,9 @@
-package org.example.common.core.configuration;
+package org.example.common.core.handler;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.core.exception.CommonException;
+import org.example.common.core.exception.ServerException;
 import org.example.common.core.result.CommonResult;
-import org.example.common.core.result.CommonServerResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,23 +23,23 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResult<String> methodArgumentNotValidHandler(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public CommonResult<Object> methodArgumentNotValidHandler(MethodArgumentNotValidException e, HttpServletRequest request) {
         printErrorInformation(e, request);
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         String msg = fieldErrors.stream().findFirst().map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage())).orElse(null);
         return CommonResult.error(msg);
     }
 
-    @ExceptionHandler(CommonException.class)
-    public CommonResult<String> handleCommonException(CommonException e, HttpServletRequest request) {
+    @ExceptionHandler(ServerException.class)
+    public CommonResult<Object> handleCommonException(ServerException e, HttpServletRequest request) {
         printErrorInformation(e, request);
-        return CommonResult.error(e.getMessage());
+        return CommonResult.result(e.getCode(), e.getMessage(), e.getData());
     }
 
     @ExceptionHandler(Exception.class)
-    public CommonResult<String> handleException(Exception e, HttpServletRequest request) {
+    public CommonResult<Object> handleException(Exception e, HttpServletRequest request) {
         printErrorInformation(e, request);
-        return CommonResult.error(CommonServerResult.SYSTEM_ERROR);
+        return CommonResult.error();
     }
 
     private void printErrorInformation(Exception e, HttpServletRequest request) {
@@ -58,7 +57,7 @@ public class GlobalExceptionHandler {
         sb.append(System.lineSeparator());
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null && headerNames.hasMoreElements()) {
-            sb.append("request headers:");
+            sb.append("请求头：");
             sb.append(System.lineSeparator());
             while (headerNames.hasMoreElements()) {
                 String headerName = headerNames.nextElement();
@@ -76,7 +75,7 @@ public class GlobalExceptionHandler {
         }
         Enumeration<String> parameterNames = request.getParameterNames();
         if (parameterNames != null && parameterNames.hasMoreElements()) {
-            sb.append("request parameters:");
+            sb.append("请求参数：");
             sb.append(System.lineSeparator());
             while (parameterNames.hasMoreElements()) {
                 String parameterName = parameterNames.nextElement();
