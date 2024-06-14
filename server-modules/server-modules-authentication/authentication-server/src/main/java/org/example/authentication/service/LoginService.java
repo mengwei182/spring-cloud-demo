@@ -14,11 +14,10 @@ public interface LoginService {
     /**
      * 登录
      *
-     * @param request
      * @param userLoginVO
      * @return
      */
-    String login(HttpServletRequest request, UserLoginVO userLoginVO);
+    String login(UserLoginVO userLoginVO);
 
     /**
      * 登出

@@ -64,9 +64,9 @@ public class UserController {
      * @return
      */
     @ApiOperation("查看用户详情")
-    @GetMapping("/info")
-    public CommonResult<UserVO> getUserInfo() {
-        return CommonResult.success(userService.getUserInfo(UserContext.get().getId()));
+    @GetMapping("/information")
+    public CommonResult<UserVO> getUserInformation() {
+        return CommonResult.success(userService.getUserInformation(UserContext.get().getId()));
     }
 
     /**

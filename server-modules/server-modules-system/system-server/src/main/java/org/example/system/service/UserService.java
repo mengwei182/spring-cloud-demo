@@ -33,7 +33,7 @@ public interface UserService {
      *
      * @return
      */
-    UserVO getUserInfo(String id);
+    UserVO getUserInformation(String id);
 
     /**
      * 更新用户信息

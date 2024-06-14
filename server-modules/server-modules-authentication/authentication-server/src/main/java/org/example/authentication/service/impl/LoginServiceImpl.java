@@ -60,12 +60,11 @@ public class LoginServiceImpl implements LoginService {
     /**
      * 登录
      *
-     * @param request
      * @param userLoginVO
      * @return
      */
     @Override
-    public String login(HttpServletRequest request, UserLoginVO userLoginVO) {
+    public String login(UserLoginVO userLoginVO) {
         String username = userLoginVO.getUsername();
         String password = userLoginVO.getPassword();
         if (StrUtil.isEmpty(username)) {
@@ -92,7 +91,7 @@ public class LoginServiceImpl implements LoginService {
             } catch (Exception e) {
                 throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2009.getCode(), ExceptionInformation.AUTHENTICATION_2009.getMessage());
             }
-            LoginVerifyTypeStrategy.verify(verifyStatus, request, userLoginVO, user);
+            LoginVerifyTypeStrategy.verify(verifyStatus, userLoginVO, user);
         }
         LoginUser loginUser = CommonUtils.transformObject(user, LoginUser.class);
         // 查询并设置登录用户的resource数据

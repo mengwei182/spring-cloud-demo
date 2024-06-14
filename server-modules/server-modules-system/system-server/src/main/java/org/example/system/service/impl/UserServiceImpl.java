@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
      * @return
      */
     @Override
-    public UserVO getUserInfo(String id) {
+    public UserVO getUserInformation(String id) {
         if (StrUtil.isEmpty(id)) {
             throw new SystemException(ExceptionInformation.AUTHENTICATION_2011.getCode(), ExceptionInformation.AUTHENTICATION_2011.getMessage());
         }
@@ -173,6 +173,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
         // 查询并填充用户角色信息
         List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userVO.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(roleIds)) {
+            userVO.setRoleIds(roleIds);
             List<Role> roles = roleMapper.selectBatchIds(roleIds);
             userVO.setRoles(CommonUtils.transformList(roles, RoleVO.class));
         }

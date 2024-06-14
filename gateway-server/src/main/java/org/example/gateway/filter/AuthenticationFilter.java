@@ -103,11 +103,11 @@ public class AuthenticationFilter implements GlobalFilter {
         }
         try {
             // token是否有效
-            String tokenString = caffeineRedisCache.get("USER_TOKEN_KEY_" + userId, String.class);
+            String tokenString = caffeineRedisCache.get("USER_TOKEN_KEY::" + userId, String.class);
             boolean tokenValid = !StrUtil.isEmpty(tokenString) && authorization.equals(tokenString);
             // token是否过期
-            Token<?> token = TokenUtils.unsigned(authorization);
             Date currentDate = new Date();
+            Token<?> token = TokenUtils.unsigned(authorization);
             Date expirationDate = token.getExpirationDate();
             boolean tokenExpiration = expirationDate.getTime() > currentDate.getTime();
             return tokenValid && tokenExpiration;

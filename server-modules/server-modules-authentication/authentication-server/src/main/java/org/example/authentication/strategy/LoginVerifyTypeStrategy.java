@@ -4,7 +4,6 @@ import lombok.Data;
 import org.example.system.entity.User;
 import org.example.system.entity.vo.UserLoginVO;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,13 +19,13 @@ public abstract class LoginVerifyTypeStrategy {
         loginVerifyStrategyMap.put(type, this);
     }
 
-    public static void verify(int type, HttpServletRequest request, UserLoginVO userLoginVO, User user) {
+    public static void verify(int type, UserLoginVO userLoginVO, User user) {
         LoginVerifyTypeStrategy loginVerifyTypeStrategy = loginVerifyStrategyMap.get(type);
         if (loginVerifyTypeStrategy == null) {
             return;
         }
-        loginVerifyTypeStrategy.strategy(request, userLoginVO, user);
+        loginVerifyTypeStrategy.strategy(userLoginVO, user);
     }
 
-    public abstract void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user);
+    public abstract void strategy(UserLoginVO userLoginVO, Object... objects);
 }

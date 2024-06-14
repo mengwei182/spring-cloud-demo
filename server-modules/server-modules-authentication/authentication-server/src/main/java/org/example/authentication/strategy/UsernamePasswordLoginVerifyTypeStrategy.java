@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lihui
@@ -25,7 +24,8 @@ public class UsernamePasswordLoginVerifyTypeStrategy extends LoginVerifyTypeStra
     }
 
     @Override
-    public void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user) {
+    public void strategy(UserLoginVO userLoginVO, Object... objects) {
+        User user = (User) objects[0];
         String password = userLoginVO.getPassword();
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2012.getCode(), ExceptionInformation.AUTHENTICATION_2012.getMessage());

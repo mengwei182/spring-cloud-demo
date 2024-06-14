@@ -55,11 +55,11 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static <T> CommonResult<T> unauthorized() {
-        return new CommonResult<>(ExceptionInformation.EXCEPTION_1001.getCode(), ExceptionInformation.EXCEPTION_1001.getMessage(), null);
+        return new CommonResult<>(ExceptionInformation.AUTHENTICATION_2001.getCode(), ExceptionInformation.AUTHENTICATION_2001.getMessage(), null);
     }
 
     public static <T> CommonResult<T> forbidden() {
-        return new CommonResult<>(ExceptionInformation.EXCEPTION_1001.getCode(), ExceptionInformation.EXCEPTION_1001.getMessage(), null);
+        return new CommonResult<>(ExceptionInformation.AUTHENTICATION_2002.getCode(), ExceptionInformation.AUTHENTICATION_2002.getMessage(), null);
     }
 
     public static <T> CommonResult<T> result(Integer code, String message, T data) {

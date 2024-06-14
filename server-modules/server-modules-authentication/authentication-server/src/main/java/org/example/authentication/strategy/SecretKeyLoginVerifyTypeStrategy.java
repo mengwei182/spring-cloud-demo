@@ -9,8 +9,6 @@ import org.example.system.entity.User;
 import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author lihui
  * @since 2024/5/22
@@ -22,7 +20,8 @@ public class SecretKeyLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
     }
 
     @Override
-    public void strategy(HttpServletRequest request, UserLoginVO userLoginVO, User user) {
+    public void strategy(UserLoginVO userLoginVO, Object... objects) {
+        User user = (User) objects[0];
         String password = userLoginVO.getPassword();
         password = RSAEncryptUtils.decrypt(password, user.getPublicKey());
         if (StrUtil.isEmpty(password)) {

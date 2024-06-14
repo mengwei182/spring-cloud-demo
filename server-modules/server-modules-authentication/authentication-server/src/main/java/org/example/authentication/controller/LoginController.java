@@ -29,14 +29,13 @@ public class LoginController {
     /**
      * 登录
      *
-     * @param request
      * @param userLoginVO
      * @return
      */
     @ApiOperation("登录")
     @RequestMapping("/login")
-    public CommonResult<String> login(HttpServletRequest request, @Valid @RequestBody UserLoginVO userLoginVO) {
-        return CommonResult.success(loginService.login(request, userLoginVO));
+    public CommonResult<String> login(@Valid @RequestBody UserLoginVO userLoginVO) {
+        return CommonResult.success(loginService.login(userLoginVO));
     }
 
     /**
