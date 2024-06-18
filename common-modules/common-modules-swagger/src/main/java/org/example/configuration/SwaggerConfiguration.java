@@ -90,7 +90,7 @@ public class SwaggerConfiguration {
                         .scopes(new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})
                         .build()))
                 // 需要认证的请求路径
-                .operationSelector(operationContext -> Arrays.stream(skipUrls.split(",")).noneMatch(o -> antPathMatcher.match(o, operationContext.requestMappingPattern())))
+                .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
                 .build());
     }
 }
