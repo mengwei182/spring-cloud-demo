@@ -1,6 +1,0 @@
-2024-06-13 08:48:31,579 WARN [Thread-8] c.a.nacos.common.notify.NotifyCenter [NotifyCenter.java : 136] [NotifyCenter] Start destroying Publisher
-2024-06-13 08:48:31,579 WARN [Thread-2] c.a.n.c.http.HttpClientBeanHolder [HttpClientBeanHolder.java : 102] [HttpClientBeanHolder] Start destroying common HttpClient
-2024-06-13 08:48:31,668 WARN [Thread-8] c.a.nacos.common.notify.NotifyCenter [NotifyCenter.java : 153] [NotifyCenter] Destruction of the end
-2024-06-13 08:48:31,689 WARN [Thread-2] c.a.n.c.http.HttpClientBeanHolder [HttpClientBeanHolder.java : 111] [HttpClientBeanHolder] Destruction of the end
-2024-06-13 08:48:31,847 INFO [SpringApplicationShutdownHook] c.a.c.n.r.NacosServiceRegistry [NacosServiceRegistry.java : 95] De-registering from Nacos Server now...
-2024-06-13 08:48:31,882 INFO [SpringApplicationShutdownHook] c.a.c.n.r.NacosServiceRegistry [NacosServiceRegistry.java : 115] De-registration finished.

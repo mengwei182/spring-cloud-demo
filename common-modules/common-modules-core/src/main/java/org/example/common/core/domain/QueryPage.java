@@ -16,6 +16,8 @@ import java.util.List;
 public class QueryPage extends Page<Object> {
     private int pageSize = 10;
     private int pageNumber = 1;
+    private String startTime;
+    private String endTime;
     /**
      * 排序列集合
      */

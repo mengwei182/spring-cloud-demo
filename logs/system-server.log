@@ -1,8 +1,0 @@
-2024-06-13 08:48:31,589 WARN [Thread-8] c.a.nacos.common.notify.NotifyCenter [NotifyCenter.java : 136] [NotifyCenter] Start destroying Publisher
-2024-06-13 08:48:31,589 WARN [Thread-2] c.a.n.c.http.HttpClientBeanHolder [HttpClientBeanHolder.java : 102] [HttpClientBeanHolder] Start destroying common HttpClient
-2024-06-13 08:48:31,672 WARN [Thread-8] c.a.nacos.common.notify.NotifyCenter [NotifyCenter.java : 153] [NotifyCenter] Destruction of the end
-2024-06-13 08:48:31,701 WARN [Thread-2] c.a.n.c.http.HttpClientBeanHolder [HttpClientBeanHolder.java : 111] [HttpClientBeanHolder] Destruction of the end
-2024-06-13 08:48:36,963 INFO [SpringApplicationShutdownHook] c.a.c.n.r.NacosServiceRegistry [NacosServiceRegistry.java : 95] De-registering from Nacos Server now...
-2024-06-13 08:48:36,969 INFO [SpringApplicationShutdownHook] c.a.c.n.r.NacosServiceRegistry [NacosServiceRegistry.java : 115] De-registration finished.
-2024-06-13 08:48:37,137 INFO [SpringApplicationShutdownHook] c.alibaba.druid.pool.DruidDataSource [DruidDataSource.java : 2174] {dataSource-1} closing ...
-2024-06-13 08:48:37,142 INFO [SpringApplicationShutdownHook] c.alibaba.druid.pool.DruidDataSource [DruidDataSource.java : 2247] {dataSource-1} closed

@@ -24,7 +24,12 @@ spring:
         password: nacos
         namespace: spring-cloud-demo
         file-extension: yml
-        group: DEFAULT_GROUP
+        group: ${spring.profiles.active}
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 log:
   file:

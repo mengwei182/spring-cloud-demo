@@ -19,6 +19,14 @@
             <artifactId>common-modules-core</artifactId>
         </dependency>
         <!--module end-->
+
+        <!--springfox start-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <!--springfox end-->
     </dependencies>
 
     <build>

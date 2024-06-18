@@ -27,5 +27,11 @@ public abstract class LoginVerifyTypeStrategy {
         loginVerifyTypeStrategy.strategy(userLoginVO, user);
     }
 
+    /**
+     * 登录策略，由具体类型实现
+     *
+     * @param userLoginVO 用户登录信息实体
+     * @param objects 其他需要的参数
+     */
     public abstract void strategy(UserLoginVO userLoginVO, Object... objects);
 }

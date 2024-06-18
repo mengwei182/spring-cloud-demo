@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.example.authentication.service.LoginService;
 import org.example.common.core.result.CommonResult;
 import org.example.system.entity.vo.UserLoginVO;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +35,7 @@ public class LoginController {
      * @return
      */
     @ApiOperation("登录")
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public CommonResult<String> login(@Valid @RequestBody UserLoginVO userLoginVO) {
         return CommonResult.success(loginService.login(userLoginVO));
     }
@@ -44,7 +46,7 @@ public class LoginController {
      * @return
      */
     @ApiOperation("登出")
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     public CommonResult<Boolean> logout() {
         return CommonResult.success(loginService.logout());
     }
@@ -60,7 +62,7 @@ public class LoginController {
      * @throws IOException
      */
     @ApiOperation("获取图片验证码")
-    @RequestMapping("/login/image/captcha")
+    @GetMapping("/login/image/captcha")
     public void getImageCaptcha(HttpServletRequest request, HttpServletResponse response, @RequestParam(defaultValue = "130") Integer width, @RequestParam(defaultValue = "30") Integer height, @RequestParam(defaultValue = "4") Integer captchaSize) throws IOException {
         loginService.generateImageCaptcha(request, response, width, height, captchaSize);
     }
