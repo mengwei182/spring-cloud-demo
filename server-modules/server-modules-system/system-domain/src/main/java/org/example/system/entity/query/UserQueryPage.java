@@ -1,4 +1,4 @@
-package org.example.system.query;
+package org.example.system.entity.query;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +10,6 @@ import org.example.common.core.domain.QueryPage;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DictionaryQueryPage extends QueryPage {
-    private String name;
+public class UserQueryPage extends QueryPage {
+    private String username;
 }

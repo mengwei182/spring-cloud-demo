@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.example.system.entity.Resource;
-import org.example.system.query.ResourceQueryPage;
+import org.example.system.entity.query.ResourceQueryPage;
 
 import java.util.List;
 

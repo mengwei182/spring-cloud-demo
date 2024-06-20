@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.example.system.entity.Role;
-import org.example.system.query.RoleQueryPage;
+import org.example.system.entity.query.RoleQueryPage;
 
 import java.util.List;
 

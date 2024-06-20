@@ -2,7 +2,7 @@ package org.example.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.system.entity.vo.ResourceVO;
-import org.example.system.query.ResourceQueryPage;
+import org.example.system.entity.query.ResourceQueryPage;
 
 import java.util.List;
 

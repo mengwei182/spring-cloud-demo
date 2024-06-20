@@ -15,7 +15,7 @@ import org.example.system.entity.vo.ResourceVO;
 import org.example.system.exception.SystemException;
 import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
-import org.example.system.query.ResourceCategoryQueryPage;
+import org.example.system.entity.query.ResourceCategoryQueryPage;
 import org.example.system.service.ResourceCategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

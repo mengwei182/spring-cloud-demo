@@ -18,7 +18,7 @@ import org.example.system.exception.SystemException;
 import org.example.system.mapper.RoleMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
-import org.example.system.query.RoleQueryPage;
+import org.example.system.entity.query.RoleQueryPage;
 import org.example.system.service.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

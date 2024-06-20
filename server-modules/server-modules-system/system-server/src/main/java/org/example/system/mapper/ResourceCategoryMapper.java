@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.example.system.entity.ResourceCategory;
-import org.example.system.query.ResourceCategoryQueryPage;
+import org.example.system.entity.query.ResourceCategoryQueryPage;
 
 import java.util.List;
 

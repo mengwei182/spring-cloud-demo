@@ -15,7 +15,7 @@ import org.example.system.entity.vo.MenuVO;
 import org.example.system.exception.SystemException;
 import org.example.system.mapper.MenuMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
-import org.example.system.query.MenuQueryPage;
+import org.example.system.entity.query.MenuQueryPage;
 import org.example.system.service.MenuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

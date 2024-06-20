@@ -41,7 +41,7 @@ import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.mapper.UserDepartmentRelationMapper;
 import org.example.system.mapper.UserMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
-import org.example.system.query.UserQueryPage;
+import org.example.system.entity.query.UserQueryPage;
 import org.example.system.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;

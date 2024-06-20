@@ -22,7 +22,7 @@ import org.example.system.mapper.ResourceCategoryMapper;
 import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
-import org.example.system.query.ResourceQueryPage;
+import org.example.system.entity.query.ResourceQueryPage;
 import org.example.system.service.ResourceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.example.system.entity.Dictionary;
-import org.example.system.query.DictionaryQueryPage;
+import org.example.system.entity.query.DictionaryQueryPage;
 
 import java.util.List;
 

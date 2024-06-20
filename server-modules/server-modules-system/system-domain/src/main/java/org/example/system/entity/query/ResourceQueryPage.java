@@ -1,4 +1,4 @@
-package org.example.system.query;
+package org.example.system.entity.query;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

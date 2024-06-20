@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import org.example.common.core.result.CommonResult;
 import org.example.system.entity.vo.RoleMenuRelationVO;
 import org.example.system.entity.vo.RoleVO;
-import org.example.system.query.RoleQueryPage;
+import org.example.system.entity.query.RoleQueryPage;
 import org.example.system.service.RoleService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
