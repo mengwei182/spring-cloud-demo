@@ -68,6 +68,7 @@ public class AuthenticationFilter implements GlobalFilter {
         try {
             token = TokenUtils.unsigned(authorization, LoginUser.class);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return writeUnauthorized(response);
         }
         LoginUser loginUser = token.getData();
