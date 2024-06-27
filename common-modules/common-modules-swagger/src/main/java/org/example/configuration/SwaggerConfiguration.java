@@ -24,7 +24,6 @@ import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,8 +41,6 @@ public class SwaggerConfiguration {
     private String serverPort;
     @Value("${spring.profiles.active}")
     private String profile;
-    @Value("${skip-urls}")
-    private String skipUrls;
 
     @Bean
     public Docket openApi() {

@@ -51,7 +51,6 @@ public class RoleServiceImpl implements RoleService, RoleDubboService {
     public Boolean addRole(RoleVO roleVO) {
         Role role = new Role();
         BeanUtils.copyProperties(roleVO, role);
-        role.setId(CommonUtils.uuid());
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         Role resultRole = roleMapper.selectOne(queryWrapper.eq(Role::getName, roleVO.getName()));
         if (resultRole != null) {
@@ -118,11 +117,10 @@ public class RoleServiceImpl implements RoleService, RoleDubboService {
         QueryWrapper<RoleMenuRelation> roleMenuRelationQueryWrapper = new QueryWrapper<>();
         roleMenuRelationQueryWrapper.lambda().eq(RoleMenuRelation::getRoleId, roleMenuRelationVO.getRoleId());
         roleMenuRelationMapper.delete(roleMenuRelationQueryWrapper);
-        List<String> menuIds = roleMenuRelationVO.getMenuIds();
+        List<Long> menuIds = roleMenuRelationVO.getMenuIds();
         if (!CollectionUtil.isEmpty(menuIds)) {
             menuIds.forEach(menuId -> {
                 RoleMenuRelation roleMenuRelation = new RoleMenuRelation();
-                roleMenuRelation.setId(CommonUtils.uuid());
                 roleMenuRelation.setRoleId(roleMenuRelationVO.getRoleId());
                 roleMenuRelation.setMenuId(menuId);
                 roleMenuRelationMapper.insert(roleMenuRelation);

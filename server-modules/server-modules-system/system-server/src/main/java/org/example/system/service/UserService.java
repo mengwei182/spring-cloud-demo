@@ -33,7 +33,7 @@ public interface UserService {
      *
      * @return
      */
-    UserVO getUserInformation(String id);
+    UserVO getUserInformation(Long id);
 
     /**
      * 更新用户信息
@@ -65,5 +65,5 @@ public interface UserService {
      * @param id
      * @return
      */
-    String getPublicKey(String id) throws NoSuchAlgorithmException;
+    String getPublicKey(Long id) throws NoSuchAlgorithmException;
 }

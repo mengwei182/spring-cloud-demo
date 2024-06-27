@@ -1,6 +1,5 @@
 package org.example.authentication.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -17,13 +16,12 @@ import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.ImageCaptchaUtils;
 import org.example.common.core.util.TokenUtils;
 import org.example.system.constant.SystemServerConstant;
-import org.example.system.dubbo.ResourceDubboService;
 import org.example.system.dubbo.TokenDubboService;
 import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.User;
-import org.example.system.entity.vo.ResourceVO;
+import org.example.system.entity.UserRoleRelation;
 import org.example.system.entity.vo.UserLoginVO;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.example.system.entity.vo.UserVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,8 +34,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author lihui
@@ -49,11 +45,7 @@ public class LoginServiceImpl implements LoginService {
     @DubboReference
     private UserDubboService userDubboService;
     @Resource
-    private PasswordEncoder passwordEncoder;
-    @Resource
     private CaffeineRedisCache caffeineRedisCache;
-    @DubboReference
-    private ResourceDubboService resourceDubboService;
     @DubboReference
     private TokenDubboService tokenDubboService;
 
@@ -95,10 +87,8 @@ public class LoginServiceImpl implements LoginService {
         }
         LoginUser loginUser = CommonUtils.transformObject(user, LoginUser.class);
         // 查询并设置登录用户的resource数据
-        List<ResourceVO> resources = resourceDubboService.getResourceByUserId(user.getId());
-        if (!CollectionUtil.isEmpty(resources)) {
-            loginUser.setResourceUrls(resources.stream().map(ResourceVO::getUrl).collect(Collectors.toList()));
-        }
+        UserVO userVO = userDubboService.getUserInformation(user.getId());
+        loginUser.setResourceUrls(userVO.getResourceUrls());
         // 登录时间
         LocalDateTime localDateTime = LocalDateTime.now();
         Date loginDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -130,7 +120,6 @@ public class LoginServiceImpl implements LoginService {
         }
         userDubboService.clearUserCache(loginUser.getId());
         tokenDubboService.clearTokenCache(loginUser.getId());
-        resourceDubboService.clearResourceCache(loginUser.getId());
         caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + loginUser.getId());
         UserContext.remove();
         return true;

@@ -16,17 +16,17 @@ public class UserRoleRelationVO extends BaseEntity {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
     /**
      * 角色id
      */
-    private String roleId;
+    private Long roleId;
     /**
      * 用户id集合
      */
-    private List<String> userIds;
+    private List<Long> userIds;
     /**
      * 角色id集合
      */
-    private List<String> roleIds;
+    private List<Long> roleIds;
 }

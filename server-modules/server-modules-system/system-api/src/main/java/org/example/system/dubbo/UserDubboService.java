@@ -1,6 +1,7 @@
 package org.example.system.dubbo;
 
 import org.example.system.entity.User;
+import org.example.system.entity.vo.UserVO;
 
 /**
  * @author lihui
@@ -13,7 +14,7 @@ public interface UserDubboService {
      * @param userId
      * @return
      */
-    User getUser(String userId);
+    UserVO getUserInformation(Long userId);
 
     /**
      * 根据username获取用户信息
@@ -28,5 +29,5 @@ public interface UserDubboService {
      *
      * @param userId
      */
-    void clearUserCache(String userId);
+    void clearUserCache(Long userId);
 }

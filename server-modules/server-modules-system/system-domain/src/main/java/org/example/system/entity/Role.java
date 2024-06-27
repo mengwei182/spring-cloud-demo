@@ -15,7 +15,7 @@ import org.example.common.core.domain.BaseEntity;
 @TableName("role")
 @EqualsAndHashCode(callSuper = true)
 public class Role extends BaseEntity {
-    public static final String ADMIN_ID = "1";
+    public static final Long ADMIN_ID = 1L;
     /**
      * 名称
      */

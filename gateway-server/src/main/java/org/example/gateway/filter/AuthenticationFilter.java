@@ -97,9 +97,9 @@ public class AuthenticationFilter implements GlobalFilter {
         return !StrUtil.isEmpty(authorizationHeader) ? authorizationHeader : authorizationParameter;
     }
 
-    private boolean tokenValid(String authorization, String userId) {
+    private boolean tokenValid(String authorization, Long userId) {
         // 校验请求中的token参数和数据
-        if (StrUtil.isEmpty(userId)) {
+        if (userId == null) {
             return false;
         }
         try {

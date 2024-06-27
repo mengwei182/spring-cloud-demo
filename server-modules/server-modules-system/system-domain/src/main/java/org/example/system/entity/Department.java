@@ -22,7 +22,7 @@ public class Department extends BaseEntity {
     /**
      * 父级id
      */
-    private String parentId;
+    private Long parentId;
     /**
      * id链
      */

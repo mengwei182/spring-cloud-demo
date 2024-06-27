@@ -16,17 +16,17 @@ public class RoleMenuRelationVO extends BaseEntity {
     /**
      * 角色id
      */
-    private String roleId;
+    private Long roleId;
     /**
      * 菜单id
      */
-    private String menuId;
+    private Long menuId;
     /**
      * 角色id集合
      */
-    private List<String> roleIds;
+    private List<Long> roleIds;
     /**
      * 菜单id集合
      */
-    private List<String> menuIds;
+    private List<Long> menuIds;
 }

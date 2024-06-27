@@ -18,9 +18,9 @@ public class RoleMenuRelation extends BaseEntity {
     /**
      * 角色id
      */
-    private String roleId;
+    private Long roleId;
     /**
      * 菜单id
      */
-    private String menuId;
+    private Long menuId;
 }

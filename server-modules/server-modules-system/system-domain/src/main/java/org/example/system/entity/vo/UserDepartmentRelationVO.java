@@ -18,17 +18,17 @@ public class UserDepartmentRelationVO extends BaseEntity {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
     /**
      * 部门id
      */
-    private String departmentId;
+    private Long departmentId;
     /**
      * 用户id集合
      */
-    private List<String> userIds;
+    private List<Long> userIds;
     /**
      * 部门id集合
      */
-    private List<String> departmentIds;
+    private List<Long> departmentIds;
 }

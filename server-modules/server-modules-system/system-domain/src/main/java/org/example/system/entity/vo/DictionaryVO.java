@@ -26,7 +26,7 @@ public class DictionaryVO extends BaseEntity {
      * 父级id
      */
     @TreeModelField(TreeModelFieldEnum.PARENT_ID)
-    private String parentId;
+    private Long parentId;
     /**
      * id链
      */

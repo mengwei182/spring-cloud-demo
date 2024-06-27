@@ -18,9 +18,9 @@ public class UserDepartmentRelation extends BaseEntity {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
     /**
      * 部门id
      */
-    private String departmentId;
+    private Long departmentId;
 }

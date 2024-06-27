@@ -1,24 +1,23 @@
 package org.example.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.common.core.domain.BaseEntity;
 import org.example.common.core.exception.ExceptionInformation;
-import org.example.common.core.util.CommonUtils;
 import org.example.common.core.util.PageUtils;
 import org.example.system.entity.Dictionary;
+import org.example.system.entity.query.DictionaryQueryPage;
 import org.example.system.entity.vo.DictionaryVO;
 import org.example.system.exception.SystemException;
 import org.example.system.mapper.DictionaryMapper;
-import org.example.system.entity.query.DictionaryQueryPage;
 import org.example.system.service.DictionaryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author lihui
@@ -39,11 +38,10 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Boolean addDictionary(DictionaryVO dictionaryVO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryVO, dictionary);
-        dictionary.setId(CommonUtils.uuid());
-        String parentId = BaseEntity.TOP_PARENT_ID;
+        Long parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<>();
         // 有父级id
-        if (!StrUtil.isEmpty(dictionaryVO.getParentId())) {
+        if (!Objects.isNull(dictionaryVO.getParentId())) {
             Dictionary parentDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getId, dictionaryVO.getParentId()));
             if (parentDictionary == null) {
                 throw new SystemException(ExceptionInformation.SYSTEM_3002.getCode(), ExceptionInformation.SYSTEM_3002.getMessage());
@@ -52,9 +50,9 @@ public class DictionaryServiceImpl implements DictionaryService {
             dictionary.setIdChain(parentDictionary.getIdChain() + "," + parentDictionary.getId());
         }
         // 无父级id
-        if (StrUtil.isEmpty(dictionaryVO.getParentId())) {
+        if (Objects.isNull(dictionaryVO.getParentId())) {
             dictionary.setParentId(BaseEntity.TOP_PARENT_ID);
-            dictionary.setIdChain(BaseEntity.TOP_PARENT_ID);
+            dictionary.setIdChain(String.valueOf(BaseEntity.TOP_PARENT_ID));
         }
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVO.getName()));
         if (resultDictionary != null) {
@@ -97,7 +95,7 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public Boolean updateDictionary(DictionaryVO dictionaryVO) {
-        String parentId = BaseEntity.TOP_PARENT_ID;
+        Long parentId = BaseEntity.TOP_PARENT_ID;
         LambdaQueryWrapper<Dictionary> queryWrapper = new LambdaQueryWrapper<>();
         Dictionary resultDictionary = dictionaryMapper.selectOne(queryWrapper.eq(Dictionary::getParentId, parentId).eq(Dictionary::getName, dictionaryVO.getName()));
         if (resultDictionary != null) {

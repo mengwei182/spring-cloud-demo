@@ -22,10 +22,10 @@ import org.example.system.entity.Department;
 import org.example.system.entity.Menu;
 import org.example.system.entity.Role;
 import org.example.system.entity.RoleMenuRelation;
-import org.example.system.entity.RoleResourceRelation;
 import org.example.system.entity.User;
 import org.example.system.entity.UserDepartmentRelation;
 import org.example.system.entity.UserRoleRelation;
+import org.example.system.entity.query.UserQueryPage;
 import org.example.system.entity.vo.DepartmentVO;
 import org.example.system.entity.vo.MenuVO;
 import org.example.system.entity.vo.RoleVO;
@@ -34,14 +34,11 @@ import org.example.system.entity.vo.UserVO;
 import org.example.system.exception.SystemException;
 import org.example.system.mapper.DepartmentMapper;
 import org.example.system.mapper.MenuMapper;
-import org.example.system.mapper.ResourceMapper;
 import org.example.system.mapper.RoleMapper;
 import org.example.system.mapper.RoleMenuRelationMapper;
-import org.example.system.mapper.RoleResourceRelationMapper;
 import org.example.system.mapper.UserDepartmentRelationMapper;
 import org.example.system.mapper.UserMapper;
 import org.example.system.mapper.UserRoleRelationMapper;
-import org.example.system.entity.query.UserQueryPage;
 import org.example.system.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -71,8 +68,6 @@ public class UserServiceImpl implements UserService, UserDubboService {
     @Resource
     private RoleMapper roleMapper;
     @Resource
-    private ResourceMapper resourceMapper;
-    @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
     private DepartmentMapper departmentMapper;
@@ -82,8 +77,6 @@ public class UserServiceImpl implements UserService, UserDubboService {
     private RoleMenuRelationMapper roleMenuRelationMapper;
     @Resource
     private UserRoleRelationMapper userRoleRelationMapper;
-    @Resource
-    private RoleResourceRelationMapper roleResourceRelationMapper;
     @Resource
     private UserDepartmentRelationMapper userDepartmentRelationMapper;
 
@@ -113,7 +106,6 @@ public class UserServiceImpl implements UserService, UserDubboService {
         user = new User();
         BeanUtils.copyProperties(userVO, user);
         String id = CommonUtils.uuid();
-        user.setId(id);
         user.setPassword(passwordEncoder.encode(password));
         String tokenExpireTime = userVO.getTokenExpireTime();
         if (StrUtil.isEmpty(tokenExpireTime)) {
@@ -126,11 +118,11 @@ public class UserServiceImpl implements UserService, UserDubboService {
         user.setUpdater(UserContext.get().getId());
         userMapper.insert(user);
         // 添加角色信息
-        List<String> roleIds = userVO.getRoleIds();
+        List<Long> roleIds = userVO.getRoleIds();
         if (CollectionUtil.isEmpty(roleIds)) {
             throw new SystemException(ExceptionInformation.SYSTEM_3016.getCode(), ExceptionInformation.SYSTEM_3016.getMessage());
         }
-        for (String roleId : roleIds) {
+        for (Long roleId : roleIds) {
             if (Role.ADMIN_ID.equals(roleId)) {
                 throw new SystemException(ExceptionInformation.SYSTEM_3017.getCode(), ExceptionInformation.SYSTEM_3017.getMessage());
             }
@@ -150,8 +142,8 @@ public class UserServiceImpl implements UserService, UserDubboService {
      * @return
      */
     @Override
-    public UserVO getUserInformation(String id) {
-        if (StrUtil.isEmpty(id)) {
+    public UserVO getUserInformation(Long id) {
+        if (id == null) {
             throw new SystemException(ExceptionInformation.AUTHENTICATION_2011.getCode(), ExceptionInformation.AUTHENTICATION_2011.getMessage());
         }
         UserVO userVO;
@@ -171,26 +163,21 @@ public class UserServiceImpl implements UserService, UserDubboService {
 
     private void loadUserInfo(UserVO userVO) {
         // 查询并填充用户角色信息
-        List<String> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userVO.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
+        List<Long> roleIds = userRoleRelationMapper.selectList(new LambdaQueryWrapper<UserRoleRelation>().eq(UserRoleRelation::getUserId, userVO.getId())).stream().map(UserRoleRelation::getRoleId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(roleIds)) {
             userVO.setRoleIds(roleIds);
             List<Role> roles = roleMapper.selectBatchIds(roleIds);
             userVO.setRoles(CommonUtils.transformList(roles, RoleVO.class));
         }
-        // 查询并填充用户菜单信息
-        List<String> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
+        // 查询并填充用户菜单信息和资源信息
+        List<Long> menuIds = roleMenuRelationMapper.selectList(new LambdaQueryWrapper<RoleMenuRelation>().in(RoleMenuRelation::getRoleId, roleIds)).stream().map(RoleMenuRelation::getMenuId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(menuIds)) {
             List<Menu> menus = menuMapper.selectBatchIds(menuIds);
             userVO.setMenus(TreeModelUtils.buildObjectTree(CommonUtils.transformList(menus, MenuVO.class)));
-        }
-        // 查询并填充用户资源信息
-        List<String> resourceIds = roleResourceRelationMapper.selectList(new LambdaQueryWrapper<RoleResourceRelation>().in(RoleResourceRelation::getRoleId, roleIds)).stream().map(RoleResourceRelation::getResourceId).collect(Collectors.toList());
-        if (CollectionUtil.isNotEmpty(resourceIds)) {
-            List<org.example.system.entity.Resource> resources = resourceMapper.selectBatchIds(resourceIds);
-            userVO.setResourceUrls(resources.stream().map(org.example.system.entity.Resource::getUrl).collect(Collectors.toList()));
+            userVO.setResourceUrls(menus.stream().map(Menu::getPath).collect(Collectors.toList()));
         }
         // 查询并填充用户部门信息
-        List<String> departmentIds = userDepartmentRelationMapper.selectList(new LambdaQueryWrapper<UserDepartmentRelation>().in(UserDepartmentRelation::getUserId, userVO.getId())).stream().map(UserDepartmentRelation::getDepartmentId).collect(Collectors.toList());
+        List<Long> departmentIds = userDepartmentRelationMapper.selectList(new LambdaQueryWrapper<UserDepartmentRelation>().in(UserDepartmentRelation::getUserId, userVO.getId())).stream().map(UserDepartmentRelation::getDepartmentId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(departmentIds)) {
             List<Department> departments = departmentMapper.selectBatchIds(departmentIds);
             userVO.setDepartments(TreeModelUtils.buildObjectTree(CommonUtils.transformList(departments, DepartmentVO.class)));
@@ -268,17 +255,6 @@ public class UserServiceImpl implements UserService, UserDubboService {
     }
 
     /**
-     * 根据user id获取用户信息
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public User getUser(String userId) {
-        return userMapper.selectById(userId);
-    }
-
-    /**
      * 根据username获取用户信息
      *
      * @param username
@@ -295,7 +271,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
      * @param userId
      */
     @Override
-    public void clearUserCache(String userId) {
+    public void clearUserCache(Long userId) {
         caffeineRedisCache.evict(userId);
     }
 
@@ -306,7 +282,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
      * @return
      */
     @Override
-    public String getPublicKey(String id) throws NoSuchAlgorithmException {
+    public String getPublicKey(Long id) throws NoSuchAlgorithmException {
         User user = new User();
         user.setId(id);
         user.setPublicKey(RSAEncryptUtils.getPublicKey());

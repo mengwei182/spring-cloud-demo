@@ -19,18 +19,18 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 顶级节点父级ID
      */
-    public static final String TOP_PARENT_ID = "0";
+    public static final Long TOP_PARENT_ID = 0L;
     @TableId
     @TreeModelField(TreeModelFieldEnum.ID)
-    private String id;
+    private Long id;
     /**
      * 创建者id
      */
-    private String creator;
+    private Long creator;
     /**
      * 更新者id
      */
-    private String updater;
+    private Long updater;
     /**
      * 创建时间
      */

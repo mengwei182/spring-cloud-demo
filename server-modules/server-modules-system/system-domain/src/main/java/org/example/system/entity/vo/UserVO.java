@@ -58,7 +58,7 @@ public class UserVO extends BaseEntity {
     /**
      * 角色ID集合
      */
-    private List<String> roleIds;
+    private List<Long> roleIds;
     /**
      * 菜单信息
      */

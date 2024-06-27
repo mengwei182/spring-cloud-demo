@@ -113,7 +113,7 @@ public class UserController {
      */
     @ApiOperation("获取密钥")
     @GetMapping("/getPublicKey")
-    public CommonResult<String> getPublicKey(@RequestParam String id) throws NoSuchAlgorithmException {
+    public CommonResult<String> getPublicKey(@RequestParam Long id) throws NoSuchAlgorithmException {
         return CommonResult.success(userService.getPublicKey(id));
     }
 }
