@@ -51,6 +51,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -143,7 +144,7 @@ public class UserServiceImpl implements UserService, UserDubboService {
      */
     @Override
     public UserVO getUserInformation(Long id) {
-        if (id == null) {
+        if (Objects.isNull(id)) {
             throw new SystemException(ExceptionInformation.AUTHENTICATION_2011.getCode(), ExceptionInformation.AUTHENTICATION_2011.getMessage());
         }
         UserVO userVO;

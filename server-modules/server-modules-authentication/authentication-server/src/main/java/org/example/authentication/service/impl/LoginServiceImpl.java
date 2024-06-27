@@ -19,10 +19,11 @@ import org.example.system.constant.SystemServerConstant;
 import org.example.system.dubbo.TokenDubboService;
 import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.User;
-import org.example.system.entity.UserRoleRelation;
 import org.example.system.entity.vo.UserLoginVO;
 import org.example.system.entity.vo.UserVO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
@@ -128,15 +129,22 @@ public class LoginServiceImpl implements LoginService {
     /**
      * 生成图片验证码
      *
-     * @param request
-     * @param response
      * @param width 图片宽度
      * @param height 图片高度
      * @param captchaSize 验证码位数
      * @throws IOException
      */
     @Override
-    public void generateImageCaptcha(HttpServletRequest request, HttpServletResponse response, Integer width, Integer height, Integer captchaSize) throws IOException {
+    public void generateImageCaptcha(Integer width, Integer height, Integer captchaSize) throws IOException {
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (servletRequestAttributes == null) {
+            throw new AuthenticationException(ExceptionInformation.EXCEPTION_1000.getCode(), ExceptionInformation.EXCEPTION_1000.getMessage());
+        }
+        HttpServletRequest request = servletRequestAttributes.getRequest();
+        HttpServletResponse response = servletRequestAttributes.getResponse();
+        if (response == null) {
+            throw new AuthenticationException(ExceptionInformation.EXCEPTION_1000.getCode(), ExceptionInformation.EXCEPTION_1000.getMessage());
+        }
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
