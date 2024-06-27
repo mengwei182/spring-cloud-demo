@@ -1,5 +1,3 @@
-CREATE DATABASE `spring_cloud_demo`;
-
 DROP TABLE IF EXISTS `spring_cloud_demo`.`user`;
 CREATE TABLE `spring_cloud_demo`.`user`
 (
