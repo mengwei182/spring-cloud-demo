@@ -30,6 +30,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 基础过滤器
@@ -99,7 +100,7 @@ public class AuthenticationFilter implements GlobalFilter {
 
     private boolean tokenValid(String authorization, Long userId) {
         // 校验请求中的token参数和数据
-        if (userId == null) {
+        if (Objects.isNull(userId)) {
             return false;
         }
         try {
