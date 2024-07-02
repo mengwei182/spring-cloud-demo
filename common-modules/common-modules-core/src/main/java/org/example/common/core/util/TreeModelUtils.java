@@ -6,7 +6,6 @@ import org.example.common.core.exception.ServerException;
 import org.example.common.core.tree.TreeModel;
 import org.example.common.core.tree.TreeModelField;
 import org.example.common.core.tree.TreeModelFieldEnum;
-import org.omg.CORBA.SystemException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

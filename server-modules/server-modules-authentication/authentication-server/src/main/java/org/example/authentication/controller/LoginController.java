@@ -2,19 +2,17 @@ package org.example.authentication.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.example.authentication.entity.vo.TokenVO;
 import org.example.authentication.service.LoginService;
 import org.example.common.core.result.CommonResult;
 import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -36,7 +34,7 @@ public class LoginController {
      */
     @ApiOperation("登录")
     @PostMapping("/login")
-    public CommonResult<String> login(@Valid @RequestBody UserLoginVO userLoginVO) {
+    public CommonResult<TokenVO> login(@Valid @RequestBody UserLoginVO userLoginVO) {
         return CommonResult.success(loginService.login(userLoginVO));
     }
 

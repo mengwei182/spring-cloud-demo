@@ -18,6 +18,7 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>system-domain</artifactId>
+            <version>${revision}</version>
         </dependency>
         <!--module end-->
     </dependencies>

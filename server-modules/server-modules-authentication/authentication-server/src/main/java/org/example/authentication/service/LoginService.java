@@ -1,9 +1,8 @@
 package org.example.authentication.service;
 
+import org.example.authentication.entity.vo.TokenVO;
 import org.example.system.entity.vo.UserLoginVO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -17,7 +16,7 @@ public interface LoginService {
      * @param userLoginVO
      * @return
      */
-    String login(UserLoginVO userLoginVO);
+    TokenVO login(UserLoginVO userLoginVO);
 
     /**
      * 登出

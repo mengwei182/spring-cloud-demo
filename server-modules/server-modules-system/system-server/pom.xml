@@ -23,10 +23,12 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>system-api</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>system-domain</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.example</groupId>

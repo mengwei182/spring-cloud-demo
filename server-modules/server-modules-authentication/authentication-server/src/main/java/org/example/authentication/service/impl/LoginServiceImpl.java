@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.example.CaffeineRedisCache;
+import org.example.authentication.entity.vo.TokenVO;
 import org.example.authentication.exception.AuthenticationException;
 import org.example.authentication.service.LoginService;
 import org.example.authentication.strategy.LoginVerifyTypeStrategy;
@@ -21,6 +22,7 @@ import org.example.system.dubbo.UserDubboService;
 import org.example.system.entity.User;
 import org.example.system.entity.vo.UserLoginVO;
 import org.example.system.entity.vo.UserVO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -49,6 +51,16 @@ public class LoginServiceImpl implements LoginService {
     private CaffeineRedisCache caffeineRedisCache;
     @DubboReference
     private TokenDubboService tokenDubboService;
+    /**
+     * 授权令牌accessToken的有效期
+     */
+    @Value("${authentication.accessTokenExpire:7}")
+    private int accessTokenExpire;
+    /**
+     * 刷新令牌refreshToken的有效期，默认14天
+     */
+    @Value("${authentication.refreshTokenExpire:14}")
+    private int refreshTokenExpire;
 
     /**
      * 登录
@@ -57,7 +69,7 @@ public class LoginServiceImpl implements LoginService {
      * @return
      */
     @Override
-    public String login(UserLoginVO userLoginVO) {
+    public TokenVO login(UserLoginVO userLoginVO) {
         String username = userLoginVO.getUsername();
         String password = userLoginVO.getPassword();
         if (StrUtil.isEmpty(username)) {
@@ -93,19 +105,19 @@ public class LoginServiceImpl implements LoginService {
         // 登录时间
         LocalDateTime localDateTime = LocalDateTime.now();
         Date loginDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        // 过期时间
-        LocalDateTime expirationDateTime = localDateTime.plusDays(Token.EXPIRATION_DAY);
-        Date expirationDate = Date.from(expirationDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        // 生成token
-        Token<LoginUser> token = new Token<>(user.getId(), loginDate, expirationDate, loginUser);
-        String tokenString = TokenUtils.sign(token);
+        // 生成accessToken
+        Token<LoginUser> accessTokenEntity = new Token<>(user.getId(), loginDate, Date.from(localDateTime.plusDays(accessTokenExpire).atZone(ZoneId.systemDefault()).toInstant()), loginUser);
+        String accessToken = TokenUtils.sign(accessTokenEntity);
+        // 生成refreshToken
+        Token<LoginUser> refreshTokenEntity = new Token<>(user.getId(), loginDate, Date.from(localDateTime.plusDays(refreshTokenExpire).atZone(ZoneId.systemDefault()).toInstant()), loginUser);
+        String refreshToken = TokenUtils.sign(refreshTokenEntity);
         // 删除旧缓存
         caffeineRedisCache.evict(user.getId());
         caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + user.getId());
         // 设置新缓存
-        caffeineRedisCache.put(user.getId(), loginUser, Duration.ofDays(Token.EXPIRATION_DAY));
-        caffeineRedisCache.put(SystemServerConstant.USER_TOKEN_KEY + user.getId(), tokenString, Duration.ofDays(Token.EXPIRATION_DAY));
-        return tokenString;
+        caffeineRedisCache.put(user.getId(), loginUser, Duration.ofDays(accessTokenExpire));
+        caffeineRedisCache.put(SystemServerConstant.USER_TOKEN_KEY + user.getId(), accessToken, Duration.ofDays(accessTokenExpire));
+        return new TokenVO(accessToken, refreshToken);
     }
 
     /**

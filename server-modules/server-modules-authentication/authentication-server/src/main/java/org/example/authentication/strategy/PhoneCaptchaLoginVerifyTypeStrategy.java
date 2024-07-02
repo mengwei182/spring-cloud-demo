@@ -3,7 +3,6 @@ package org.example.authentication.strategy;
 import cn.hutool.core.util.StrUtil;
 import org.example.CaffeineRedisCache;
 import org.example.authentication.exception.AuthenticationException;
-import org.example.common.core.constant.CommonConstant;
 import org.example.common.core.constant.RedisKeyConstant;
 import org.example.common.core.enums.UserVerifyTypeStatusEnum;
 import org.example.common.core.exception.ExceptionInformation;
@@ -12,7 +11,6 @@ import org.example.system.entity.vo.UserLoginVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lihui

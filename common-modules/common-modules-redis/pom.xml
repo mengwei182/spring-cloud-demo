@@ -20,6 +20,7 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>system-api</artifactId>
+            <version>${revision}</version>
         </dependency>
         <!--module end-->
 

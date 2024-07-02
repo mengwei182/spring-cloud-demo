@@ -7,4 +7,4 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
-skip-urls: /swagger-ui/**,/swagger-ui.html,/swagger-resources/**,/v2/api-docs,/v3/api-docs,/login,/login/image/captcha
+skip-urls: /swagger-ui/**,/swagger-ui.html,/swagger-resources/**,/v2/api-docs,/v3/api-docs,/login,/login/image/captcha,/token/refresh
