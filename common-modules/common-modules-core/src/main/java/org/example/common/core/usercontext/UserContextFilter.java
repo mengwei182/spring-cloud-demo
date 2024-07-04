@@ -44,6 +44,10 @@ public class UserContextFilter implements Filter {
                 log.error(e.getMessage());
             }
         }
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            UserContext.remove();
+        }
     }
 }
