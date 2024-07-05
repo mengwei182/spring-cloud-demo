@@ -134,7 +134,6 @@ public class LoginServiceImpl implements LoginService {
         userDubboService.clearUserCache(loginUser.getId());
         tokenDubboService.clearTokenCache(loginUser.getId());
         caffeineRedisCache.evict(SystemServerConstant.USER_TOKEN_KEY + loginUser.getId());
-        UserContext.remove();
         return true;
     }
 
