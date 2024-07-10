@@ -52,7 +52,7 @@ public class LoginServiceImpl implements LoginService {
     @DubboReference
     private TokenDubboService tokenDubboService;
     /**
-     * 授权令牌accessToken的有效期
+     * 授权令牌accessToken的有效期，默认7天
      */
     @Value("${authentication.accessTokenExpire:7}")
     private int accessTokenExpire;
