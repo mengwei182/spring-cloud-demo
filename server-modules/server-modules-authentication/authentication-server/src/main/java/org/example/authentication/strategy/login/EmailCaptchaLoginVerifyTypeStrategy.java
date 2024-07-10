@@ -1,4 +1,4 @@
-package org.example.authentication.strategy;
+package org.example.authentication.strategy.login;
 
 import cn.hutool.core.util.StrUtil;
 import org.example.CaffeineRedisCache;
@@ -17,28 +17,28 @@ import javax.annotation.Resource;
  * @since 2024/5/22
  */
 @Service
-public class PhoneCaptchaLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
+public class EmailCaptchaLoginVerifyTypeStrategy extends LoginVerifyTypeStrategy {
     @Resource
     private CaffeineRedisCache caffeineRedisCache;
 
-    public PhoneCaptchaLoginVerifyTypeStrategy() {
-        super(UserVerifyTypeStatusEnum.PHONE_CAPTCHA.getType());
+    public EmailCaptchaLoginVerifyTypeStrategy() {
+        super(UserVerifyTypeStatusEnum.EMAIL_CAPTCHA.getType());
     }
 
     @Override
     public void strategy(UserLoginVO userLoginVO, Object... objects) {
         User user = (User) objects[0];
-        String phoneCaptcha = userLoginVO.getPhoneCaptcha();
-        if (StrUtil.isEmpty(phoneCaptcha)) {
+        String emailCaptcha = userLoginVO.getEmailCaptcha();
+        if (StrUtil.isEmpty(emailCaptcha)) {
             throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2014.getCode(), ExceptionInformation.AUTHENTICATION_2014.getMessage());
         }
-        String phoneCaptchaCache = caffeineRedisCache.get(RedisKeyConstant.LOGIN_PHONE_CAPTCHA + user.getPhone(), String.class);
-        if (StrUtil.isEmpty(phoneCaptchaCache)) {
+        String emailCaptchaCache = caffeineRedisCache.get(RedisKeyConstant.LOGIN_EMAIL_CAPTCHA + user.getEmail(), String.class);
+        if (StrUtil.isEmpty(emailCaptchaCache)) {
             throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2014.getCode(), ExceptionInformation.AUTHENTICATION_2014.getMessage());
         }
-        if (!phoneCaptcha.equalsIgnoreCase(phoneCaptchaCache)) {
+        if (!emailCaptcha.equalsIgnoreCase(emailCaptchaCache)) {
             throw new AuthenticationException(ExceptionInformation.AUTHENTICATION_2014.getCode(), ExceptionInformation.AUTHENTICATION_2014.getMessage());
         }
-        caffeineRedisCache.evict(RedisKeyConstant.LOGIN_PHONE_CAPTCHA + user.getPhone());
+        caffeineRedisCache.evict(RedisKeyConstant.LOGIN_EMAIL_CAPTCHA + user.getEmail());
     }
 }

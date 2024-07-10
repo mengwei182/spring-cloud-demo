@@ -1,4 +1,4 @@
-package org.example.authentication.strategy;
+package org.example.authentication.strategy.login;
 
 import lombok.Data;
 import org.example.system.entity.User;

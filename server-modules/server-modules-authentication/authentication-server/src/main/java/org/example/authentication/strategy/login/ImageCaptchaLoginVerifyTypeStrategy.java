@@ -1,4 +1,4 @@
-package org.example.authentication.strategy;
+package org.example.authentication.strategy.login;
 
 import cn.hutool.core.util.StrUtil;
 import org.example.CaffeineRedisCache;

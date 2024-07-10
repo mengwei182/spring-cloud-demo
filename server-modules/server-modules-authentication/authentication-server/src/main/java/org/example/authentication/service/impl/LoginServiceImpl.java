@@ -7,7 +7,7 @@ import org.example.CaffeineRedisCache;
 import org.example.authentication.entity.vo.TokenVO;
 import org.example.authentication.exception.AuthenticationException;
 import org.example.authentication.service.LoginService;
-import org.example.authentication.strategy.LoginVerifyTypeStrategy;
+import org.example.authentication.strategy.login.LoginVerifyTypeStrategy;
 import org.example.common.core.domain.LoginUser;
 import org.example.common.core.domain.Token;
 import org.example.common.core.enums.UserVerifyTypeStatusEnum;
