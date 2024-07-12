@@ -36,6 +36,9 @@ spring:
       group-id: spring_cloud_demo_group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  cache:
+    redis:
+      use-key-prefix: false
 
 dubbo:
   application:
