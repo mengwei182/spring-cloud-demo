@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>authentication-domain</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -11,7 +11,6 @@
     </parent>
 
     <artifactId>system-server</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>

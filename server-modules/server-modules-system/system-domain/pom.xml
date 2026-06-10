@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>system-domain</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>

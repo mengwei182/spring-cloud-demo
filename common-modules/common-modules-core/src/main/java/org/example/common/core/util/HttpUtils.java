@@ -37,44 +37,60 @@ public class HttpUtils {
     private HttpUtils() {
     }
 
-    private static HttpGet buildHttpGet(String url) {
-        return new HttpGet(url);
-    }
-
-    private static HttpPost buildHttpPost(String url) {
-        return new HttpPost(url);
-    }
-
-    private static HttpPost buildHttpPost(String url, String body) {
-        HttpPost httpPost = buildHttpPost(url);
-        httpPost.setEntity(new StringEntity(body));
-        return httpPost;
-    }
-
-    private static HttpPost buildHttpPost(String url, Map<String, Object> body) {
-        HttpPost httpPost = buildHttpPost(url);
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-        for (Map.Entry<String, Object> entry : body.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                entityBuilder.addTextBody(key, (String) value);
-            }
-            if (value instanceof File) {
-                entityBuilder.addBinaryBody(key, (File) value);
+    private static HttpGet buildHttpGet(String url, Map<String, String> header) {
+        HttpGet httpGet = new HttpGet(url);
+        if (header != null) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpGet.setHeader(entry.getKey(), entry.getValue());
             }
         }
-        httpPost.setEntity(entityBuilder.build());
+        return httpGet;
+    }
+
+    private static HttpPost buildHttpPost(String url, Map<String, String> header, String body) {
+        HttpPost httpPost = new HttpPost(url);
+        if (header != null) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPost.setHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        if (body != null) {
+            httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
+        }
         return httpPost;
     }
 
-    public static String get(String url) throws Exception {
-        HttpGet httpGet = buildHttpGet(url);
+    private static HttpPost buildHttpPost(String url, Map<String, String> header, Map<String, Object> body) {
+        HttpPost httpPost = new HttpPost(url);
+        if (header != null) {
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                httpPost.setHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        if (body != null) {
+            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+            for (Map.Entry<String, Object> entry : body.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    entityBuilder.addTextBody(key, (String) value);
+                }
+                if (value instanceof File) {
+                    entityBuilder.addBinaryBody(key, (File) value);
+                }
+            }
+            httpPost.setEntity(entityBuilder.build());
+        }
+        return httpPost;
+    }
+
+    public static String get(String url, Map<String, String> header) throws Exception {
+        HttpGet httpGet = buildHttpGet(url, header);
         return HTTP_CLIENT.execute(httpGet, new BasicHttpClientResponseHandler());
     }
 
-    public static ClassicHttpResponse getHttpResponse(String url) throws Exception {
-        HttpGet httpGet = buildHttpGet(url);
+    public static ClassicHttpResponse getHttpResponse(String url, Map<String, String> header) throws Exception {
+        HttpGet httpGet = buildHttpGet(url, header);
         CommonHttpClientResponseHandler responseHandler = new CommonHttpClientResponseHandler();
         ClassicHttpResponse response = HTTP_CLIENT.execute(httpGet, responseHandler);
         response.setEntity(new ByteArrayEntity(responseHandler.getContent(), ContentType.WILDCARD));
@@ -82,40 +98,45 @@ public class HttpUtils {
     }
 
     public static String post(String url) throws Exception {
-        HttpPost httpPost = buildHttpPost(url);
+        HttpPost httpPost = buildHttpPost(url, null, (String) null);
         return HTTP_CLIENT.execute(httpPost, new BasicHttpClientResponseHandler());
     }
 
-    public static String post(String url, String body) throws Exception {
-        HttpPost httpPost = buildHttpPost(url, body);
+    public static String post(String url, Map<String, String> header) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, (String) null);
         return HTTP_CLIENT.execute(httpPost, new BasicHttpClientResponseHandler());
     }
 
-    public static String post(String url, Map<String, Object> body) throws Exception {
-        HttpPost httpPost = buildHttpPost(url, body);
+    public static String post(String url, Map<String, String> header, String body) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, body);
         return HTTP_CLIENT.execute(httpPost, new BasicHttpClientResponseHandler());
     }
 
-    public static ClassicHttpResponse postHttpResponse(String url) throws Exception {
-        HttpPost httpPost = buildHttpPost(url);
+    public static String post(String url, Map<String, String> header, Map<String, Object> body) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, body);
+        return HTTP_CLIENT.execute(httpPost, new BasicHttpClientResponseHandler());
+    }
+
+    public static ClassicHttpResponse postHttpResponse(String url, Map<String, String> header) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, (String) null);
         return HTTP_CLIENT.execute(httpPost, new CommonHttpClientResponseHandler());
     }
 
-    public static ClassicHttpResponse postHttpResponse(String url, String body) throws Exception {
-        HttpPost httpPost = buildHttpPost(url, body);
+    public static ClassicHttpResponse postHttpResponse(String url, Map<String, String> header, String body) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, body);
         return HTTP_CLIENT.execute(httpPost, new CommonHttpClientResponseHandler());
     }
 
-    public static ClassicHttpResponse postHttpResponse(String url, Map<String, Object> body) throws Exception {
-        HttpPost httpPost = buildHttpPost(url, body);
+    public static ClassicHttpResponse postHttpResponse(String url, Map<String, String> header, Map<String, Object> body) throws Exception {
+        HttpPost httpPost = buildHttpPost(url, header, body);
         CommonHttpClientResponseHandler responseHandler = new CommonHttpClientResponseHandler();
         ClassicHttpResponse response = HTTP_CLIENT.execute(httpPost, responseHandler);
         response.setEntity(new ByteArrayEntity(responseHandler.getContent(), ContentType.WILDCARD));
         return response;
     }
 
-    public static void download(String url, String filepath) throws Exception {
-        HttpGet httpGet = buildHttpGet(url);
+    public static void download(String url, Map<String, String> header, String filepath) throws Exception {
+        HttpGet httpGet = buildHttpGet(url, header);
         HTTP_CLIENT.execute(httpGet, new FileHttpClientResponseHandler(filepath));
     }
 

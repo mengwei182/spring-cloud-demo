@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>system-api</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>

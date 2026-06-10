@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>authentication-server</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>

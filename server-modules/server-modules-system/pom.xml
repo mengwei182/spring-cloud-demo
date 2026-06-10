@@ -9,7 +9,6 @@
     </parent>
 
     <artifactId>server-modules-system</artifactId>
-    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>
